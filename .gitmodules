@@ -19,3 +19,6 @@
 [submodule "ext/cereal"]
 	path = ext/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "nanogui"]
+	path = nanogui
+	url = ./nanogui
