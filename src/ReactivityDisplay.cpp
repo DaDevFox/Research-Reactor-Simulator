@@ -1,14 +1,14 @@
-#include <nanogui/ReactivityDisplay.h>
+#include "../include/ReactivityDisplay.h"
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 
-NAMESPACE_BEGIN(nanogui)
+using namespace nanogui;
 
-void PeriodDisplay::draw(NVGcontext *ctx)
+void PeriodDisplay::draw(NVGcontext* ctx)
 {
 	Widget::draw(ctx);
-	float displayWidth = 0.5*(mSize.x() - 2 * mPadding);
-	float axesWidth = 0.5*(mSize.x() - 2 * mPadding);
+	float displayWidth = 0.5 * (mSize.x() - 2 * mPadding);
+	float axesWidth = 0.5 * (mSize.x() - 2 * mPadding);
 	if (displayWidth <= 0.f) return;
 
 	nvgSave(ctx);
@@ -26,11 +26,13 @@ void PeriodDisplay::draw(NVGcontext *ctx)
 	float centerLocation = 0.17 * rangeY / 1.17;
 	float displayVal;
 
-	if (period > 0) {
+	if (period > 0)
+	{
 		displayVal = std::max(-(1.f - posFromPeriod(period)) * (rangeYM), -rangeYM);
 		displayVal = std::min(displayVal, 0.f);
 	}
-	else {
+	else
+	{
 		displayVal = std::min((1.f - posFromPeriod(-period)) * rangeYM, centerLocation);
 		displayVal = std::max(displayVal, 0.f);
 	}
@@ -38,7 +40,7 @@ void PeriodDisplay::draw(NVGcontext *ctx)
 	// Draw backgrounds
 	nvgBeginPath(ctx);
 
-	nvgRect(ctx, mPos.x() + mPadding + axesWidth, mPos.y() + verticalMargins*0.98f, displayWidth, rangeY*1.01f);
+	nvgRect(ctx, mPos.x() + mPadding + axesWidth, mPos.y() + verticalMargins * 0.98f, displayWidth, rangeY * 1.01f);
 	nvgFillColor(ctx, Color(200, 255));
 	nvgFill(ctx);
 
@@ -59,7 +61,8 @@ void PeriodDisplay::draw(NVGcontext *ctx)
 	//nvgFill(ctx);
 
 	//Draw tics and text
-	for (int i = 1; i < 7; i++) {
+	for (int i = 1; i < 7; i++)
+	{
 		float posY = mPos.y() + verticalMargins + axesLocations[6 - i] * (rangeYM);
 		nvgBeginPath(ctx);
 		nvgMoveTo(ctx, mPos.x() + mPadding + 0.5 * axesWidth, posY);
@@ -70,7 +73,8 @@ void PeriodDisplay::draw(NVGcontext *ctx)
 	}
 
 	nvgFillColor(ctx, Color(255, 255));
-	for (int i = 1; i < 7; i++) {
+	for (int i = 1; i < 7; i++)
+	{
 		float posY = mPos.y() + verticalMargins + axesLocations[6 - i] * (rangeYM);
 		nvgText(ctx, mPos.x() + mPadding, posY, axesValues[6 - i], NULL);
 	}
@@ -91,14 +95,15 @@ void PeriodDisplay::draw(NVGcontext *ctx)
 
 float PeriodDisplay::posFromPeriod(float period_)
 {
-	return log(0.46874*period_)*0.316009;
+	return log(0.46874 * period_) * 0.316009;
 }
 
-Vector2i PeriodDisplay::preferredSize(NVGcontext *) const {
+Vector2i PeriodDisplay::preferredSize(NVGcontext*) const
+{
 	return Vector2i(15, 70);
 }
 
-PeriodDisplay::PeriodDisplay(Widget * parent) : Widget(parent)
+PeriodDisplay::PeriodDisplay(Widget* parent) : Widget(parent)
 {
 
 }
@@ -108,4 +113,3 @@ PeriodDisplay::~PeriodDisplay()
 
 }
 
-NAMESPACE_END(nanogui)

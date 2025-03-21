@@ -1,24 +1,25 @@
-#include "nanogui/controlRodDisplay.h"
+#include "../include/controlRodDisplay.h"
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 
-NAMESPACE_BEGIN(nanogui)
+using namespace nanogui;
 
-void ControlRodDisplay::draw(NVGcontext *ctx)
+void ControlRodDisplay::draw(NVGcontext* ctx)
 {
 	Widget::draw(ctx);
 
 	nvgSave(ctx);
 
-	const float rodSize = mSize.y() - rodBorder;
-	const float rodWidth = (mSize.x() - 2 * rodSpacing) / 3.f;
+	const float rodSize = m_size.y() - rodBorder;
+	const float rodWidth = (m_size.x() - 2 * rodSpacing) / 3.f;
 
 	// Draw backgrounds
 	float x[3];
 	nvgBeginPath(ctx);
-	for (int i = 0; i < 3; i++) {
-		x[i] = mPos.x() + (rodWidth + rodSpacing)*i;
-		nvgRect(ctx, mPos.x() + (rodWidth + rodSpacing)*i, mPos.y(), rodWidth, mSize.y());
+	for (int i = 0; i < 3; i++)
+	{
+		x[i] = m_pos.x() + (rodWidth + rodSpacing) * i;
+		nvgRect(ctx, m_pos.x() + (rodWidth + rodSpacing) * i, m_pos.y(), rodWidth, m_size.y());
 	}
 	nvgFillColor(ctx, mRodBackgroundColor);
 	nvgFill(ctx);
@@ -28,28 +29,32 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 	const float h = std::sqrt(3.f) * pointerSize * 0.5f;
 	NVGpaint upper[2];
 	const float rodWgrad = rodWidth / 2 - rodBorder;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++)
+	{
 		// Store rod positions
 		relPosRod = (1.f - *rodActualPos[i] / *rodSteps[i]) * rodSize;
 		relPosMagnet = (1.f - *rodExactPos[i] / *rodSteps[i]) * rodSize;
 
 		// Drawing top part
-		if (relPosRod > 0.f) {
-			for (int m = 0; m < 2; m++) {
+		if (relPosRod > 0.f)
+		{
+			for (int m = 0; m < 2; m++)
+			{
 				upper[m] = nvgLinearGradient(ctx, x[i] + rodWgrad, 0, // startx, starty
 					m ? (x[i] + rodWidth) : x[i], 0, // endx, endy
 					rodEnabled[i] ? mRodExtrudedWhiteColor : mRodDisabledWhiteColor, rodEnabled[i] ? mRodExtrudedColor : mRodDisabledColor); // startcol, endcol
 				nvgBeginPath(ctx);
-				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), mPos.y(), (2 - m)*rodWgrad, relPosRod);
+				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), m_pos.y(), (2 - m) * rodWgrad, relPosRod);
 				nvgFillPaint(ctx, upper[m]);
 				nvgFill(ctx);
 			}
 		}
 
 		// Drawing lower part
-		if (relPosRod < rodSize) {
+		if (relPosRod < rodSize)
+		{
 			nvgBeginPath(ctx);
-			nvgRect(ctx, x[i] + rodBorder, mPos.y() + relPosRod, rodWidth - 2 * rodBorder, rodSize - relPosRod);
+			nvgRect(ctx, x[i] + rodBorder, m_pos.y() + relPosRod, rodWidth - 2 * rodBorder, rodSize - relPosRod);
 			nvgFillColor(ctx, mRodInsertedColor);
 			nvgFill(ctx);
 		}
@@ -57,13 +62,13 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 		// Drawing pointers
 		nvgFillColor(ctx, Color(255, 255));
 		nvgBeginPath(ctx);
-		nvgMoveTo(ctx, x[i], mPos.y() + relPosMagnet);
-		nvgLineTo(ctx, x[i] - h, mPos.y() + relPosMagnet - pointerSize / 2.f);
-		nvgLineTo(ctx, x[i] - h, mPos.y() + relPosMagnet + pointerSize / 2.f);
+		nvgMoveTo(ctx, x[i], m_pos.y() + relPosMagnet);
+		nvgLineTo(ctx, x[i] - h, m_pos.y() + relPosMagnet - pointerSize / 2.f);
+		nvgLineTo(ctx, x[i] - h, m_pos.y() + relPosMagnet + pointerSize / 2.f);
 		nvgClosePath(ctx);
-		nvgMoveTo(ctx, x[i] + rodWidth, mPos.y() + relPosMagnet);
-		nvgLineTo(ctx, x[i] + rodWidth + h, mPos.y() + relPosMagnet - pointerSize / 2.f);
-		nvgLineTo(ctx, x[i] + rodWidth + h, mPos.y() + relPosMagnet + pointerSize / 2.f);
+		nvgMoveTo(ctx, x[i] + rodWidth, m_pos.y() + relPosMagnet);
+		nvgLineTo(ctx, x[i] + rodWidth + h, m_pos.y() + relPosMagnet - pointerSize / 2.f);
+		nvgLineTo(ctx, x[i] + rodWidth + h, m_pos.y() + relPosMagnet + pointerSize / 2.f);
 		nvgClosePath(ctx);
 		nvgFill(ctx);
 	}
@@ -71,8 +76,7 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 	nvgRestore(ctx);
 }
 
-Vector2i ControlRodDisplay::preferredSize(NVGcontext *) const {
+Vector2i ControlRodDisplay::preferredSize(NVGcontext*) const
+{
 	return Vector2i((int)std::ceil(2 * rodSpacing + 6 * rodBorder), 70);
 }
-
-NAMESPACE_END(nanogui)

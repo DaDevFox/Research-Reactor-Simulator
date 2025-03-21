@@ -6,8 +6,13 @@ set(NANOGUI_BUILD_PYTHON  OFF CACHE BOOL " " FORCE)
 set(NANOGUI_USE_GLAD       ON CACHE BOOL " " FORCE)
 set(NANOGUI_INSTALL       OFF CACHE BOOL " " FORCE)
 
+project(SimulatorGui)
+
 # Add the configurations from nanogui
-add_subdirectory(ext/nanogui)
+add_subdirectory("ext/nanogui")
+
+# Scan sources
+file( GLOB_RECURSE APPLICATION_SOURCES "src/*.cpp" )
 
 # For reliability of parallel build, make the NanoGUI targets dependencies
 set_property(TARGET glfw glfw_objects nanogui PROPERTY FOLDER "dependencies")
@@ -18,10 +23,37 @@ add_definitions(${NANOGUI_EXTRA_DEFS})
 # On top of adding the path to nanogui/include, you may need extras
 include_directories(${NANOGUI_EXTRA_INCS})
 
+set (SIMULATORGUI_EIGEN3_INCLUDE_DIR "ext/eigen")
+
+# `if NOT` is what enables the same bypass for your project
+if(NOT SIMULATORGUI_EIGEN3_INCLUDE_DIR)
+  # Grab or find the Eigen3 include directory.
+  find_package(Eigen3 QUIET)
+  if(EIGEN3_INCLUDE_DIR)
+    set(SIMULATORGUI_EIGEN3_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
+  else()
+    # use the internal NanoGUI copy of Eigen
+    set(SIMULATORGUI_EIGEN3_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/nanogui/ext/eigen)
+  endif()
+endif()
+
+message(STATUS "Using Eigen3 from directory: ${SIMULATORGUI_EIGEN3_INCLUDE_DIR}")
+set(NANOGUI_EIGEN_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR} CACHE BOOL " " FORCE)
+
+add_library(cereal INTERFACE)
+target_include_directories(cereal INTERFACE ${CMAKE_SOURCE_DIR}/ext/cereal/include)
+
 # Compile a target using NanoGUI
-add_executable(SimulatorGui src/SimulatorGUI.cpp src/ScriptCommand.cpp  src/Simulator.cpp ext/nanovg/src/nanovg.c include/Icon.h include/Simulator.h include/ControlRod.h build/resource1.h build/logo_256px.ico build/SimulatorGUI1.rc include/PeriodicalMode.h include/Settings.h include/SerialClass.h src/SerialClass.cpp)
+include_directories(include)
+add_executable(SimulatorGui src/SimulatorGUI.cpp src/ScriptCommand.cpp  src/Simulator.cpp include/Icon.h include/Simulator.h include/ControlRod.h build/resource1.h build/logo_256px.ico build/SimulatorGUI1.rc include/PeriodicalMode.h include/Settings.h include/SerialClass.h src/SerialClass.cpp "src/fileDialog.cpp" "include/fileDialog.h" "include/entypo.h" "include/pieChart.h" "include/BarGraph.h" "include/DataDisplay.h" "include/controlRodDisplay.h" "include/Plot.h" "include/ReactivityDisplay.h" "src/RelativeGridLayout.cpp" "include/RelativeGridLayout.h" "include/CustomPopupButton.h" "src/SliderCheckbox.cpp" "include/SliderCheckBox.h" "include/util.h" "src/util.cpp" "src/IntervalSlider.cpp" "include/CustomTabWidget.h" "include/CustomTabHeader.h" "src/CustomTabHeader.cpp"  )
+
+target_include_directories(SimulatorGui PRIVATE ext/nanogui/include ext/cereal/include ${SIMULATORGUI_EIGEN3_INCLUDE_DIR})
 
 # Lastly, additional libraries may have been built for you.  In addition to linking
 # against NanoGUI, we need to link against those as well.
-target_link_libraries(SimulatorGui nanogui ${NANOGUI_EXTRA_LIBS})
+target_link_libraries(SimulatorGui nanogui ${NANOGUI_EXTRA_LIBS} cereal)
+
+# include it for your project as well (or append to a list
+# and include that list later, depending on your setup)
+include_directories(${MYPROJ_EIGEN3_INCLUDE_DIR})
 
