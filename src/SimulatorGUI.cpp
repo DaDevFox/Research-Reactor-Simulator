@@ -4,6 +4,8 @@
 */
 #define NOMINMAX
 
+#include "CustomLabel.h"
+#include "CustomWidget.h"
 #include <nanogui/screen.h>
 #include <nanogui/window.h>
 #include <nanogui/layout.h>
@@ -266,20 +268,20 @@ public:
 
 	IntervalSlider* pulseTimer;
 
-	Label* userScram;
-	Label* powerScram;
-	Label* fuelTemperatureScram;
-	Label* waterTemperatureScram;
-	Label* waterLevelScram;
-	Label* periodScram;
+	CustomLabel* userScram;
+	CustomLabel* powerScram;
+	CustomLabel* fuelTemperatureScram;
+	CustomLabel* waterTemperatureScram;
+	CustomLabel* waterLevelScram;
+	CustomLabel* periodScram;
 
-	Label* timeLabel;
-	Label* simStatusLabel;
-	Label* simFactorLabel;
+	CustomLabel* timeLabel;
+	CustomLabel* simStatusLabel;
+	CustomLabel* simFactorLabel;
 
-	Label* pulseLabels[4];
-	Label* pulseDisplayLabels[4];
-	Label* standInCover;
+	CustomLabel* pulseLabels[4];
+	CustomLabel* pulseDisplayLabels[4];
+	CustomLabel* standInCover;
 
 	DataDisplay<double>* powerShow;
 	DataDisplay<float>* reactivityShow;
@@ -1006,25 +1008,25 @@ public:
 			bottomLayout->setAnchor(border, RelativeGridLayout::makeAnchor(i, 0));
 		}
 
-		Label* versionLabel = bottomPanel->add<Label>("v " + version());
-		versionLabel->setTextAlignment(Label::TextAlign::LEFT | Label::TextAlign::VERTICAL_CENTER);
+		CustomLabel* versionLabel = bottomPanel->add<CustomLabel>("v " + version());
+		versionLabel->setTextAlignment(CustomLabel::TextAlign::LEFT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		versionLabel->setPadding(0, 5.f);
 		versionLabel->setFontSize(20.f);
 		versionLabel->setColor(Color(255, 255));
 		bottomLayout->setAnchor(versionLabel, RelativeGridLayout::makeAnchor(0, 0));
 
-		fpsLabel = bottomPanel->add<Label>("FPS: ");
-		fpsLabel->setTextAlignment(Label::TextAlign::LEFT | Label::TextAlign::VERTICAL_CENTER);
+		fpsLabel = bottomPanel->add<CustomLabel>("FPS: ");
+		fpsLabel->setTextAlignment(CustomLabel::TextAlign::LEFT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		fpsLabel->setFontSize(20.f);
 		fpsLabel->setColor(Color(255, 255));
 		fpsLabel->setPadding(0, 5.f);
 		bottomLayout->setAnchor(fpsLabel, RelativeGridLayout::makeAnchor(2, 0));
 
-		Label* speedText = bottomPanel->add<Label>("Simulation speed:");
+		CustomLabel* speedText = bottomPanel->add<CustomLabel>("Simulation speed:");
 		speedText->setPadding(2, 5);
 		speedText->setColor(Color(255, 255));
 		speedText->setFontSize(20.f);
-		speedText->setTextAlignment(Label::TextAlign::RIGHT | Label::TextAlign::VERTICAL_CENTER);
+		speedText->setTextAlignment(CustomLabel::TextAlign::RIGHT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		bottomLayout->setAnchor(speedText, RelativeGridLayout::makeAnchor(4, 0, 1, 1, Alignment::Maximum));
 
 		Widget* speedToolPanel = bottomPanel->add<Widget>();
@@ -1054,23 +1056,23 @@ public:
 				}
 			});
 
-		simFactorLabel = bottomPanel->add<Label>("real-time");
+		simFactorLabel = bottomPanel->add<CustomLabel>("real-time");
 		simFactorLabel->setColor(Color(255, 255));
 		simFactorLabel->setFontSize(20.f);
-		simFactorLabel->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+		simFactorLabel->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		bottomLayout->setAnchor(simFactorLabel, RelativeGridLayout::makeAnchor(8, 0));
 
-		timeLabel = bottomPanel->add<Label>("00:00:00");
+		timeLabel = bottomPanel->add<CustomLabel>("00:00:00");
 		timeLabel->setColor(Color(255, 255));
 		timeLabel->setFontSize(20.f);
-		timeLabel->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+		timeLabel->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		bottomLayout->setAnchor(timeLabel, RelativeGridLayout::makeAnchor(10, 0));
 
-		simStatusLabel = bottomPanel->add<Label>(utf8(ENTYPO_ICON_PLAY).data(), "icons");
+		simStatusLabel = bottomPanel->add<CustomLabel>(utf8(ENTYPO_ICON_PLAY).data(), "icons");
 		simStatusLabel->setColor(Color(255, 255));
 		simStatusLabel->setFontSize(40.f);
 		simStatusLabel->setFixedWidth(30);
-		simStatusLabel->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+		simStatusLabel->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		bottomLayout->setAnchor(simStatusLabel, RelativeGridLayout::makeAnchor(10, 0, 1, 1, Alignment::Minimum, Alignment::Fill));
 	}
 
@@ -2442,7 +2444,7 @@ public:
 		// Create titles, periods and amplitudes
 		std::string titles[3] = { "Square wave","Sine wave","Saw tooth" };
 		RelativeGridLayout* layouts[3];
-		Widget* tabs[3];
+		CustomWidget* tabs[3];
 		for (int i = 0; i < 3; i++)
 		{
 			tabs[i] = modeTabs->createTab(titles[i]);
