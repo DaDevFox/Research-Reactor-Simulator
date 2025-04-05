@@ -171,7 +171,7 @@ public:
 	BoxLayout* layout;
 	Window* baseWindow;
 	RelativeGridLayout* relativeLayout; // layout for the main window
-	Label* fpsLabel;
+	CustomLabel* fpsCustomLabel;
 	Plot* reactivityPlot;
 	Plot* rodReactivityPlot;
 	Plot* powerPlot;
@@ -186,7 +186,7 @@ public:
 	Plot* rodDerivatives[NUMBER_OF_CONTROL_RODS];
 	CustomTabWidget* tabControl;
 
-	Widget* sourceSettings;
+	CustomWidget* sourceSettings;
 	Plot* neutronSourcePlot;
 	Plot* neutronSourceTracker;
 	ComboBox* neutronSourceModeBox;
@@ -196,8 +196,8 @@ public:
 	IntBox<int>* neutronSourceSQWBoxes[4];
 	IntBox<int>* neutronSourceSAWBoxes[6];
 
-	Widget* displayPanel1;
-	Widget* displayPanel2;
+	CustomWidget* displayPanel1;
+	CustomWidget* displayPanel2;
 	ControlRodDisplay* rodDisplay;
 	PeriodDisplay* periodDisplay;
 	ComboBox* rodMode;
@@ -528,12 +528,12 @@ public:
 	void createDataDisplays(Widget* parent, RelativeGridLayout* rLayout)
 	{
 		// Create the displays
-		displayPanel1 = parent->add<Widget>();
+		displayPanel1 = parent->add<CustomWidget>();
 		displayPanel1->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 10, 5));
 		rLayout->setAnchor(displayPanel1, RelativeGridLayout::makeAnchor(0, 0, 1, 1, Alignment::Fill, Alignment::Fill, RelativeGridLayout::FillMode::Always, RelativeGridLayout::FillMode::IfLess));
 		displayPanel1->setBackgroundColor(Color(50, 255));
 		displayPanel1->setDrawBackground(true);
-		displayPanel2 = parent->add<Widget>();
+		displayPanel2 = parent->add<CustomWidget>();
 		displayPanel2->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 10, 5));
 		rLayout->setAnchor(displayPanel2, RelativeGridLayout::makeAnchor(1, 0, 1, 1, Alignment::Fill, Alignment::Fill, RelativeGridLayout::FillMode::Always, RelativeGridLayout::FillMode::IfLess));
 		displayPanel2->setBackgroundColor(Color(50, 255));
@@ -872,7 +872,7 @@ public:
 		this->mTheme->mTabButtonVerticalPadding = 7.f;
 		this->mTheme->mBorderDark = coolBlue;
 		this->mTheme->mBorderLight = Color(coolBlue.r(), coolBlue.g(), coolBlue.b(), 0.4f);
-		this->mTheme->mBorderWidth = 0.8f;
+		//this->mTheme->mBorderWidth = 0.8f;
 		this->mTheme->mTextBoxFontSize = 18.f;
 		// Set minimum size
 		glfwSetWindowSizeLimits(mGLFWWindow, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
@@ -921,7 +921,7 @@ public:
 		baseWindow->setBackgroundColor(Color(80, 255));
 		baseWindow->setDrawBackground(true);
 
-		Widget* bottomBorder = baseWindow->add<Widget>();
+		CustomWidget* bottomBorder = baseWindow->add<CustomWidget>();
 		bottomBorder->setBackgroundColor(Color(255, 255));
 		bottomBorder->setDrawBackground(true);
 		bottomBorder->setBackgroundColor(coolBlue);
@@ -980,7 +980,7 @@ public:
 	// Bottom panel initialization
 	void createBottomPanel()
 	{
-		Widget* bottomPanel = baseWindow->add<Widget>();
+		CustomWidget* bottomPanel = baseWindow->add<CustomWidget>();
 		bottomPanel->setId("bottom panel");
 		bottomPanel->setDrawBackground(true);
 		bottomPanel->setBackgroundColor(Color(35, 255));
@@ -1002,7 +1002,7 @@ public:
 
 		for (int i = 1; i < 11; i += 2)
 		{
-			Widget* border = bottomPanel->add<Widget>();
+			CustomWidget* border = bottomPanel->add<CustomWidget>();
 			border->setDrawBackground(true);
 			border->setBackgroundColor(coolBlue);
 			bottomLayout->setAnchor(border, RelativeGridLayout::makeAnchor(i, 0));
@@ -1015,7 +1015,7 @@ public:
 		versionLabel->setColor(Color(255, 255));
 		bottomLayout->setAnchor(versionLabel, RelativeGridLayout::makeAnchor(0, 0));
 
-		fpsLabel = bottomPanel->add<CustomLabel>("FPS: ");
+		CustomLabel* fpsLabel = bottomPanel->add<CustomLabel>("FPS: ");
 		fpsLabel->setTextAlignment(CustomLabel::TextAlign::LEFT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		fpsLabel->setFontSize(20.f);
 		fpsLabel->setColor(Color(255, 255));
@@ -1175,26 +1175,26 @@ public:
 		for (int i = 0; i < 3; i++) rodLayout->appendCol(1.f);
 		controlRodBase->setLayout(rodLayout);
 
-		Label* temp;
-		Widget* backg = controlRodBase->add<Widget>();
+		CustomLabel* temp;
+		CustomWidget* backg = controlRodBase->add<CustomWidget>();
 		backg->setDrawBackground(true);
 		backg->setBackgroundColor(Color(.15f, 1.f));
 		rodLayout->setAnchor(backg, RelativeGridLayout::makeAnchor(0, 0, 3));
 		rodDisplay = controlRodBase->add<ControlRodDisplay>();
 		for (int i = 0; i < 3; i++)
 		{
-			temp = controlRodBase->add<Label>(i ? ((i == 1) ? "R" : "C") : "S", "sans-bold");
+			temp = controlRodBase->add<CustomLabel>(i ? ((i == 1) ? "R" : "C") : "S", "sans-bold");
 			temp->setFontSize(25.f);
 			temp->setColor(Color(255, 255));
 			if (i != 1) temp->setPadding(2 - i, ControlRodDisplay::getRodSpacing() * 2 / 3);
-			temp->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+			temp->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 			rodLayout->setAnchor(temp, RelativeGridLayout::makeAnchor(i, 0));
 			rodDisplay->setRod(i, reactor->rods[i]->getRodSteps(), reactor->rods[i]->getActualPosition(), reactor->rods[i]->getExactPosition(), reactor->rods[i]->isEnabled());
 		}
 		rodLayout->setAnchor(rodDisplay, RelativeGridLayout::makeAnchor(0, 1, 3));
 
 		// Create a panel for alarms
-		Widget* alarmPanel = mainTabBase->add<Widget>();
+		CustomWidget* alarmPanel = mainTabBase->add<CustomWidget>();
 		alarmPanel->setDrawBackground(true);
 		alarmPanel->setBackgroundColor(Color(40, 255));
 		rel3->setAnchor(alarmPanel, RelativeGridLayout::makeAnchor(7, 0));
@@ -1203,12 +1203,12 @@ public:
 		alarmLayout->appendRow(RelativeGridLayout::Size(35.f, RelativeGridLayout::SizeType::Fixed));
 		alarmPanel->setLayout(alarmLayout);
 
-		Label* alarmHeader = alarmPanel->add<Label>("SCRAMs");
+		CustomLabel* alarmHeader = alarmPanel->add<CustomLabel>("SCRAMs");
 		alarmHeader->setFontSize(24.f);
-		alarmHeader->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+		alarmHeader->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		alarmLayout->setAnchor(alarmHeader, RelativeGridLayout::makeAnchor(0, 0));
 		// Alarm labels
-		Label* alarmLabels[6];
+		CustomLabel* alarmLabels[6];
 		std::string text[6] = { "MAN", "PER", "FTEMP", "WTEMP", "POW", "WLEVEL" };
 		RelativeGridLayout::Anchor a;
 		for (int i = 0; i < 6; i++)
@@ -1216,17 +1216,17 @@ public:
 			if (i < 5)
 			{
 				alarmLayout->appendRow(1.f);
-				alarmLabels[i] = alarmPanel->add<Label>(text[i], "sans-bold");
+				alarmLabels[i] = alarmPanel->add<CustomLabel>(text[i], "sans-bold");
 				a = RelativeGridLayout::makeAnchor(0, i + 1);
 				a.padding = Vector4i(14, 7, 14, 7);
 				alarmLayout->setAnchor(alarmLabels[i], a);
 			}
 			else
 			{
-				alarmLabels[i] = new Label(nullptr, text[i], "sans-bold");
+				alarmLabels[i] = new CustomLabel(nullptr, text[i], "sans-bold");
 			}
 			alarmLabels[i]->setColor(Color(255, 255));
-			alarmLabels[i]->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+			alarmLabels[i]->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 			alarmLabels[i]->setFixedSize(Vector2i(60, 40));
 			alarmLabels[i]->setGlow(false);
 			alarmLabels[i]->setBackgroundColor(Color(100, 255));
@@ -1277,7 +1277,7 @@ public:
 		{
 			Widget* checkBoxCooling = main_right->add<Widget>();
 			checkBoxCooling->setLayout(panelsLayout);
-			checkBoxCooling->add<Label>("Cooling :", "sans-bold");
+			checkBoxCooling->add<CustomLabel>("Cooling :", "sans-bold");
 			cooling = checkBoxCooling->add<SliderCheckBox>();
 			cooling->setFontSize(16);
 			cooling->setChecked(false);
@@ -1297,7 +1297,7 @@ public:
 
 			Widget* checkBoxPanelNeutronSource = main_right->add<Widget>();
 			checkBoxPanelNeutronSource->setLayout(panelsLayout);
-			checkBoxPanelNeutronSource->add<Label>("Neutron source :", "sans-bold");
+			checkBoxPanelNeutronSource->add<CustomLabel>("Neutron source :", "sans-bold");
 			neutronSourceCB = checkBoxPanelNeutronSource->add<SliderCheckBox>();
 			neutronSourceCB->setFontSize(16);
 			neutronSourceCB->setChecked(reactor->getNeutronSourceInserted());
@@ -1323,7 +1323,7 @@ public:
 		graphControlsLayout->appendCol(1.f);
 		graphControlsLayout->appendCol(1.f);
 		graph_controls->setLayout(graphControlsLayout);
-		Widget* border = graph_controls->add<Widget>();
+		CustomWidget* border = graph_controls->add<CustomWidget>();
 		border->setBackgroundColor(coolBlue);
 		border->setDrawBackground(true);
 		graphControlsLayout->setAnchor(border, RelativeGridLayout::makeAnchor(0, 2, 2, 1));
@@ -1519,7 +1519,7 @@ public:
 				hardcoreMode(value);
 			});
 
-		Label* timeAdjLabel = graph_controls->add<Label>("Edit display range", "sans-bold");
+		CustomLabel* timeAdjLabel = graph_controls->add<CustomLabel>("Edit display range", "sans-bold");
 		timeAdjLabel->setFontSize(25);
 		timeAdjLabel->setPadding(0, 15);
 		graphControlsLayout->setAnchor(timeAdjLabel, RelativeGridLayout::makeAnchor(0, 3, 1, 1, Alignment::Minimum, Alignment::Minimum));
@@ -1531,7 +1531,7 @@ public:
 		tlLayout->appendCol(1.f);
 		tlLayout->appendRow(1.f);
 		timeLockPanel->setLayout(tlLayout);
-		Label* tmp = timeLockPanel->add<Label>("Lock view:", "sans-bold");
+		CustomLabel* tmp = timeLockPanel->add<CustomLabel>("Lock view:", "sans-bold");
 		tlLayout->setAnchor(tmp, RelativeGridLayout::makeAnchor(0, 0));
 		tmp->setPadding(0, 25);
 		tmp->setPadding(2, 10);
@@ -1610,7 +1610,7 @@ public:
 		physicsLayout->appendCol(1.f);
 		physicsLayout->appendCol(RelativeGridLayout::Size(10.f + SCROLL_BAR_THICKNESS, RelativeGridLayout::SizeType::Fixed));
 		physics_settings->setLayout(physicsLayout);
-		Widget* delayedPanel = physics_settings->add<Widget>();
+		CustomWidget* delayedPanel = physics_settings->add<CustomWidget>();
 		physicsLayout->setAnchor(delayedPanel, RelativeGridLayout::makeAnchor(1, 1, 2, 1));
 		delayedPanel->setDrawBackground(true);
 		delayedPanel->setBackgroundColor(Color(40, 40, 40, 255));
@@ -1638,7 +1638,7 @@ public:
 		sourceLayout->appendCol(RelativeGridLayout::Size(SCROLL_BAR_THICKNESS, RelativeGridLayout::SizeType::Fixed));
 		sourceSettings->setLayout(sourceLayout);
 		// source seperator
-		Widget* ns_border = sourceSettings->add<Widget>();
+		CustomWidget* ns_border = sourceSettings->add<CustomWidget>();
 		ns_border->setDrawBackground(true);
 		ns_border->setBackgroundColor(coolBlue);
 		sourceLayout->setAnchor(ns_border, RelativeGridLayout::makeAnchor(1, 3, 2));
@@ -1784,19 +1784,19 @@ public:
 			Label* textLabel = delayedPanel->add<Label>("Group " + std::to_string(i + 1) + ((i == 5 || i == 0) ? (i == 5 ? " (fastest)" : " (slowest)") : ""), "sans-bold");
 			relPhysics->setAnchor(textLabel, RelativeGridLayout::makeAnchor((i + 1) * 2 + 1, 1, 1, 1, Alignment::Middle, Alignment::Middle));
 		}
-		Widget* border;
+		CustomWidget* border;
 		for (int i = 0; i < 8; i++)
 		{
-			border = delayedPanel->add<Widget>();
+			border = delayedPanel->add<CustomWidget>();
 			border->setDrawBackground(true);
 			border->setBackgroundColor(coolBlue);
 			relPhysics->setAnchor(border, RelativeGridLayout::makeAnchor(i * 2, 0, 1, 9));
 		}
-		Label* textLabel;
+		CustomLabel* textLabel;
 		std::string rowText[3] = { "Beta(i):","Lambda(i):","Enabled:" };
 		for (int i = 0; i < 3; i++)
 		{
-			textLabel = delayedPanel->add<Label>(rowText[i], "sans-bold");
+			textLabel = delayedPanel->add<CustomLabel>(rowText[i], "sans-bold");
 			textLabel->setPadding(0, 7.f);
 			relPhysics->setAnchor(textLabel, RelativeGridLayout::makeAnchor(0, 2 * (i + 1) + 1, 1, 1, Alignment::Minimum, Alignment::Middle));
 		}
@@ -1804,7 +1804,7 @@ public:
 		// Data inputs
 		for (int row = 0; row < 4; row++)
 		{
-			border = delayedPanel->add<Widget>();
+			border = delayedPanel->add<CustomWidget>();
 			border->setDrawBackground(true);
 			border->setBackgroundColor(coolBlue);
 			relPhysics->setAnchor(border, RelativeGridLayout::makeAnchor(0, 2 * row, 15));
@@ -2130,12 +2130,12 @@ public:
 		// Create borders
 		for (int i = 0; i < 2; i++)
 		{
-			Widget* border = rod_settings->add<Widget>();
+			CustomWidget* border = rod_settings->add<CustomWidget>();
 			rod_settings_layout->setAnchor(border, RelativeGridLayout::makeAnchor(i ? 3 : 7, 0, 1, 13));
 			border->setBackgroundColor(coolBlue);
 			border->setDrawBackground(true);
 		}
-		Widget* border = rod_settings->add<Widget>();
+		CustomWidget* border = rod_settings->add<CustomWidget>();
 		rod_settings_layout->setAnchor(border, RelativeGridLayout::makeAnchor(0, 8, 11, 1));
 		border->setBackgroundColor(coolBlue);
 		border->setDrawBackground(true);
@@ -2326,7 +2326,7 @@ public:
 		delayedLayout->appendRow(1.f);	// graph area
 		delayed_tab->setLayout(delayedLayout);
 
-		Widget* topHost = delayed_tab->add<Widget>();
+		CustomWidget* topHost = delayed_tab->add<CustomWidget>();
 		topHost->setBackgroundColor(Color(240, 255));
 		topHost->setDrawBackground(true);
 		delayedLayout->setAnchor(topHost, RelativeGridLayout::makeAnchor(0, 0));
@@ -2338,7 +2338,7 @@ public:
 
 		Color dataColors[7] = { Color(255,255), Color(34,116,165,255), Color(247, 92, 3,255), Color(241, 196, 15, 255), Color(0, 204, 102, 255), Color(240, 58, 71, 255), Color(153, 0, 153, 255) };
 
-		Widget* keyPanel = topHost->add<Widget>();
+		CustomWidget* keyPanel = topHost->add<CustomWidget>();
 		topLayout->setAnchor(keyPanel, RelativeGridLayout::makeAnchor(1, 0, 1, 1, Alignment::Minimum, Alignment::Middle));
 		keyPanel->setDrawBackground(true);
 		keyPanel->setBackgroundColor(Color(65, 255));
@@ -2357,13 +2357,13 @@ public:
 		rel->setAnchor(tempLabelKey, RelativeGridLayout::makeAnchor(0, 0, 1, 1, Alignment::Middle, Alignment::Middle));
 		tempLabelKey = keyPanel->add<Label>("Group No.", "sans-bold");
 		rel->setAnchor(tempLabelKey, RelativeGridLayout::makeAnchor(3, 0, 1, 1, Alignment::Minimum, Alignment::Middle));
-		Widget* temp = keyPanel->add<Widget>();
+		CustomWidget* temp = keyPanel->add<CustomWidget>();
 		rel->setAnchor(temp, RelativeGridLayout::makeAnchor(1, 0));
 		temp->setDrawBackground(true);
 		temp->setBackgroundColor(coolBlue);
 		for (int i = 1; i < 7; i++)
 		{
-			temp = keyPanel->add<Widget>();
+			temp = keyPanel->add<CustomWidget>();
 			rel->setAnchor(temp, RelativeGridLayout::makeAnchor(0, i, 1, 1, Alignment::Middle, Alignment::Middle));
 			temp->setDrawBackground(true);
 			temp->setBackgroundColor(dataColors[i]);
@@ -2640,7 +2640,7 @@ public:
 		}
 
 		// AUTOMATIC
-		Widget* autoTab = modeTabs->createTab("Automatic");
+		CustomWidget* autoTab = modeTabs->createTab("Automatic");
 		RelativeGridLayout* autoLayout = new RelativeGridLayout();
 		autoLayout->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // left border
 		autoLayout->appendCol(1.f); // everything else
@@ -2710,7 +2710,7 @@ public:
 	const Simulator::ScramSignals reasons[5] = { Simulator::ScramSignals::Period, Simulator::ScramSignals::Power, Simulator::ScramSignals::FuelTemperature, Simulator::ScramSignals::WaterTemperature, Simulator::ScramSignals::WaterLevel };
 	void createOperationalLimitsTab()
 	{
-		Widget* limits_tab = tabControl->createTab("Operational limits");
+		CustomWidget* limits_tab = tabControl->createTab("Operational limits");
 		limits_tab->setId("op. limits tab");
 		RelativeGridLayout* rel = new RelativeGridLayout();
 		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// left border
@@ -2828,7 +2828,7 @@ public:
 
 		// Create a panel for rod reactivity plot visibility
 		rel->appendRow(RelativeGridLayout::Size(27.5f, RelativeGridLayout::SizeType::Fixed));
-		Widget* checkBoxPanelRods = limits_tab->add<Widget>();
+		CustomWidget* checkBoxPanelRods = limits_tab->add<CustomWidget>();
 		rel->setAnchor(checkBoxPanelRods, RelativeGridLayout::makeAnchor(1, 5));
 		checkBoxPanelRods->setLayout(panelsLayout);
 		checkBoxPanelRods->add<Label>("All control rods at once: ", "sans-bold");
@@ -2842,7 +2842,7 @@ public:
 
 		// Create a panel for rod reactivity plot visibility
 		rel->appendRow(RelativeGridLayout::Size(27.5f, RelativeGridLayout::SizeType::Fixed));
-		Widget* checkBoxPanelAutoScram = limits_tab->add<Widget>();
+		CustomWidget* checkBoxPanelAutoScram = limits_tab->add<CustomWidget>();
 		rel->setAnchor(checkBoxPanelAutoScram, RelativeGridLayout::makeAnchor(1, 6));
 		checkBoxPanelAutoScram->setLayout(panelsLayout);
 		checkBoxPanelAutoScram->add<Label>("SCRAM after pulse: ", "sans-bold");
@@ -2858,7 +2858,7 @@ public:
 
 	void createPulseTab()
 	{
-		Widget* pulse_tab = tabControl->createTab("Pulse");
+		CustomWidget* pulse_tab = tabControl->createTab("Pulse");
 		pulse_tab->setId("pulse tab");
 		RelativeGridLayout* rel = new RelativeGridLayout();
 		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 left border
@@ -2873,15 +2873,15 @@ public:
 		rel->setAnchor(pulseGraph, RelativeGridLayout::makeAnchor(0, 0, 2, 2));
 		initializePulseGraph();
 
-		standInCover = pulse_tab->add<Label>("Perform a pulse experiment to view data", "sans-bold", 35);
+		standInCover = pulse_tab->add<CustomLabel>("Perform a pulse experiment to view data", "sans-bold", 35);
 		rel->setAnchor(standInCover, RelativeGridLayout::makeAnchor(0, 0, 2, 2));
-		standInCover->setTextAlignment(Label::TextAlign::HORIZONTAL_CENTER | Label::TextAlign::VERTICAL_CENTER);
+		standInCover->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		standInCover->setDrawBackground(true);
 		standInCover->setBackgroundColor(Color(60, 255));
 		standInCover->setColor(Color(255, 255));
 		standInCover->setVisible(true);
 
-		Widget* dataSheet = pulse_tab->add<Widget>();
+		CustomWidget* dataSheet = pulse_tab->add<CustomWidget>();
 		rel->setAnchor(dataSheet, RelativeGridLayout::makeAnchor(2, 1));
 
 		RelativeGridLayout* rel2 = new RelativeGridLayout();
@@ -2904,18 +2904,18 @@ public:
 		std::string text[4] = { "Peak power","FWHM","Peak fuel temp.","Pulse energy" };
 		for (int i = 0; i < 4; i++)
 		{
-			Widget* marker = dataSheet->add<Widget>();
+			CustomWidget* marker = dataSheet->add<CustomWidget>();
 			rel2->setAnchor(marker, RelativeGridLayout::makeAnchor((i % 2) * 3 + 1, (i / 2) * 2));
 			marker->setDrawBackground(true);
 			marker->setBackgroundColor(colors[i]);
 
-			Label* baseLabel = dataSheet->add<Label>(text[i], "sans-bold");
+			CustomLabel* baseLabel = dataSheet->add<CustomLabel>(text[i], "sans-bold");
 			rel2->setAnchor(baseLabel, RelativeGridLayout::makeAnchor((i % 2) * 3 + 2, (i / 2) * 2));
 			baseLabel->setPadding(0, 7.f);
 			baseLabel->setPadding(1, 5.f);
 			baseLabel->setBackgroundColor(Color(32, 255));
 			baseLabel->setDrawBackground(true);
-			baseLabel->setTextAlignment(Label::TextAlign::TOP | Label::TextAlign::LEFT);
+			baseLabel->setTextAlignment(CustomLabel::TextAlign::TOP | CustomLabel::TextAlign::LEFT);
 			baseLabel->setFontSize(25.f);
 			baseLabel->setColor(Color(170, 255));
 
@@ -2924,11 +2924,11 @@ public:
 			rel3->appendRow(1.f);
 			baseLabel->setLayout(rel3);
 
-			pulseLabels[i] = baseLabel->add<Label>("", "sans-bold");
+			pulseLabels[i] = baseLabel->add<CustomLabel>("", "sans-bold");
 			pulseLabels[i]->setColor(Color(255, 255));
 			pulseLabels[i]->setPadding(0, 7.f);
 			pulseLabels[i]->setFontSize(44.f);
-			pulseLabels[i]->setTextAlignment(Label::TextAlign::BOTTOM | Label::TextAlign::LEFT);
+			pulseLabels[i]->setTextAlignment(CustomLabel::TextAlign::BOTTOM | CustomLabel::TextAlign::LEFT);
 			rel3->setAnchor(pulseLabels[i], RelativeGridLayout::makeAnchor(0, 0));
 		}
 
@@ -2941,41 +2941,41 @@ public:
 			{
 				updatePulseTrack();
 			});
-		Label* infoLbl;
+		CustomLabel* infoLbl;
 		for (int i = 0; i < 2; i++)
 		{
-			infoLbl = dataSheet->add<Label>(i ? "5s later" : "pulse start", "sans-bold");
+			infoLbl = dataSheet->add<CustomLabel>(i ? "5s later" : "pulse start", "sans-bold");
 			infoLbl->setColor(Color(255, 255));
 			infoLbl->setFontSize(17.f);
 			infoLbl->setPadding(1, 4);
 			rel2->setAnchor(infoLbl, RelativeGridLayout::makeAnchor(1, 5, 5, 1, i ? Alignment::Maximum : Alignment::Minimum, Alignment::Minimum));
 		}
 
-		Widget* displayPanel = dataSheet->add<Widget>();
+		CustomWidget* displayPanel = dataSheet->add<CustomWidget>();
 		rel2->setAnchor(displayPanel, RelativeGridLayout::makeAnchor(1, 6, 5, 1, Alignment::Middle, Alignment::Middle));
 		displayPanel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Fill));
 
-		Label* temp;
-		temp = displayPanel->add<Label>("From", "sans-bold", 25);
+		CustomLabel* temp;
+		temp = displayPanel->add<CustomLabel>("From", "sans-bold", 25);
 		temp->setPadding(2, 10);
-		pulseDisplayLabels[0] = displayPanel->add<Label>("0", "sans", 30);
-		pulseDisplayLabels[1] = displayPanel->add<Label>("00", "sans", 20);
-		temp = displayPanel->add<Label>("to", "sans-bold", 25);
+		pulseDisplayLabels[0] = displayPanel->add<CustomLabel>("0", "sans", 30);
+		pulseDisplayLabels[1] = displayPanel->add<CustomLabel>("00", "sans", 20);
+		temp = displayPanel->add<CustomLabel>("to", "sans-bold", 25);
 		temp->setPadding(0, 10);
 		temp->setPadding(2, 10);
-		pulseDisplayLabels[2] = displayPanel->add<Label>("5", "sans", 30);
-		pulseDisplayLabels[3] = displayPanel->add<Label>("00", "sans", 20);
+		pulseDisplayLabels[2] = displayPanel->add<CustomLabel>("5", "sans", 30);
+		pulseDisplayLabels[3] = displayPanel->add<CustomLabel>("00", "sans", 20);
 
 		for (int i = 0; i < 4; i++)
 		{
 			pulseDisplayLabels[i]->setColor(Color(255, 255));
-			pulseDisplayLabels[i]->setTextAlignment((i % 2) ? (Label::TextAlign::TOP | Label::TextAlign::LEFT) : (Label::TextAlign::VERTICAL_CENTER | Label::TextAlign::HORIZONTAL_CENTER));
+			pulseDisplayLabels[i]->setTextAlignment((i % 2) ? (CustomLabel::TextAlign::TOP | CustomLabel::TextAlign::LEFT) : (CustomLabel::TextAlign::VERTICAL_CENTER | CustomLabel::TextAlign::HORIZONTAL_CENTER));
 		}
 	}
 
 	void createOtherTab()
 	{
-		Widget* other_tab = tabControl->createTab("Other");
+		CustomWidget* other_tab = tabControl->createTab("Other");
 		other_tab->setId("other tab");
 		RelativeGridLayout* rel = new RelativeGridLayout();
 		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 left border
@@ -3032,7 +3032,7 @@ public:
 				reactor->dataToFile(logFileName);
 			});
 
-		Label* divisionLabel = other_tab->add<Label>("Save each steps:");
+		CustomLabel* divisionLabel = other_tab->add<CustomLabel>("Save each steps:");
 		rel->setAnchor(divisionLabel, RelativeGridLayout::makeAnchor(3, 3));
 
 		IntBox<int>* divisionBox = other_tab->add<IntBox<int>>(reactor->data_division);
@@ -3116,12 +3116,12 @@ public:
 	{
 		Widget* panel = parent->add<Widget>();
 		panel->setLayout(panelsLayout);
-		Label* temp = panel->add<Label>(text, "sans-bold");
+		CustomLabel* temp = panel->add<CustomLabel>(text, "sans-bold");
 		if (fixedWidth) temp->setFixedWidth(fixedWidth);
 		return panel->add<WidgetClass>(args...);
 	}
 
-	IntBox<int>* makeSimulationSetting(Widget* parent, int initialValue, std::string text)
+	IntBox<int>* makeSimulationSetting(CustomWidget* parent, int initialValue, std::string text)
 	{
 		IntBox<int>* tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
 		tempBox->setFixedWidth(100);
@@ -3597,7 +3597,7 @@ public:
 		alphaPlot->setPointerPosition((float)((reactor->getReactivityCoefficient(tempNow) - alphaPlot->limits()[2]) / (alphaPlot->limits()[3] - alphaPlot->limits()[2])));
 
 		// Update the text
-		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) rodBox[i]->setText((int)std::ceil(*reactor->rods[i]->getExactPosition()));
+		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) rodBox[i]->setValue((int)std::ceil(*reactor->rods[i]->getExactPosition()));
 
 		// Update time
 		timeLabel->setCaption(getTimeSinceStart());

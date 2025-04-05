@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CustomWidget.h"
 #include <nanogui/widget.h>
 #include <nanovg.h>
 #include <nanogui/common.h>
@@ -27,7 +28,7 @@ enum class DisplayMode
 };
 
 template <typename DisplayType>
-class DataDisplay : public nanogui::Widget
+class DataDisplay : public CustomWidget
 {
 protected:
 	float textFontSize = 22.f;

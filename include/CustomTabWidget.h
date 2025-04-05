@@ -19,8 +19,8 @@ public:
 	const std::function<void(int)>& callback() const { return mCallback; }
 
 	/// Creates a new tab with the specified name and returns a pointer to the layer.
-	Widget* createTab(const std::string& label, bool scrolling = true);
-	Widget* createTab(int index, const std::string& label, bool scrolling = true);
+	CustomWidget* createTab(const std::string& label, bool scrolling = true);
+	CustomWidget* createTab(int index, const std::string& label, bool scrolling = true);
 
 	/// Inserts a tab at the end of the tabs collection and associates it with the provided widget.
 	void addTab(const std::string& label, Widget* tab);

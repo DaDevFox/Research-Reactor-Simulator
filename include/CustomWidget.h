@@ -13,6 +13,15 @@
 
 enum class Cursor;
 
+enum Border
+{
+	NONE = 0,
+	LEFT = 1,
+	TOP = 2,
+	RIGHT = 4,
+	BOTTOM = 8
+};
+
 /**
  * \brief Base class of all extended nanogui widgets (have borders + fill control settings)
  *
@@ -23,14 +32,6 @@ enum class Cursor;
 class CustomWidget : public nanogui::Widget
 {
 public:
-	enum Border
-	{
-		NONE = 0,
-		LEFT = 1,
-		TOP = 2,
-		RIGHT = 4,
-		BOTTOM = 8
-	};
 
 	/// Construct a new widget with the given parent widget
 	CustomWidget(Widget* parent);
