@@ -10,6 +10,7 @@
 #include <nanogui/serializer/core.h>
 #include <nanogui/theme.h>
 #include <nanogui/window.h>
+#include "CustomTheme.h"
 
 enum class Cursor;
 
@@ -56,6 +57,9 @@ public:
 	/// Determine the widget located at the given position value (recursive)
 	virtual Widget* findWidget(const nanogui::Vector2i& p);
 
+	CustomTheme* theme() { return mCustomTheme; }
+	const CustomTheme* theme() const { return mCustomTheme.get(); }
+	virtual void setTheme(CustomTheme* theme);
 
 	void draw(NVGcontext* ctx) override;
 
@@ -69,6 +73,7 @@ public:
 	void setBorderWidth(float borderWidth) { mBorderWidth = borderWidth; }
 
 protected:
+	nanogui::ref<CustomTheme> mCustomTheme;
 	/// Free all resources used by the widget and any children
 	virtual ~CustomWidget();
 

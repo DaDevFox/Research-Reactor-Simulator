@@ -1,6 +1,7 @@
 #include "../include/SliderCheckBox.h"
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>
+#include "util.h"
 
 using namespace nanogui;
 
@@ -92,7 +93,7 @@ void SliderCheckBox::draw(NVGcontext* ctx)
 	float amp0 = width() - 2.f * cornerR;
 	if (state != 0)
 	{
-		double t = (nanogui::get_seconds_since_epoch() - timeAtChange) / ANIM_TIME;
+		double t = (get_seconds_since_epoch() - timeAtChange) / ANIM_TIME;
 		if (t >= 1.)
 		{
 			t = 1.;

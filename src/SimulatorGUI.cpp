@@ -3,6 +3,8 @@
 	GUI screen
 */
 #define NOMINMAX
+#define SCROLL_BAR_THICKNESS	12
+#define SCROLL_BAR_ROUND		.8f
 
 #include "../include/CustomGraph.h"
 #include "CustomLabel.h"
@@ -172,7 +174,7 @@ public:
 	BoxLayout* layout;
 	Window* baseWindow;
 	RelativeGridLayout* relativeLayout; // layout for the main window
-	CustomLabel* fpsCustomLabel;
+	CustomLabel* fpsLabel;
 	Plot* reactivityPlot;
 	Plot* rodReactivityPlot;
 	Plot* powerPlot;
@@ -919,8 +921,8 @@ public:
 		relativeLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));		// 2 border
 		relativeLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 3 bottom panel
 		baseWindow->setLayout(relativeLayout);
-		baseWindow->setBackgroundColor(Color(80, 255));
-		baseWindow->setDrawBackground(true);
+		//baseWindow->setBackgroundColor(Color(80, 255));
+		//baseWindow->setDrawBackground(true);
 
 		CustomWidget* bottomBorder = baseWindow->add<CustomWidget>();
 		bottomBorder->setBackgroundColor(Color(255, 255));

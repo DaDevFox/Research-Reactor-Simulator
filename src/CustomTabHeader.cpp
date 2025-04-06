@@ -58,7 +58,7 @@ void CustomTabHeader::TabButton::drawAtPosition(NVGcontext* ctx, const Vector2i&
 	int yPos = position.y();
 	int width = mSize.x();
 	int height = mSize.y();
-	Theme* theme = mHeader->theme();
+	CustomTheme* theme = mHeader->theme();
 
 	nvgScissor(ctx, xPos, yPos, width + 1, height);
 	// Gradients
@@ -180,7 +180,7 @@ void CustomTabHeader::TabButton::drawInactiveBorderAt(NVGcontext* ctx, const Vec
 
 
 CustomTabHeader::CustomTabHeader(Widget* parent, const std::string& font)
-	: Widget(parent), mFont(font)
+	: CustomWidget(parent), mFont(font)
 {}
 
 void CustomTabHeader::setActiveTab(int tabIndex)
@@ -376,6 +376,8 @@ void CustomTabHeader::performLayout(NVGcontext* ctx)
 
 Vector2i CustomTabHeader::preferredSize(NVGcontext* ctx) const
 {
+	theme()->mTabControlWidth;
+
 	// Set up the nvg context for measuring the text inside the tab buttons.
 	nvgFontFace(ctx, mFont.c_str());
 	nvgFontSize(ctx, fontSize());

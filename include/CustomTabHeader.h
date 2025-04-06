@@ -1,7 +1,10 @@
+#pragma once
+
+#include "CustomWidget.h"
 #include <nanogui/widget.h>
 #include <nanovg.h>
 
-class CustomTabHeader : public nanogui::Widget
+class CustomTabHeader : public CustomWidget
 {
 public:
 	CustomTabHeader(Widget* parent, const std::string& font = "sans-bold");

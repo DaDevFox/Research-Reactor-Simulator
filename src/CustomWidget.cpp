@@ -27,6 +27,8 @@ float CustomWidget::fontSize() const
 	return (mFontSize < 0 && mTheme) ? mTheme->mStandardFontSize : mFontSize;
 }
 
+void CustomWidget::setTheme(CustomTheme* theme) { mCustomTheme = theme; }
+
 Widget* CustomWidget::findWidget(const Vector2i& p)
 {
 	for (auto it = mChildren.rbegin(); it != mChildren.rend(); ++it)

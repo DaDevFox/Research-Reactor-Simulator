@@ -2,7 +2,7 @@
 #include "../include/CustomTabWidget.h"
 
 CustomGraph::CustomGraph(Widget* parent, size_t graphNumber, const std::string& caption)
-	: Graph(parent, caption)
+	: CustomWidget(parent), mCaption(caption)
 {
 	mBackgroundColor = Color(20, 128);
 	mTextColor = Color(240, 192);

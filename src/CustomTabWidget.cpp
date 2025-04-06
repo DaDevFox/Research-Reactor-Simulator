@@ -1,6 +1,7 @@
 #include "../include/CustomWidget.h"
 #include "../include/CustomTabWidget.h"
 #include "../include/CustomTabHeader.h"
+#include "../include/RelativeGridLayout.h"
 #include <nanogui/tabheader.h>
 #include <nanogui/stackedwidget.h>
 #include <nanogui/theme.h>
@@ -10,6 +11,8 @@
 #include <nanogui/vscrollpanel.h>
 #include <nanogui/layout.h>
 #include <algorithm>
+
+using namespace nanogui;
 
 CustomTabWidget::CustomTabWidget(Widget* parent)
 	: Widget(parent), mHeader(new CustomTabHeader(this)), mContent(new StackedWidget(this))
@@ -63,7 +66,7 @@ CustomWidget* CustomTabWidget::createTab(int index, const std::string& label, bo
 
 }
 
-Widget* CustomTabWidget::createTab(const std::string& label, bool scrolling)
+CustomWidget* CustomTabWidget::createTab(const std::string& label, bool scrolling)
 {
 	return createTab(tabCount(), label, scrolling);
 }
@@ -73,7 +76,7 @@ void CustomTabWidget::addTab(const std::string& name, Widget* tab)
 	addTab(tabCount(), name, tab);
 }
 
-void TabWidget::addTab(int index, const std::string& label, Widget* tab)
+void CustomTabWidget::addTab(int index, const std::string& label, Widget* tab)
 {
 	assert(index <= tabCount());
 	// It is important to add the content first since the callback
@@ -83,23 +86,23 @@ void TabWidget::addTab(int index, const std::string& label, Widget* tab)
 	assert(mHeader->tabCount() == mContent->childCount());
 }
 
-int TabWidget::tabLabelIndex(const std::string& label)
+int CustomTabWidget::tabLabelIndex(const std::string& label)
 {
 	return mHeader->tabIndex(label);
 }
 
-int TabWidget::tabIndex(Widget* tab)
+int CustomTabWidget::tabIndex(Widget* tab)
 {
 	return mContent->childIndex(tab);
 }
 
-void TabWidget::ensureTabVisible(int index)
+void CustomTabWidget::ensureTabVisible(int index)
 {
 	if (!mHeader->isTabVisible(index))
 		mHeader->ensureTabVisible(index);
 }
 
-const Widget* TabWidget::tab(const std::string& tabName) const
+const Widget* CustomTabWidget::tab(const std::string& tabName) const
 {
 	int index = mHeader->tabIndex(tabName);
 	if (index == mContent->childCount())
@@ -107,7 +110,7 @@ const Widget* TabWidget::tab(const std::string& tabName) const
 	return mContent->children()[index];
 }
 
-Widget* TabWidget::tab(const std::string& tabName)
+Widget* CustomTabWidget::tab(const std::string& tabName)
 {
 	int index = mHeader->tabIndex(tabName);
 	if (index == mContent->childCount())
@@ -115,7 +118,7 @@ Widget* TabWidget::tab(const std::string& tabName)
 	return mContent->children()[index];
 }
 
-bool TabWidget::removeTab(const std::string& tabName)
+bool CustomTabWidget::removeTab(const std::string& tabName)
 {
 	int index = mHeader->removeTab(tabName);
 	if (index == -1)
@@ -124,7 +127,7 @@ bool TabWidget::removeTab(const std::string& tabName)
 	return true;
 }
 
-void TabWidget::removeTab(int index)
+void CustomTabWidget::removeTab(int index)
 {
 	assert(mContent->childCount() < index);
 	mHeader->removeTab(index);
@@ -133,12 +136,12 @@ void TabWidget::removeTab(int index)
 		setActiveTab(index == (index - 1) ? index - 1 : 0);
 }
 
-const std::string& TabWidget::tabLabelAt(int index) const
+const std::string& CustomTabWidget::tabLabelAt(int index) const
 {
 	return mHeader->tabLabelAt(index);
 }
 
-void TabWidget::performLayout(NVGcontext* ctx)
+void CustomTabWidget::performLayout(NVGcontext* ctx)
 {
 	int headerHeight = mHeader->preferredSize(ctx).y();
 	int margin = mTheme->mTabInnerMargin;
@@ -150,7 +153,7 @@ void TabWidget::performLayout(NVGcontext* ctx)
 	mContent->performLayout(ctx);
 }
 
-Vector2i TabWidget::preferredSize(NVGcontext* ctx) const
+Vector2i CustomTabWidget::preferredSize(NVGcontext* ctx) const
 {
 	auto contentSize = mContent->preferredSize(ctx);
 	auto headerSize = mHeader->preferredSize(ctx);
@@ -160,14 +163,15 @@ Vector2i TabWidget::preferredSize(NVGcontext* ctx) const
 	return tabPreferredSize;
 }
 
-void TabWidget::draw(NVGcontext* ctx)
+void CustomTabWidget::draw(NVGcontext* ctx)
 {
 	Widget::draw(ctx);
 	int tabHeight = mHeader->preferredSize(ctx).y();
 	std::pair<Vector2i, Vector2i> activeArea = mHeader->activeButtonArea();
 	nvgSave(ctx);
 
-	float thisBorder = mTheme->mBorderWidth * 1.8f;
+	// FLAG: chnaged BorderWidth to TabBorderWidth
+	float thisBorder = mTheme->mTabBorderWidth * 1.8f;
 
 	nvgStrokeWidth(ctx, thisBorder);
 	for (int i = 0; i < 2; i++)

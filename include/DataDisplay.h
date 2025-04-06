@@ -128,7 +128,7 @@ public:
 	}
 
 	DataDisplay(Widget* parent, const std::string& caption = "Untitled")
-		: Widget(parent), mCaption(caption)
+		: CustomWidget(parent), mCaption(caption)
 	{
 		//mBackgroundColor = nanogui::Color(20, 128);
 		mTextColor = nanogui::Color(255, 255);
