@@ -4,6 +4,7 @@
 */
 #define NOMINMAX
 
+#include "../include/CustomGraph.h"
 #include "CustomLabel.h"
 #include "CustomWidget.h"
 #include <nanogui/screen.h>
@@ -164,10 +165,10 @@ public:
 	Serial* theBox;
 #endif
 	Simulator* reactor;
-	Graph* canvas;
-	Graph* delayedGroupsGraph;
-	Graph* pulseGraph;
-	Graph* sourceGraph;
+	CustomGraph* canvas;
+	CustomGraph* delayedGroupsGraph;
+	CustomGraph* pulseGraph;
+	CustomGraph* sourceGraph;
 	BoxLayout* layout;
 	Window* baseWindow;
 	RelativeGridLayout* relativeLayout; // layout for the main window
@@ -603,7 +604,7 @@ public:
 	void initializeGraph()
 	{
 		// Create a graph object
-		canvas = baseWindow->add<Graph>(4, "Main graph");
+		canvas = baseWindow->add<CustomGraph>(4, "Main graph");
 		relativeLayout->setAnchor(canvas, RelativeGridLayout::makeAnchor(0, 0));
 		canvas->setBackgroundColor(Color(250, 255));
 		canvas->setDrawBackground(true);
@@ -1669,7 +1670,7 @@ public:
 			});
 		neutronSourceModeBox->setSelectedIndex(0);
 		// Source graph
-		sourceGraph = sourceSettings->add<Graph>(2, "Neutron source simulation");
+		sourceGraph = sourceSettings->add<CustomGraph>(2, "Neutron source simulation");
 		sourceGraph->setDrawBackground(true);
 		sourceGraph->setBackgroundColor(Color(32, 255));
 		sourceLayout->setAnchor(sourceGraph, RelativeGridLayout::makeAnchor(0, 0, 1, 14, Alignment::Fill, Alignment::Fill));
@@ -1827,7 +1828,7 @@ public:
 			}
 			case 3:
 			{
-				border = delayedPanel->add<Widget>();
+				border = delayedPanel->add<CustomWidget>();
 				border->setDrawBackground(true);
 				border->setBackgroundColor(coolBlue);
 				relPhysics->setAnchor(border, RelativeGridLayout::makeAnchor(0, 2 * (row + 1), 15));
@@ -2002,7 +2003,7 @@ public:
 		physicsLayout->setAnchor(alphaPanel, RelativeGridLayout::makeAnchor(2, 3, 1, 1));
 		alphaPanel->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 0, 10));
 		// Temperature reactivity coef.
-		Graph* alphaGraph = alphaPanel->add<Graph>(1, "Temp. reactivity coef.");
+		CustomGraph* alphaGraph = alphaPanel->add<CustomGraph>(1, "Temp. reactivity coef.");
 		alphaGraph->setBackgroundColor(Color(60, 255));
 		alphaGraph->setDrawBackground(true);
 		alphaGraph->setFixedHeight(250);
@@ -2209,7 +2210,7 @@ public:
 				});
 
 			// Display tool
-			Graph* rodControl = rod_settings->add<Graph>(1);
+			CustomGraph* rodControl = rod_settings->add<CustomGraph>(1);
 			rod_settings_layout->setAnchor(rodControl, RelativeGridLayout::makeAnchor(i * 4, 5, 3, 1, Alignment::Middle));
 			rodControl->setFixedWidth(320);
 			rodControl->setBackgroundColor(Color(60, 255));
@@ -2271,7 +2272,7 @@ public:
 			tempLabel = rod_settings->add<Label>("Differential\nrod worth curve", "sans-bold", 25);
 			rod_settings_layout->setAnchor(tempLabel, RelativeGridLayout::makeAnchor(i * 4, 10, 3, 1, Alignment::Middle, Alignment::Maximum));
 
-			Graph* rodDerDisplay = rod_settings->add<Graph>(1);
+			CustomGraph* rodDerDisplay = rod_settings->add<CustomGraph>(1);
 			rod_settings_layout->setAnchor(rodDerDisplay, RelativeGridLayout::makeAnchor(i * 4, 11, 3, 1, Alignment::Middle, Alignment::Minimum));
 			rodDerDisplay->setFixedSize(Vector2i(320, 320));
 			rodDerDisplay->setBackgroundColor(Color(60, 255));
@@ -2372,7 +2373,7 @@ public:
 			rel->setAnchor(tempLabel, RelativeGridLayout::makeAnchor(3, i, 1, 1, Alignment::Minimum, Alignment::Middle));
 		}
 
-		delayedGroupsGraph = topHost->add<Graph>(6, "Delayed neutron groups");
+		delayedGroupsGraph = topHost->add<CustomGraph>(6, "Delayed neutron groups");
 		delayedGroupsGraph->setPadding(90.f, 20.f, 60.f, 50.f);
 		delayedGroupsGraph->setTextColor(Color(0, 255));
 		topLayout->setAnchor(delayedGroupsGraph, RelativeGridLayout::makeAnchor(0, 0));
@@ -2470,7 +2471,7 @@ public:
 			size_t arraySize = use->num_points();
 
 			// create graph first just for event binding
-			Graph* graph = tabs[i]->add<Graph>(2, titles[i]);
+			CustomGraph* graph = tabs[i]->add<CustomGraph>(2, titles[i]);
 			graph->setDrawBackground(true);
 			graph->setBackgroundColor(Color(32, 255));
 			layouts[i]->setAnchor(graph, RelativeGridLayout::makeAnchor(2, 0, 2, simModeFields[i] + 3, Alignment::Fill, Alignment::Fill));
@@ -2869,7 +2870,7 @@ public:
 		rel->appendRow(1.f);																		// 1 content
 		pulse_tab->setLayout(rel);
 
-		pulseGraph = pulse_tab->add<Graph>(4, "Last pulse");
+		pulseGraph = pulse_tab->add<CustomGraph>(4, "Last pulse");
 		rel->setAnchor(pulseGraph, RelativeGridLayout::makeAnchor(0, 0, 2, 2));
 		initializePulseGraph();
 
