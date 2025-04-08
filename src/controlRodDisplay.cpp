@@ -10,16 +10,16 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 
 	nvgSave(ctx);
 
-	const float rodSize = m_size.y() - rodBorder;
-	const float rodWidth = (m_size.x() - 2 * rodSpacing) / 3.f;
+	const float rodSize = mSize.y() - rodBorder;
+	const float rodWidth = (mSize.x() - 2 * rodSpacing) / 3.f;
 
 	// Draw backgrounds
 	float x[3];
 	nvgBeginPath(ctx);
 	for (int i = 0; i < 3; i++)
 	{
-		x[i] = m_pos.x() + (rodWidth + rodSpacing) * i;
-		nvgRect(ctx, m_pos.x() + (rodWidth + rodSpacing) * i, m_pos.y(), rodWidth, m_size.y());
+		x[i] = mPos.x() + (rodWidth + rodSpacing) * i;
+		nvgRect(ctx, mPos.x() + (rodWidth + rodSpacing) * i, mPos.y(), rodWidth, mSize.y());
 	}
 	nvgFillColor(ctx, mRodBackgroundColor);
 	nvgFill(ctx);
@@ -44,7 +44,7 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 					m ? (x[i] + rodWidth) : x[i], 0, // endx, endy
 					rodEnabled[i] ? mRodExtrudedWhiteColor : mRodDisabledWhiteColor, rodEnabled[i] ? mRodExtrudedColor : mRodDisabledColor); // startcol, endcol
 				nvgBeginPath(ctx);
-				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), m_pos.y(), (2 - m) * rodWgrad, relPosRod);
+				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), mPos.y(), (2 - m) * rodWgrad, relPosRod);
 				nvgFillPaint(ctx, upper[m]);
 				nvgFill(ctx);
 			}
@@ -54,7 +54,7 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 		if (relPosRod < rodSize)
 		{
 			nvgBeginPath(ctx);
-			nvgRect(ctx, x[i] + rodBorder, m_pos.y() + relPosRod, rodWidth - 2 * rodBorder, rodSize - relPosRod);
+			nvgRect(ctx, x[i] + rodBorder, mPos.y() + relPosRod, rodWidth - 2 * rodBorder, rodSize - relPosRod);
 			nvgFillColor(ctx, mRodInsertedColor);
 			nvgFill(ctx);
 		}
@@ -62,13 +62,13 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 		// Drawing pointers
 		nvgFillColor(ctx, Color(255, 255));
 		nvgBeginPath(ctx);
-		nvgMoveTo(ctx, x[i], m_pos.y() + relPosMagnet);
-		nvgLineTo(ctx, x[i] - h, m_pos.y() + relPosMagnet - pointerSize / 2.f);
-		nvgLineTo(ctx, x[i] - h, m_pos.y() + relPosMagnet + pointerSize / 2.f);
+		nvgMoveTo(ctx, x[i], mPos.y() + relPosMagnet);
+		nvgLineTo(ctx, x[i] - h, mPos.y() + relPosMagnet - pointerSize / 2.f);
+		nvgLineTo(ctx, x[i] - h, mPos.y() + relPosMagnet + pointerSize / 2.f);
 		nvgClosePath(ctx);
-		nvgMoveTo(ctx, x[i] + rodWidth, m_pos.y() + relPosMagnet);
-		nvgLineTo(ctx, x[i] + rodWidth + h, m_pos.y() + relPosMagnet - pointerSize / 2.f);
-		nvgLineTo(ctx, x[i] + rodWidth + h, m_pos.y() + relPosMagnet + pointerSize / 2.f);
+		nvgMoveTo(ctx, x[i] + rodWidth, mPos.y() + relPosMagnet);
+		nvgLineTo(ctx, x[i] + rodWidth + h, mPos.y() + relPosMagnet - pointerSize / 2.f);
+		nvgLineTo(ctx, x[i] + rodWidth + h, mPos.y() + relPosMagnet + pointerSize / 2.f);
 		nvgClosePath(ctx);
 		nvgFill(ctx);
 	}
