@@ -6,6 +6,7 @@
 #define SCROLL_BAR_THICKNESS	12
 #define SCROLL_BAR_ROUND		.8f
 
+#include <nanogui/common.h>
 #include "../include/CustomGraph.h"
 #include "CustomLabel.h"
 #include "CustomWidget.h"
@@ -342,12 +343,12 @@ public:
 		}
 		else if (sf > 1.)
 		{
-			simFactorLabel->setCaption(formatDecimals(sf, 2, false) + "x");
+			simFactorLabel->setCaption(formatDecimalsDoubleWithTrailing(sf, 2, false) + "x");
 			simStatusLabel->setCaption(utf8(ENTYPO_ICON_FF).data());
 		}
 		else
 		{
-			simFactorLabel->setCaption(formatDecimals(sf, 2, false) + "x");
+			simFactorLabel->setCaption(formatDecimalsDoubleWithTrailing(sf, 2, false) + "x");
 			simStatusLabel->setCaption(utf8(ENTYPO_ICON_FB).data());
 		}
 	}
@@ -504,10 +505,10 @@ public:
 
 		if (updateData)
 		{
-			pulseLabels[0]->setCaption(formatDecimals(lastPulseData.peakPower * 1e-6, 1) + " MW");
+			pulseLabels[0]->setCaption(formatDecimalsDouble(lastPulseData.peakPower * 1e-6, 1) + " MW");
 			pulseLabels[1]->setCaption(to_string((int)(lastPulseData.FWHM * 1e3)) + " ms");
-			pulseLabels[2]->setCaption(formatDecimals(lastPulseData.maxFuelTemp, 1) + " " + degCelsiusUnit);
-			pulseLabels[3]->setCaption(formatDecimals(lastPulseData.releasedEnergy * 1e-6, 1) + " MJ");
+			pulseLabels[2]->setCaption(formatDecimalsDouble(lastPulseData.maxFuelTemp, 1) + " " + degCelsiusUnit);
+			pulseLabels[3]->setCaption(formatDecimalsDouble(lastPulseData.releasedEnergy * 1e-6, 1) + " MJ");
 		}
 	}
 
@@ -1018,7 +1019,7 @@ public:
 		versionLabel->setColor(Color(255, 255));
 		bottomLayout->setAnchor(versionLabel, RelativeGridLayout::makeAnchor(0, 0));
 
-		CustomLabel* fpsLabel = bottomPanel->add<CustomLabel>("FPS: ");
+		fpsLabel = bottomPanel->add<CustomLabel>("FPS: ");
 		fpsLabel->setTextAlignment(CustomLabel::TextAlign::LEFT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		fpsLabel->setFontSize(20.f);
 		fpsLabel->setColor(Color(255, 255));
@@ -1408,7 +1409,7 @@ public:
 		displayBox = timePanel->add<FloatBox<float>>(properties->displayTime);
 		displayBox->setFixedSize(Vector2i(100, 20));
 		displayBox->setUnits("s");
-		displayBox->setDefaultValue(formatDecimals((double)properties->displayTime, 1));
+		displayBox->setDefaultValue(formatDecimalsDouble((double)properties->displayTime, 1));
 		displayBox->setFontSize(16);
 		displayBox->setFormat("[0-9]*[.]?[0-9]?");
 		displayBox->setSpinnable(true);
@@ -1417,7 +1418,7 @@ public:
 		displayBox->setCallback([this](float a)
 			{
 				properties->displayTime = std::min((float)reactor->getDeleteOldValues(), std::max(a, 0.5f));
-				std::string limit = formatDecimals((double)properties->displayTime, 1) + " seconds ago";
+				std::string limit = formatDecimalsDouble((double)properties->displayTime, 1) + " seconds ago";
 				powerPlot->setLimitOverride(0, limit);
 				delayedGroups[0]->setLimitOverride(0, limit);
 			});
@@ -1694,7 +1695,7 @@ public:
 			neutronSourcePeriodBoxes[i]->setMinValue(0.1f);
 			neutronSourcePeriodBoxes[i]->setValueIncrement(0.1f);
 			neutronSourcePeriodBoxes[i]->setSpinnable(true);
-			neutronSourcePeriodBoxes[i]->setDefaultValue(formatDecimals(per->getPeriod(), 1));
+			neutronSourcePeriodBoxes[i]->setDefaultValue(formatDecimalsDouble(per->getPeriod(), 1));
 			neutronSourcePeriodBoxes[i]->setCallback([this, i, per](float change)
 				{
 					switch (i)
@@ -2512,7 +2513,7 @@ public:
 			periodBoxes[i]->setMinValue(0.1f);
 			periodBoxes[i]->setValueIncrement(0.1f);
 			periodBoxes[i]->setSpinnable(true);
-			periodBoxes[i]->setDefaultValue(formatDecimals(use->getPeriod(), 1));
+			periodBoxes[i]->setDefaultValue(formatDecimalsDouble(use->getPeriod(), 1));
 			periodBoxes[i]->setCallback([use, i, this](float change)
 				{
 					switch (i)
@@ -2753,7 +2754,7 @@ public:
 		rel->setAnchor(periodLimBox, RelativeGridLayout::makeAnchor(2, 1, 1, 1, Alignment::Fill, Alignment::Middle));
 		periodLimBox->setFixedSize(Vector2i(100, 20));
 		periodLimBox->setUnits("s");
-		periodLimBox->setDefaultValue(formatDecimals((float)properties->periodLimit, 1));
+		periodLimBox->setDefaultValue(formatDecimalsDouble((float)properties->periodLimit, 1));
 		periodLimBox->setFontSize(16);
 		periodLimBox->setFormat(SCI_NUMBER_FORMAT);
 		periodLimBox->setMinMaxValues(0.f, 3600.f);
@@ -3587,6 +3588,8 @@ public:
 		fpsSum += thisFps;
 		if (fpsCount == 0 || fpsCount == 20)
 		{
+			fpsLabel->setCaption("test");
+			auto test1 = fpsLabel->caption();
 			fpsLabel->setCaption("FPS: " + to_string((int)roundf(fpsCount ? (fpsSum / fpsCount) : thisFps)));
 			fpsSum = thisFps;
 			fpsCount %= 20;
@@ -3940,20 +3943,20 @@ public:
 		}
 	}
 
-	static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
-	{
-		stringstream ss;
-		ss << fixed;
-		ss.precision(decDigits);
-		ss << x;
-		std::string res = ss.str();
-		if (removeTrailingZeros)
-		{
-			while (res.back() == '0') res = res.substr(0, res.length() - 1);
-			if (res.back() == '.') res = res.substr(0, res.length() - 1);
-		}
-		return res;
-	}
+	//static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
+	//{
+	//	stringstream ss;
+	//	ss << fixed;
+	//	ss.precision(decDigits);
+	//	ss << x;
+	//	std::string res = ss.str();
+	//	if (removeTrailingZeros)
+	//	{
+	//		while (res.back() == '0') res = res.substr(0, res.length() - 1);
+	//		if (res.back() == '.') res = res.substr(0, res.length() - 1);
+	//	}
+	//	return res;
+	//}
 
 	void reculculateDisplayInterval(double fromTime, double toTime)
 	{
