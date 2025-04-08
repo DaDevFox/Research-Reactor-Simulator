@@ -6,4 +6,5 @@ public:
 	float mBorderWidth;
 
 	CustomTheme(NVGcontext* ctx);
+	CustomTheme(const Theme& original);
 };

@@ -27,7 +27,44 @@ float CustomWidget::fontSize() const
 	return (mFontSize < 0 && mTheme) ? mTheme->mStandardFontSize : mFontSize;
 }
 
-void CustomWidget::setTheme(CustomTheme* theme) { mCustomTheme = theme; }
+CustomTheme* CustomWidget::theme()
+{
+	CustomTheme* converted;
+	auto test = mTheme.get();
+	auto test2 = mCustomTheme.get();
+	if (!mCustomTheme.get())
+	{
+		converted = dynamic_cast<CustomTheme*>(mTheme.get());
+		if (converted)
+			return converted;
+		else
+			return (mCustomTheme = new CustomTheme(*mTheme.get()));
+	}
+	return mCustomTheme.get();
+}
+
+const CustomTheme* CustomWidget::theme() const
+{
+	if (!mCustomTheme && typeid(*mTheme.get()) == typeid(CustomTheme))
+		return (const CustomTheme*)mTheme.get();
+	return mCustomTheme.get();
+}
+
+
+void CustomWidget::setTheme(CustomTheme* theme)
+{
+	if (mCustomTheme.get() == theme)
+		return;
+	mCustomTheme = theme;
+	for (auto child : mChildren)
+	{
+		CustomWidget* converted;
+		if ((converted = dynamic_cast<CustomWidget*>(child)) != nullptr)
+			converted->setTheme(theme);
+		else
+			child->setTheme(theme);
+	}
+}
 
 Widget* CustomWidget::findWidget(const Vector2i& p)
 {

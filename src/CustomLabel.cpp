@@ -6,7 +6,7 @@
 using namespace nanogui;
 
 CustomLabel::CustomLabel(Widget* parent, const std::string& caption, const std::string& font, int fontSize)
-	: Widget(parent), mCaption(caption), mFont(font)
+	: CustomWidget(parent), mCaption(caption), mFont(font)
 {
 	if (mTheme)
 	{

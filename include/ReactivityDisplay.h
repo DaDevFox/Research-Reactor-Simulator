@@ -5,11 +5,6 @@
 #include <iostream>
 #include <algorithm>    // std::max
 
-using nanogui::Color;
-using std::deque;
-using std::pair;
-using std::exception;
-
 class PeriodDisplay : public nanogui::Widget
 {
 public:
@@ -21,8 +16,8 @@ public:
 	void setPeriod(double period_) { period = period_; }
 protected:
 	std::string mFontFace = "sans-bold";
-	Color mTextColor = Color(200, 255);
-	Color mTextDisabledColor = Color(120, 255);
+	nanogui::Color mTextColor = nanogui::Color(200, 255);
+	nanogui::Color mTextDisabledColor = nanogui::Color(120, 255);
 	float textFontSize = 22.f;
 	float mSpacing = 20.f;
 	float mPadding = 15.f;
