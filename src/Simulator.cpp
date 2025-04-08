@@ -7,6 +7,28 @@
 #include <chrono>
 #include "../include/util.h"
 
+std::string formatDecimalsDouble(double value, int decimalPlaces)
+{
+	std::ostringstream stream;
+	stream << std::fixed << std::setprecision(decimalPlaces) << value;
+	return stream.str();
+}
+
+std::string formatDecimalsDoubleWithTrailing(const double x, const int decDigits, bool removeTrailingZeros)
+{
+	std::stringstream ss;
+	ss << std::fixed;
+	ss.precision(decDigits);
+	ss << x;
+	std::string res = ss.str();
+	if (removeTrailingZeros)
+	{
+		while (res.back() == '0') res = res.substr(0, res.length() - 1);
+		if (res.back() == '.') res = res.substr(0, res.length() - 1);
+	}
+	return res;
+}
+
 void Simulator::dataToFile(std::string fileName)
 {
 	ofstream logFile;

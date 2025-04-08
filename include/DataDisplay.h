@@ -9,13 +9,6 @@
 #include <sstream>
 #include <string>
 
-std::string formatDecimals(double value, int decimalPlaces)
-{
-	std::ostringstream stream;
-	stream << std::fixed << std::setprecision(decimalPlaces) << value;
-	return stream.str();
-}
-
 enum class DisplayMode
 {
 	Integer,
@@ -149,16 +142,16 @@ private:
 			ret = std::to_string(value);
 			break;
 		case DisplayMode::FixedDecimalPlaces1:
-			ret = formatDecimals(value, 1);
+			ret = formatDecimalsDouble(value, 1);
 			break;
 		case DisplayMode::FixedDecimalPlaces2:
-			ret = formatDecimals(value, 2);
+			ret = formatDecimalsDouble(value, 2);
 			break;
 		case DisplayMode::FixedDecimalPlaces3:
-			ret = formatDecimals(value, 3);
+			ret = formatDecimalsDouble(value, 3);
 			break;
 		case DisplayMode::FixedDecimalPlaces4:
-			ret = formatDecimals(value, 4);
+			ret = formatDecimalsDouble(value, 4);
 			break;
 		case DisplayMode::Scientific:
 			int order;
@@ -183,7 +176,7 @@ private:
 			}
 			else
 			{
-				ret = formatDecimals(newValue, 2 - (int)floor(log10(newValue)));
+				ret = formatDecimalsDouble(newValue, 2 - (int)floor(log10(newValue)));
 			}
 			ret += " " + ((order > -7 && order < 13 && order != 0) ? std::string(utf8(units[order + 6]).data()) : "") + unit;
 			return ret;

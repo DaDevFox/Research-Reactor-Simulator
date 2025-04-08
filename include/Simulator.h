@@ -29,6 +29,9 @@ constexpr auto TANK_RADIUS = 1.;			  // radius of the reactor tank [m]
 
 using namespace std;
 
+std::string formatDecimalsDouble(double value, int decimalPlaces);
+std::string formatDecimalsDoubleWithTrailing(const double x, const int decDigits, bool removeTrailingZeros);
+
 class Simulator
 {
 private:
