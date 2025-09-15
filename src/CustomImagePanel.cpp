@@ -63,6 +63,10 @@ void CustomImagePanel::draw(NVGcontext* ctx)
 
 	for (size_t i = 0; i < mImages.size(); ++i)
 	{
+		if (mImages[i].first == 0 || mImages[i].first == -1) {
+			fprintf(stderr, "[CustomImagePanel] Warning: Invalid image handle (%d) for image %zu: %s\n", mImages[i].first, i, mImages[i].second.c_str());
+			continue;
+		}
 		Vector2i p = mPos + Vector2i::Constant(mMargin) +
 			Vector2i((int)i % grid.x(), (int)i / grid.x()) * (mThumbSize + mSpacing);
 		int imgw, imgh;
