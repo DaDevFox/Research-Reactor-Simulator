@@ -8,6 +8,7 @@
 
 #include <nanogui/common.h>
 #include "../include/CustomGraph.h"
+#include "../include/CustomWindow.h"
 #include "CustomLabel.h"
 #include "CustomWidget.h"
 #include <nanogui/screen.h>
@@ -173,7 +174,7 @@ public:
 	CustomGraph* pulseGraph;
 	CustomGraph* sourceGraph;
 	BoxLayout* layout;
-	Window* baseWindow;
+	CustomWindow* baseWindow;
 	RelativeGridLayout* relativeLayout; // layout for the main window
 	CustomLabel* fpsLabel;
 	Plot* reactivityPlot;
@@ -911,7 +912,7 @@ public:
 		baseLayout->appendCol(1.f);
 		baseLayout->appendRow(1.f);
 		this->setLayout(baseLayout);
-		baseWindow = this->add<Window>("");
+		baseWindow = this->add<CustomWindow>("");
 		baseLayout->setAnchor(baseWindow, RelativeGridLayout::makeAnchor(0, 0));
 
 		// Create a layout for the window
@@ -922,8 +923,8 @@ public:
 		relativeLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));		// 2 border
 		relativeLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 3 bottom panel
 		baseWindow->setLayout(relativeLayout);
-		//baseWindow->setBackgroundColor(Color(80, 255));
-		//baseWindow->setDrawBackground(true);
+		baseWindow->setBackgroundColor(Color(80, 255));
+		baseWindow->setDrawBackground(true);
 
 		CustomWidget* bottomBorder = baseWindow->add<CustomWidget>();
 		bottomBorder->setBackgroundColor(Color(255, 255));
