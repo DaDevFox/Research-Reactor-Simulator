@@ -78,11 +78,11 @@ void CustomTabHeader::TabButton::drawAtPosition(NVGcontext* ctx, const Vector2i&
 	nvgFillPaint(ctx, nvgLinearGradient(ctx, xPos, yPos, xPos, yPos + height, gradTop, gradBot));
 	nvgFill(ctx);
 
-	float halfBorder = theme->mBorderWidth;
-	if (active)
-	{
-		nvgBeginPath(ctx);
-		nvgStrokeWidth(ctx, theme->mBorderWidth);
+		float halfBorder = theme->mTabBorderWidth;
+		if (active)
+		{
+			nvgBeginPath(ctx);
+			nvgStrokeWidth(ctx, theme->mTabBorderWidth);
 		nvgRoundedRect(ctx, xPos + halfBorder, yPos + 1.f + halfBorder, width,
 			height + 1.f, theme->mButtonCornerRadius);
 		nvgStrokeColor(ctx, theme->mBorderLight);

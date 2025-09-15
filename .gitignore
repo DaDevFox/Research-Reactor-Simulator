@@ -7,6 +7,16 @@ bin/
 !bin/resource1.h
 !bin/SimulatorGUI1.rc
 
+# Build files
+CMakeFiles/*
+CMakeCache.txt
+*.sln
+*.vcxproj
+*.vcxproj.filters
+**/*.sln
+**/*.vcxproj
+**/*.vcxproj.filters
+
 # User-specific files
 *.rsuser
 *.suo
