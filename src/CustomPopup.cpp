@@ -3,7 +3,6 @@
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>
-#include <nanovg/src/nanovg.h>
 
 using namespace nanogui;
 
@@ -69,15 +68,8 @@ void CustomPopup::draw(NVGcontext *ctx)
 	nvgFillColor(ctx, mTheme->mWindowPopup);
 	nvgFill(ctx);
 
-	// Draw children without scissor clipping (matching original nanogui behavior)
-	if (!mChildren.empty())
-	{
-		nvgTranslate(ctx, mPos.x(), mPos.y());
-		for (Widget *child : mChildren)
-			if (child->visible())
-				child->draw(ctx);
-		nvgTranslate(ctx, -mPos.x(), -mPos.y());
-	}
+	// Call Widget::draw to properly render children (matching original nanogui behavior)
+	Widget::draw(ctx);
 }
 
 void CustomPopup::save(Serializer &s) const

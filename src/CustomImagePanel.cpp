@@ -1,46 +1,46 @@
 
 #include "../include/CustomImagePanel.h"
 #include <nanogui/opengl.h>
-#include <nanovg/src/nanovg.h>
 
 using namespace nanogui;
 
-CustomImagePanel::CustomImagePanel(Widget* parent)
+CustomImagePanel::CustomImagePanel(Widget *parent)
 	: Widget(parent), mThumbSize(64), mSpacing(10), mMargin(10),
-	mMouseIndex(-1)
-{}
+	  mMouseIndex(-1)
+{
+}
 
 Vector2i CustomImagePanel::gridSize() const
 {
 	int nCols = 1 + std::max(0,
-		(int)((mSize.x() - 2 * mMargin - mThumbSize) /
-			(float)(mThumbSize + mSpacing)));
+							 (int)((mSize.x() - 2 * mMargin - mThumbSize) /
+								   (float)(mThumbSize + mSpacing)));
 	int nRows = ((int)mImages.size() + nCols - 1) / nCols;
 	return Vector2i(nCols, nRows);
 }
 
-int CustomImagePanel::indexForPosition(const Vector2i& p) const
+int CustomImagePanel::indexForPosition(const Vector2i &p) const
 {
 	Vector2f pp = (p.cast<float>() - Vector2f::Constant(mMargin)) /
-		(float)(mThumbSize + mSpacing);
+				  (float)(mThumbSize + mSpacing);
 	float iconRegion = mThumbSize / (float)(mThumbSize + mSpacing);
 	bool overImage = pp.x() - std::floor(pp.x()) < iconRegion &&
-		pp.y() - std::floor(pp.y()) < iconRegion;
+					 pp.y() - std::floor(pp.y()) < iconRegion;
 	Vector2i gridPos = pp.cast<int>(), grid = gridSize();
 	overImage &= ((gridPos.array() >= 0).all() &&
-		(gridPos.array() < grid.array()).all());
+				  (gridPos.array() < grid.array()).all());
 	return overImage ? (gridPos.x() + gridPos.y() * grid.x()) : -1;
 }
 
-bool CustomImagePanel::mouseMotionEvent(const Vector2i& p, const Vector2i& /* rel */,
-	int /* button */, int /* modifiers */)
+bool CustomImagePanel::mouseMotionEvent(const Vector2i &p, const Vector2i & /* rel */,
+										int /* button */, int /* modifiers */)
 {
 	mMouseIndex = indexForPosition(p);
 	return true;
 }
 
-bool CustomImagePanel::mouseButtonEvent(const Vector2i& p, int /* button */, bool down,
-	int /* modifiers */)
+bool CustomImagePanel::mouseButtonEvent(const Vector2i &p, int /* button */, bool down,
+										int /* modifiers */)
 {
 	int index = indexForPosition(p);
 	if (index >= 0 && mCallback && down)
@@ -48,27 +48,27 @@ bool CustomImagePanel::mouseButtonEvent(const Vector2i& p, int /* button */, boo
 	return true;
 }
 
-Vector2i CustomImagePanel::preferredSize(NVGcontext*) const
+Vector2i CustomImagePanel::preferredSize(NVGcontext *) const
 {
 	Vector2i grid = gridSize();
 	return Vector2i(
 		grid.x() * mThumbSize + (grid.x() - 1) * mSpacing + 2 * mMargin,
-		grid.y() * mThumbSize + (grid.y() - 1) * mSpacing + 2 * mMargin
-	);
+		grid.y() * mThumbSize + (grid.y() - 1) * mSpacing + 2 * mMargin);
 }
 
-void CustomImagePanel::draw(NVGcontext* ctx)
+void CustomImagePanel::draw(NVGcontext *ctx)
 {
 	Vector2i grid = gridSize();
 
 	for (size_t i = 0; i < mImages.size(); ++i)
 	{
-		if (mImages[i].first == 0 || mImages[i].first == -1) {
+		if (mImages[i].first == 0 || mImages[i].first == -1)
+		{
 			fprintf(stderr, "[CustomImagePanel] Warning: Invalid image handle (%d) for image %zu: %s\n", mImages[i].first, i, mImages[i].second.c_str());
 			continue;
 		}
 		Vector2i p = mPos + Vector2i::Constant(mMargin) +
-			Vector2i((int)i % grid.x(), (int)i / grid.x()) * (mThumbSize + mSpacing);
+					 Vector2i((int)i % grid.x(), (int)i / grid.x()) * (mThumbSize + mSpacing);
 		int imgw, imgh;
 
 		nvgImageSize(ctx, mImages[i].first, &imgw, &imgh);
@@ -99,7 +99,7 @@ void CustomImagePanel::draw(NVGcontext* ctx)
 
 		NVGpaint shadowPaint =
 			nvgBoxGradient(ctx, p.x() - 1, p.y(), mThumbSize + 2, mThumbSize + 2, 5, 3,
-				nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+						   nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
 		nvgBeginPath(ctx);
 		nvgRect(ctx, p.x() - 5, p.y() - 5, mThumbSize + 10, mThumbSize + 10);
 		nvgRoundedRect(ctx, p.x(), p.y(), mThumbSize, mThumbSize, 6);
@@ -114,4 +114,3 @@ void CustomImagePanel::draw(NVGcontext* ctx)
 		nvgStroke(ctx);
 	}
 }
-

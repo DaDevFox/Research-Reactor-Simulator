@@ -33,18 +33,17 @@ enum Border
 class CustomWidget : public nanogui::Widget
 {
 public:
-
 	/// Construct a new widget with the given parent widget
-	CustomWidget(Widget* parent);
+	CustomWidget(Widget *parent);
 
 	/// Returns the background color of this widget
-	const nanogui::Color& backgroundColor() const { return mBackgroundColor; }
-	void setBackgroundColor(const nanogui::Color& backgroundColor) { mBackgroundColor = backgroundColor; }
+	const nanogui::Color &backgroundColor() const { return mBackgroundColor; }
+	void setBackgroundColor(const nanogui::Color &backgroundColor) { mBackgroundColor = backgroundColor; }
 
-	const bool& getDrawBackground() const { return drawBackground; }
+	const bool &getDrawBackground() const { return drawBackground; }
 	void setDrawBackground(bool value) { drawBackground = value; }
 
-	nanogui::Screen* parentScreen();
+	nanogui::Screen *parentScreen();
 
 	/// Return current font size. If not set the default of the current theme will be returned
 	float fontSize() const;
@@ -55,13 +54,13 @@ public:
 	bool hasFontSize() const { return mFontSize > 0; }
 
 	/// Determine the widget located at the given position value (recursive)
-	virtual Widget* findWidget(const nanogui::Vector2i& p);
+	virtual Widget *findWidget(const nanogui::Vector2i &p);
 
-	CustomTheme* theme();
-	const CustomTheme* theme() const;
-	virtual void setTheme(CustomTheme* theme);
+	CustomTheme *theme();
+	const CustomTheme *theme() const;
+	virtual void setTheme(CustomTheme *theme);
 
-	void draw(NVGcontext* ctx) override;
+	void draw(NVGcontext *ctx) override;
 
 	int border() { return mBorder; }
 	void setBorder(int border) { mBorder = border; }
@@ -81,7 +80,7 @@ protected:
 	nanogui::Color mBackgroundColor = nanogui::Color(0, 0);
 	bool drawBackground = false;
 
-	nanogui::Color mBorderColor;
+	nanogui::Color mBorderColor = nanogui::Color(0, 0); // Initialize to transparent to avoid garbage blue
 	int mBorder = 0;
 	float mBorderWidth = 2.f;
 };

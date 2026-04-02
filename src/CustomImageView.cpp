@@ -12,15 +12,15 @@
 
 #include "../include/CustomImageView.h"
 #include <nanogui/opengl.h>
-#include <nanovg/src/nanovg.h>
 
 using namespace nanogui;
 
-CustomImageView::CustomImageView(Widget* parent, int img, SizePolicy policy)
+CustomImageView::CustomImageView(Widget *parent, int img, SizePolicy policy)
 	: Widget(parent), mImage(img), mPolicy(policy)
-{}
+{
+}
 
-Vector2i CustomImageView::preferredSize(NVGcontext* ctx) const
+Vector2i CustomImageView::preferredSize(NVGcontext *ctx) const
 {
 	if (!mImage)
 		return Vector2i(0, 0);
@@ -29,7 +29,7 @@ Vector2i CustomImageView::preferredSize(NVGcontext* ctx) const
 	return Vector2i(w, h);
 }
 
-void CustomImageView::draw(NVGcontext* ctx)
+void CustomImageView::draw(NVGcontext *ctx)
 {
 	if (!mImage)
 		return;
@@ -54,8 +54,8 @@ void CustomImageView::draw(NVGcontext* ctx)
 		}
 	}
 	else
-	{    // mPolicy == Expand
-	 // expand to width
+	{ // mPolicy == Expand
+	  // expand to width
 		h = (int)std::round(h * (float)s.x() / w);
 		w = s.x();
 
@@ -74,4 +74,3 @@ void CustomImageView::draw(NVGcontext* ctx)
 	nvgFillPaint(ctx, imgPaint);
 	nvgFill(ctx);
 }
-

@@ -20,11 +20,12 @@
 using namespace nanogui;
 using namespace std;
 
-CustomWindow::CustomWindow(Widget* parent, const std::string& title)
+CustomWindow::CustomWindow(Widget *parent, const std::string &title)
 	: Window(parent, title)
-{}
+{
+}
 
-CustomWidget* CustomWindow::buttonPanel()
+CustomWidget *CustomWindow::buttonPanel()
 {
 	if (!mButtonPanel)
 	{
@@ -34,7 +35,7 @@ CustomWidget* CustomWindow::buttonPanel()
 	return mButtonPanel;
 }
 
-void CustomWindow::draw(NVGcontext* ctx)
+void CustomWindow::draw(NVGcontext *ctx)
 {
 	int ds = mTheme->mWindowDropShadowSize, cr = mTheme->mWindowCornerRadius;
 	int hh = mTheme->mWindowHeaderHeight;
@@ -45,7 +46,7 @@ void CustomWindow::draw(NVGcontext* ctx)
 	nvgRoundedRect(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y(), cr);
 
 	nvgFillColor(ctx, mMouseFocus ? mTheme->mWindowFillFocused
-		: mTheme->mWindowFillUnfocused);
+								  : mTheme->mWindowFillUnfocused);
 	nvgFill(ctx);
 
 	/* Draw a drop shadow */
@@ -95,13 +96,13 @@ void CustomWindow::draw(NVGcontext* ctx)
 		nvgFontBlur(ctx, 2.f);
 		nvgFillColor(ctx, mTheme->mDropShadow);
 		nvgText(ctx, mPos.x() + mSize.x() / 2.f,
-			mPos.y() + hh / 2.f, mTitle.c_str(), nullptr);
+				mPos.y() + hh / 2.f, mTitle.c_str(), nullptr);
 
 		nvgFontBlur(ctx, 0);
 		nvgFillColor(ctx, mFocused ? mTheme->mWindowTitleFocused
-			: mTheme->mWindowTitleUnfocused);
+								   : mTheme->mWindowTitleUnfocused);
 		nvgText(ctx, mPos.x() + mSize.x() / 2, mPos.y() + hh / 2 - 1,
-			mTitle.c_str(), nullptr);
+				mTitle.c_str(), nullptr);
 	}
 
 	nvgRestore(ctx);
@@ -126,7 +127,7 @@ void CustomWindow::draw(NVGcontext* ctx)
 	if (mBorder != 0)
 	{
 		nvgStrokeColor(ctx, mBorderColor);
-		//nvgStrokeWidth(ctx, mBorderWidth);
+		nvgStrokeWidth(ctx, mBorderWidth);
 		if (mBorder & Border::LEFT)
 		{
 			nvgBeginPath(ctx);
@@ -169,7 +170,7 @@ void CustomWindow::draw(NVGcontext* ctx)
 		return;
 
 	nvgTranslate(ctx, mPos.x(), mPos.y());
-	for (Widget* child : mChildren)
+	for (Widget *child : mChildren)
 		if (child->visible())
 			child->draw(ctx);
 	nvgTranslate(ctx, -mPos.x(), -mPos.y());
@@ -196,10 +197,11 @@ void CustomWindow::draw(NVGcontext* ctx)
 	}
 }
 
-bool CustomWindow::mouseDragEvent(const Vector2i&, const Vector2i& rel,
-	int button, int /* modifiers */)
+bool CustomWindow::mouseDragEvent(const Vector2i &, const Vector2i &rel,
+								  int button, int /* modifiers */)
 {
-	if (!mEnabled) return false;
+	if (!mEnabled)
+		return false;
 	if (mDrag && (button & (1 << GLFW_MOUSE_BUTTON_1)) != 0)
 	{
 		mPos += rel;
@@ -210,9 +212,10 @@ bool CustomWindow::mouseDragEvent(const Vector2i&, const Vector2i& rel,
 	return false;
 }
 
-bool CustomWindow::mouseButtonEvent(const Vector2i& p, int button, bool down, int modifiers)
+bool CustomWindow::mouseButtonEvent(const Vector2i &p, int button, bool down, int modifiers)
 {
-	if (!mEnabled) return false;
+	if (!mEnabled)
+		return false;
 	if (Widget::mouseButtonEvent(p, button, down, modifiers))
 		return true;
 	if (button == GLFW_MOUSE_BUTTON_1)
@@ -223,14 +226,15 @@ bool CustomWindow::mouseButtonEvent(const Vector2i& p, int button, bool down, in
 	return false;
 }
 
-bool CustomWindow::scrollEvent(const Vector2i& p, const Vector2f& rel)
+bool CustomWindow::scrollEvent(const Vector2i &p, const Vector2f &rel)
 {
-	if (!mEnabled) return false;
+	if (!mEnabled)
+		return false;
 	Widget::scrollEvent(p, rel);
 	return true;
 }
 
-bool CustomWindow::mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int button, int modifiers)
+bool CustomWindow::mouseMotionEvent(const Vector2i &p, const Vector2i &rel, int button, int modifiers)
 {
 	if (mEnabled)
 	{
@@ -243,7 +247,7 @@ bool CustomWindow::mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int 
 	}
 }
 
-bool CustomWindow::mouseEnterEvent(const Vector2i& p, bool enter)
+bool CustomWindow::mouseEnterEvent(const Vector2i &p, bool enter)
 {
 	if (mEnabled)
 	{
@@ -288,20 +292,19 @@ float CustomWindow::borderThickness()
 
 // CustomWidget reimplementation:
 
-
 float CustomWindow::fontSize() const
 {
 	return (mFontSize < 0 && mTheme) ? mTheme->mStandardFontSize : mFontSize;
 }
 
-CustomTheme* CustomWindow::theme()
+CustomTheme *CustomWindow::theme()
 {
-	CustomTheme* converted;
+	CustomTheme *converted;
 	auto test = mTheme.get();
 	auto test2 = mCustomTheme.get();
 	if (!mCustomTheme.get())
 	{
-		converted = dynamic_cast<CustomTheme*>(mTheme.get());
+		converted = dynamic_cast<CustomTheme *>(mTheme.get());
 		if (converted)
 			return converted;
 		else
@@ -310,43 +313,42 @@ CustomTheme* CustomWindow::theme()
 	return mCustomTheme.get();
 }
 
-const CustomTheme* CustomWindow::theme() const
+const CustomTheme *CustomWindow::theme() const
 {
 	if (!mCustomTheme && typeid(*mTheme.get()) == typeid(CustomTheme))
-		return (const CustomTheme*)mTheme.get();
+		return (const CustomTheme *)mTheme.get();
 	return mCustomTheme.get();
 }
 
-
-void CustomWindow::setTheme(CustomTheme* theme)
+void CustomWindow::setTheme(CustomTheme *theme)
 {
 	if (mCustomTheme.get() == theme)
 		return;
 	mCustomTheme = theme;
 	for (auto child : mChildren)
 	{
-		CustomWidget* converted;
-		if ((converted = dynamic_cast<CustomWidget*>(child)) != nullptr)
+		CustomWidget *converted;
+		if ((converted = dynamic_cast<CustomWidget *>(child)) != nullptr)
 			converted->setTheme(theme);
 		else
 			child->setTheme(theme);
 	}
 }
 
-Widget* CustomWindow::findWidget(const Vector2i& p)
+Widget *CustomWindow::findWidget(const Vector2i &p)
 {
 	for (auto it = mChildren.rbegin(); it != mChildren.rend(); ++it)
 	{
-		Widget* child = *it;
+		Widget *child = *it;
 		if (child->visible() && child->contains(p - mPos))
 			return child->findWidget(p - mPos);
 	}
 	return contains(p) ? this : nullptr;
 }
 
-Screen* CustomWindow::parentScreen()
+Screen *CustomWindow::parentScreen()
 {
-	Screen* screen = dynamic_cast<Screen*>(parent());
+	Screen *screen = dynamic_cast<Screen *>(parent());
 	if (screen)
 	{
 		return screen;
