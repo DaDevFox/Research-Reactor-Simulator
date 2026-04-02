@@ -4,12 +4,13 @@
 
 using namespace nanogui;
 
-void PeriodDisplay::draw(NVGcontext* ctx)
+void PeriodDisplay::draw(NVGcontext *ctx)
 {
-	Widget::draw(ctx);
+	// Note: PeriodDisplay has no children, skip Widget::draw() to avoid scissor clipping
 	float displayWidth = 0.5 * (mSize.x() - 2 * mPadding);
 	float axesWidth = 0.5 * (mSize.x() - 2 * mPadding);
-	if (displayWidth <= 0.f) return;
+	if (displayWidth <= 0.f)
+		return;
 
 	nvgSave(ctx);
 
@@ -52,22 +53,22 @@ void PeriodDisplay::draw(NVGcontext* ctx)
 	nvgFillColor(ctx, Color(0, 255, 0, 255));
 	nvgFill(ctx);
 
-	//Main line for axes
+	// Main line for axes
 	nvgBeginPath(ctx);
 	nvgMoveTo(ctx, mPos.x() + mPadding + 0.8 * axesWidth, mPos.y() + verticalMargins);
 	nvgLineTo(ctx, mPos.x() + mPadding + 0.8 * axesWidth, mPos.y() + verticalMargins + rangeY);
 	nvgClosePath(ctx);
 	nvgStrokeColor(ctx, Color(255, 255));
-	//nvgFill(ctx);
+	// nvgFill(ctx);
 
-	//Draw tics and text
+	// Draw tics and text
 	for (int i = 1; i < 7; i++)
 	{
 		float posY = mPos.y() + verticalMargins + axesLocations[6 - i] * (rangeYM);
 		nvgBeginPath(ctx);
 		nvgMoveTo(ctx, mPos.x() + mPadding + 0.5 * axesWidth, posY);
 		nvgLineTo(ctx, mPos.x() + mPadding + 0.8 * axesWidth, posY);
-		//nvgClosePath(ctx);
+		// nvgClosePath(ctx);
 		nvgStroke(ctx);
 		// nvgFill(ctx);
 	}
@@ -98,18 +99,15 @@ float PeriodDisplay::posFromPeriod(float period_)
 	return log(0.46874 * period_) * 0.316009;
 }
 
-Vector2i PeriodDisplay::preferredSize(NVGcontext*) const
+Vector2i PeriodDisplay::preferredSize(NVGcontext *) const
 {
 	return Vector2i(15, 70);
 }
 
-PeriodDisplay::PeriodDisplay(Widget* parent) : Widget(parent)
+PeriodDisplay::PeriodDisplay(Widget *parent) : Widget(parent)
 {
-
 }
 
 PeriodDisplay::~PeriodDisplay()
 {
-
 }
-

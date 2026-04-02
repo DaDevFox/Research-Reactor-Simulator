@@ -7,8 +7,8 @@
 
 using namespace nanogui;
 
-bool FileDialog::ItemList::mouseButtonEvent(const Vector2i& p, int button,
-	bool down, int /*modifiers*/)
+bool FileDialog::ItemList::mouseButtonEvent(const Vector2i &p, int button,
+											bool down, int /*modifiers*/)
 {
 	if (button != GLFW_MOUSE_BUTTON_LEFT)
 		return false;
@@ -59,8 +59,9 @@ bool FileDialog::ItemList::mouseButtonEvent(const Vector2i& p, int button,
 	return true;
 }
 
-void FileDialog::ItemList::draw(NVGcontext* ctx)
+void FileDialog::ItemList::draw(NVGcontext *ctx)
 {
+	// Note: ItemList has no children, so we skip Widget::draw() which adds scissor clipping
 
 	Vector2i cursorPos = parent()->screen()->mousePos();
 	cursorPos -= this->absolutePosition();
@@ -82,10 +83,10 @@ void FileDialog::ItemList::draw(NVGcontext* ctx)
 	for (int i = 0; i < 2; i++)
 	{
 		rule = rule && (cursorPos[i] >= bounds[i]) &&
-			(cursorPos[i] < bounds[i] + bounds[2 + i]);
+			   (cursorPos[i] < bounds[i] + bounds[2 + i]);
 	}
 
-	Widget::draw(ctx);
+	// Skip Widget::draw(ctx) - no children, avoids scissor clipping issues
 
 	mouseOnIndex = -1;
 	if (rule)
@@ -105,8 +106,8 @@ void FileDialog::ItemList::draw(NVGcontext* ctx)
 			(lastClickIndex == i) ? Color(0.3f, 0.8f, 1.f, 1.f) : Color(1.f, 1.f);
 		Color backColor =
 			(lastClickIndex == i)
-			? ((mouseOnIndex == i) ? Color(0.f, 0.2f) : Color(0.f, 0.4f))
-			: ((mouseOnIndex == i) ? Color(1.f, 0.3f) : Color(0.f, 0.f));
+				? ((mouseOnIndex == i) ? Color(0.f, 0.2f) : Color(0.f, 0.4f))
+				: ((mouseOnIndex == i) ? Color(1.f, 0.3f) : Color(0.f, 0.f));
 		if (backColor.w())
 		{ // only paint background if alpha is not 0
 			nvgBeginPath(ctx);
@@ -122,21 +123,21 @@ void FileDialog::ItemList::draw(NVGcontext* ctx)
 		if (FileDialog::isTopLevelDirectory(displayData[i].first))
 			icon = ENTYPO_ICON_DRIVE;
 		nvgText(ctx, iconWidth / 2.f, (0.5f + i) * itemHeight, utf8(icon).data(),
-			NULL);
+				NULL);
 
 		nvgFillColor(ctx, textColor); // text color
 		nvgFontFace(ctx, "sans");
 		nvgTextAlign(ctx, NVGalign::NVG_ALIGN_MIDDLE | NVGalign::NVG_ALIGN_LEFT);
 		nvgText(ctx, iconWidth, (0.5f + i) * itemHeight,
-			displayData[i].first.c_str(), NULL);
+				displayData[i].first.c_str(), NULL);
 	}
 	nvgRestore(ctx);
 }
 
-FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
-	std::string filetypes, std::string confirmButtonText,
-	bool isFolderGoal, bool save)
-	: Window((Widget*)parent, title)
+FileDialog::FileDialog(Screen *parent, std::string title, std::string startDir,
+					   std::string filetypes, std::string confirmButtonText,
+					   bool isFolderGoal, bool save)
+	: Window((Widget *)parent, title)
 {
 	mScreen = parent;
 	mSave = save;
@@ -163,11 +164,11 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	this->setSize(Vector2i(400, 400));
 	this->setVisible(true);
 	this->setFocused(true);
-	//this->setBorder(true);
-	//this->setBorderColor(Color(77, 184, 255, 255));
+	// this->setBorder(true);
+	// this->setBorderColor(Color(77, 184, 255, 255));
 
 	// Create window layout
-	RelativeGridLayout* baseLayout = new RelativeGridLayout();
+	RelativeGridLayout *baseLayout = new RelativeGridLayout();
 	baseLayout->appendCol(RelativeGridLayout::Size(
 		LEFT_PANEL_SIZE, RelativeGridLayout::SizeType::Fixed));
 	baseLayout->appendCol(
@@ -181,21 +182,21 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	baseLayout->appendRow(1.f);
 	baseLayout->appendRow(
 		RelativeGridLayout::Size(mSave ? TOOLBAR_HEIGHT * 2 : TOOLBAR_HEIGHT,
-			RelativeGridLayout::SizeType::Fixed));
+								 RelativeGridLayout::SizeType::Fixed));
 	this->setLayout(baseLayout);
 
 	// Borders
-	Widget* borderl = this->add<Widget>();
-	//borderl->setDrawBackground(true);
-	//borderl->setBackgroundColor(Color(77, 184, 255, 255));
+	Widget *borderl = this->add<Widget>();
+	// borderl->setDrawBackground(true);
+	// borderl->setBackgroundColor(Color(77, 184, 255, 255));
 	baseLayout->setAnchor(borderl, RelativeGridLayout::makeAnchor(1, 1, 1, 2));
 
 	// Create top panel
-	Widget* topPanel = this->add<Widget>();
-	//topPanel->setDrawBackground(true);
-	//topPanel->setBackgroundColor(Color(0.1f, 1.f));
+	Widget *topPanel = this->add<Widget>();
+	// topPanel->setDrawBackground(true);
+	// topPanel->setBackgroundColor(Color(0.1f, 1.f));
 	baseLayout->setAnchor(topPanel, RelativeGridLayout::makeAnchor(0, 1, 3));
-	RelativeGridLayout* topLayout = new RelativeGridLayout();
+	RelativeGridLayout *topLayout = new RelativeGridLayout();
 	topLayout->appendCol(RelativeGridLayout::Size(
 		LEFT_PANEL_SIZE, RelativeGridLayout::SizeType::Fixed));
 	topLayout->appendCol(1.f);
@@ -205,10 +206,10 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	mDirUpButton = topPanel->add<Button>("Move up", ENTYPO_ICON_LEVEL_UP);
 	mDirUpButton->setEnabled(!startDir.empty());
 	topLayout->setAnchor(mDirUpButton,
-		RelativeGridLayout::makeAnchor(
-			0, 0, 1, 1, Alignment::Middle, Alignment::Middle));
+						 RelativeGridLayout::makeAnchor(
+							 0, 0, 1, 1, Alignment::Middle, Alignment::Middle));
 	mDirUpButton->setCallback([this]()
-		{
+							  {
 			std::string prev = this->prevDirectory;
 			if (this->isTopLevelDirectory(prev))
 			{
@@ -233,8 +234,7 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 						break;
 					}
 				}
-			}
-		});
+			} });
 
 	mUrlBox = topPanel->add<TextBox>(startDir);
 	mUrlBox->setAlignment(TextBox::Alignment::Left);
@@ -244,22 +244,22 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	topLayout->setAnchor(mUrlBox, anchor_url);
 
 	// Create right scroll panel
-	VScrollPanel* mList = this->add<VScrollPanel>();
-	//mList->setDrawBackground(true);
-	//mList->setBackgroundColor(Color(0.2f, 1.f));
-	RelativeGridLayout* rel2 = new RelativeGridLayout();
+	VScrollPanel *mList = this->add<VScrollPanel>();
+	// mList->setDrawBackground(true);
+	// mList->setBackgroundColor(Color(0.2f, 1.f));
+	RelativeGridLayout *rel2 = new RelativeGridLayout();
 	rel2->appendCol(1.f);
 	rel2->appendRow(1.f);
 	mList->setLayout(rel2);
 	mScrollArea = mList->add<ItemList>();
 	rel2->setAnchor(mScrollArea, RelativeGridLayout::makeAnchor(
-		0, 0, 1, 1, Alignment::Fill, Alignment::Fill,
-		RelativeGridLayout::FillMode::Always,
-		RelativeGridLayout::FillMode::IfLess));
+									 0, 0, 1, 1, Alignment::Fill, Alignment::Fill,
+									 RelativeGridLayout::FillMode::Always,
+									 RelativeGridLayout::FillMode::IfLess));
 	baseLayout->setAnchor(mList, RelativeGridLayout::makeAnchor(2, 2));
 
 	mScrollArea->setClickCallback([this](std::string folder)
-		{
+								  {
 			std::string prev = this->prevDirectory;
 			if (prev.empty())
 			{
@@ -272,12 +272,11 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 			else
 			{
 				this->openDirectory(prev + this->mDelimiter + folder, false);
-			}
-		});
+			} });
 	if (mSave)
 	{
 		mScrollArea->setSelectedChangedCallback([this](int index)
-			{
+												{
 				if (index < 0)
 					return;
 				DirInfo itm = mScrollArea->item(index);
@@ -290,15 +289,14 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 				{
 					if (!itm.second)
 						mFileBox->setValue(itm.first);
-				}
-			});
+				} });
 	}
 
 	// Create left scroll panel
-	VScrollPanel* mLeftList = this->add<VScrollPanel>();
-	//mLeftList->setDrawBackground(true);
-	//mLeftList->setBackgroundColor(Color(0.3f, 1.f));
-	RelativeGridLayout* rel3 = new RelativeGridLayout();
+	VScrollPanel *mLeftList = this->add<VScrollPanel>();
+	// mLeftList->setDrawBackground(true);
+	// mLeftList->setBackgroundColor(Color(0.3f, 1.f));
+	RelativeGridLayout *rel3 = new RelativeGridLayout();
 	rel3->appendCol(1.f);
 	rel3->appendRow(1.f);
 	mLeftList->setLayout(rel3);
@@ -306,20 +304,21 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	mDriveArea->setItemHeight(30.f);
 	mDriveArea->setDoubleClick(false);
 	rel3->setAnchor(mDriveArea, RelativeGridLayout::makeAnchor(
-		0, 0, 1, 1, Alignment::Fill, Alignment::Fill,
-		RelativeGridLayout::FillMode::Always,
-		RelativeGridLayout::FillMode::IfLess));
+									0, 0, 1, 1, Alignment::Fill, Alignment::Fill,
+									RelativeGridLayout::FillMode::Always,
+									RelativeGridLayout::FillMode::IfLess));
 	baseLayout->setAnchor(mLeftList, RelativeGridLayout::makeAnchor(0, 2));
 
 	mDriveArea->setClickCallback(
-		[this](std::string drive) { this->openDirectory(drive, false); });
+		[this](std::string drive)
+		{ this->openDirectory(drive, false); });
 
 	// Create bottom panel
-	Widget* bottomPanel = this->add<Widget>();
-	//bottomPanel->setDrawBackground(true);
-	//bottomPanel->setBackgroundColor(Color(0.1f, 1.f));
+	Widget *bottomPanel = this->add<Widget>();
+	// bottomPanel->setDrawBackground(true);
+	// bottomPanel->setBackgroundColor(Color(0.1f, 1.f));
 	baseLayout->setAnchor(bottomPanel, RelativeGridLayout::makeAnchor(0, 3, 3));
-	RelativeGridLayout* bottomLayout = new RelativeGridLayout();
+	RelativeGridLayout *bottomLayout = new RelativeGridLayout();
 	bottomLayout->appendCol(RelativeGridLayout::Size(
 		LEFT_PANEL_SIZE, RelativeGridLayout::SizeType::Fixed));
 	bottomLayout->appendCol(1.f);
@@ -329,10 +328,10 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 
 	if (mSave)
 	{
-		Label* fileLabel = bottomPanel->add<Label>("File name:");
+		Label *fileLabel = bottomPanel->add<Label>("File name:");
 		bottomLayout->setAnchor(
 			fileLabel, RelativeGridLayout::makeAnchor(0, 0, 1, 1, Alignment::Middle,
-				Alignment::Middle));
+													  Alignment::Middle));
 		mFileBox = bottomPanel->add<TextBox>();
 		mFileBox->setEditable(true);
 		RelativeGridLayout::Anchor anc_file = RelativeGridLayout::makeAnchor(
@@ -347,7 +346,8 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	anc1.padding = Vector4i(20, 0, 0, 0);
 	bottomLayout->setAnchor(mOkButton, anc1);
 
-	mOkButton->setCallback([this]() { dispose(); });
+	mOkButton->setCallback([this]()
+						   { dispose(); });
 
 	mCancelButton = bottomPanel->add<Button>("Cancel", ENTYPO_ICON_CIRCLED_CROSS);
 	RelativeGridLayout::Anchor anc2 = RelativeGridLayout::makeAnchor(
@@ -355,7 +355,8 @@ FileDialog::FileDialog(Screen* parent, std::string title, std::string startDir,
 	anc2.padding = Vector4i(0, 0, 20, 0);
 	bottomLayout->setAnchor(mCancelButton, anc2);
 
-	mCancelButton->setCallback([this]() { dispose(); });
+	mCancelButton->setCallback([this]()
+							   { dispose(); });
 
 	refreshDrives(mScreen->nvgContext());
 	openDirectory(startDir, false);
@@ -434,7 +435,7 @@ void FileDialog::openDirectory(std::string directory, bool folders)
 	this->performLayout(mScreen->nvgContext());
 }
 
-void FileDialog::draw(NVGcontext* ctx)
+void FileDialog::draw(NVGcontext *ctx)
 {
 	mOkButton->setEnabled(canContinue());
 	Window::draw(ctx);
@@ -453,13 +454,13 @@ void FileDialog::draw(NVGcontext* ctx)
 	}
 }
 
-void FileDialog::refreshDrives(NVGcontext* ctx)
+void FileDialog::refreshDrives(NVGcontext *ctx)
 {
 	int selectedIndex = mDriveArea->selectedItem();
 	std::string selItem =
 		(selectedIndex == -1)
-		? ""
-		: mDriveArea->item(mDriveArea->selectedItem()).first;
+			? ""
+			: mDriveArea->item(mDriveArea->selectedItem()).first;
 	mDriveArea->clearItems();
 	std::vector<DirInfo> drives = openDir("", false);
 	int sel = -1;
@@ -483,10 +484,10 @@ bool FileDialog::canContinue()
 		}
 		else
 		{
-			char range1[2] = { '0', '9' };
-			char range2[2] = { 'A', 'Z' };
-			char range3[2] = { 'a', 'z' };
-			char accepted[3] = { '.', '_', '-' };
+			char range1[2] = {'0', '9'};
+			char range2[2] = {'A', 'Z'};
+			char range3[2] = {'a', 'z'};
+			char accepted[3] = {'.', '_', '-'};
 			bool invalid_found = false;
 			std::string name = mFileBox->value();
 			if (name.empty() || name.length() > 37)
@@ -523,7 +524,7 @@ bool FileDialog::canContinue()
 		else
 		{
 			return !mScrollArea->isFolderSelected() &&
-				(mScrollArea->selectedItem() >= 0);
+				   (mScrollArea->selectedItem() >= 0);
 		}
 	}
 }
@@ -562,7 +563,7 @@ std::string FileDialog::getFileName()
 				else
 				{
 					if (ret.substr(ret.length() - fileType.length() - 1,
-						fileType.length() + 1) != ("." + fileType))
+								   fileType.length() + 1) != ("." + fileType))
 					{
 						ret += "." + fileType;
 					}

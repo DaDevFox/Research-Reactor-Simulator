@@ -53,7 +53,7 @@ void CustomLabel::draw(NVGcontext* ctx)
 		nvgRect(ctx, mPos.x() - mFeather, mPos.y() - mFeather, mSize.x() + 2.f * mFeather, mSize.y() + 2.f * mFeather);
 		nvgFill(ctx);
 	}
-	Widget::draw(ctx);
+	CustomWidget::draw(ctx);
 	nvgFontFace(ctx, mFont.c_str());
 	nvgFontSize(ctx, mFontSize);
 	nvgFillColor(ctx, mColor);

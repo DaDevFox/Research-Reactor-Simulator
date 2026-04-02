@@ -31,6 +31,7 @@ CMakeCache.txt
 mono_crash.*
 
 # Build results
+[Bb]uild_[Tt]est/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

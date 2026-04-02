@@ -1,13 +1,13 @@
 #include "../include/CustomGraph.h"
 #include "../include/CustomTabWidget.h"
 
-CustomGraph::CustomGraph(Widget* parent, size_t graphNumber, const std::string& caption)
+CustomGraph::CustomGraph(Widget *parent, size_t graphNumber, const std::string &caption)
 	: CustomWidget(parent), mCaption(caption)
 {
 	mBackgroundColor = Color(20, 128);
 	mTextColor = Color(240, 192);
 	mGraphNumber = graphNumber;
-	graphs = new GraphElement * [graphNumber];
+	graphs = new GraphElement *[graphNumber];
 }
 
 CustomGraph::~CustomGraph()
@@ -15,10 +15,9 @@ CustomGraph::~CustomGraph()
 	delete[] graphs;
 }
 
-
-void CustomGraph::draw(NVGcontext* ctx)
+void CustomGraph::draw(NVGcontext *ctx)
 {
-	Widget::draw(ctx);
+	CustomWidget::draw(ctx);
 	nvgSave(ctx);
 	nvgFontFace(ctx, "sans");
 	nvgIntersectScissor(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y());
@@ -57,12 +56,12 @@ void CustomGraph::draw(NVGcontext* ctx)
 
 	for (size_t index = 0; index < mActualGraphNumber; index++)
 	{
-		GraphElement* currentElement = graphs[index];
+		GraphElement *currentElement = graphs[index];
 		if (currentElement->getEnabled())
 		{
 			// Save values for log drawing (saves CPU time)
-			double* limits = currentElement->limits();
-			double* limLog = currentElement->logLimits();
+			double *limits = currentElement->limits();
+			double *limLog = currentElement->logLimits();
 
 			// Save current state
 			nvgSave(ctx);
@@ -73,7 +72,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 			float halfDraw = currentElement->getStrokeWidth() * .5f;
 			if (currentElement->graphType() == GraphElement::GraphType::PlotDeque)
 			{
-				Plot* current = (Plot*)currentElement;
+				Plot *current = (Plot *)currentElement;
 				if (current->getPlotRange() > 0)
 				{
 					size_t plotStartIndex = current->getPlotStart();
@@ -183,20 +182,20 @@ void CustomGraph::draw(NVGcontext* ctx)
 						nvgLineTo(ctx, xPos + graphRangeX + halfDraw, yLast);
 						break;
 					}
-
 					}
 				}
 			}
 			else if (currentElement->graphType() == GraphElement::GraphType::Bezier)
 			{
-				BezierCurve* current = (BezierCurve*)currentElement;
+				BezierCurve *current = (BezierCurve *)currentElement;
 				nvgBeginPath(ctx);
 				nvgMoveTo(ctx, xPos, yPos + graphRangeY);
 				nvgBezierTo(ctx, xPos + current->getParameter(0) * graphRangeX, yPos + (1 - current->getParameter(1)) * graphRangeY,
-					xPos + current->getParameter(2) * graphRangeX, yPos + (1 - current->getParameter(3)) * graphRangeY, xPos + graphRangeX, yPos);
+							xPos + current->getParameter(2) * graphRangeX, yPos + (1 - current->getParameter(3)) * graphRangeY, xPos + graphRangeX, yPos);
 				nvgLineTo(ctx, xPos + graphRangeX + halfDraw, yPos);
 			}
-			if (currentElement->getHorizontalPointerShown()) relFill = currentElement->getHorizontalPointerPosition();
+			if (currentElement->getHorizontalPointerShown())
+				relFill = currentElement->getHorizontalPointerPosition();
 
 			// If the space under the curve should be filled, close the path
 			if (currentElement->isFill())
@@ -217,7 +216,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 						// Overflow part
 						nvgIntersectScissor(ctx, xPos, yPos, relFill * graphRangeX, (1 - currentElement->getPointerPosition()) * graphRangeY);
 						// Fill
-						nvgFillColor(ctx, ((BezierCurve*)currentElement)->overFillColor());
+						nvgFillColor(ctx, ((BezierCurve *)currentElement)->overFillColor());
 						nvgFill(ctx);
 						nvgRestore(ctx);
 						nvgSave(ctx);
@@ -299,7 +298,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 					string content = currentElement->getOverridenLimits()[3].length() ? currentElement->getOverridenLimits()[3] : currentElement->formatNumber(limits[3] * currentElement->getLimitMultiplier());
 					nvgFontSize(ctx, currentElement->getMainTickFontSize());
 					nvgText(ctx, new_xPos - direction * (currentElement->getMajorTickSize() + 3), yPos,
-						content.c_str(), NULL);
+							content.c_str(), NULL);
 				}
 				if (currentElement->getYlog())
 				{
@@ -329,7 +328,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 							{
 								nvgFontSize(ctx, currentElement->getMajorTickFontSize());
 								nvgText(ctx, new_xPos - direction * (currentElement->getMajorTickSize() + 3), thisY,
-									currentElement->formatNumber((limits[2] + (currentElement->getMajorTickNumber() + 1 - i) * (limits[3] - limits[2]) / (currentElement->getMajorTickNumber() + 1)) * currentElement->getLimitMultiplier()).c_str(), NULL);
+										currentElement->formatNumber((limits[2] + (currentElement->getMajorTickNumber() + 1 - i) * (limits[3] - limits[2]) / (currentElement->getMajorTickNumber() + 1)) * currentElement->getLimitMultiplier()).c_str(), NULL);
 							}
 						}
 					}
@@ -341,7 +340,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 					string content = currentElement->getOverridenLimits()[2].length() ? currentElement->getOverridenLimits()[2] : currentElement->formatNumber(limits[2] * currentElement->getLimitMultiplier());
 					nvgFontSize(ctx, currentElement->getMainTickFontSize());
 					nvgText(ctx, new_xPos - direction * (currentElement->getMajorTickSize() + 3), yPos + graphRangeY,
-						content.c_str(), NULL);
+							content.c_str(), NULL);
 				}
 				nvgStroke(ctx);
 
@@ -400,7 +399,8 @@ void CustomGraph::draw(NVGcontext* ctx)
 					nvgTextAlign(ctx, NVG_ALIGN_BOTTOM | NVG_ALIGN_CENTER);
 
 					string content = currentElement->getName();
-					if (currentElement->getUnits().length() > 0) content += " [" + currentElement->getUnits() + "]";
+					if (currentElement->getUnits().length() > 0)
+						content += " [" + currentElement->getUnits() + "]";
 					float title_x = new_xPos - direction * (currentElement->getMajorTickSize() + currentElement->getTextOffset());
 					float title_y = yPos + graphRangeY / 2.f;
 					nvgTranslate(ctx, title_x, title_y);
@@ -459,7 +459,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 					string content = currentElement->getOverridenLimits()[0].length() ? currentElement->getOverridenLimits()[0] : currentElement->formatNumber(limits[0] * currentElement->getLimitMultiplier());
 					nvgFontSize(ctx, currentElement->getMainTickFontSize());
 					nvgText(ctx, xPos, new_yPos + direction * (currentElement->getMajorTickSize() + 3),
-						content.c_str(), NULL);
+							content.c_str(), NULL);
 				}
 				if (currentElement->getHorizontalMajorTickNumber() != 0)
 				{
@@ -473,7 +473,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 						{
 							nvgFontSize(ctx, currentElement->getMajorTickFontSize());
 							nvgText(ctx, thisX, new_yPos + direction * (currentElement->getMajorTickSize() + 3),
-								currentElement->formatNumber((currentElement->limits()[0] + i * (limits[1] - limits[0]) / (currentElement->getHorizontalMajorTickNumber() + 1)) * currentElement->getLimitHorizontalMultiplier()).c_str(), NULL);
+									currentElement->formatNumber((currentElement->limits()[0] + i * (limits[1] - limits[0]) / (currentElement->getHorizontalMajorTickNumber() + 1)) * currentElement->getLimitHorizontalMultiplier()).c_str(), NULL);
 						}
 					}
 				}
@@ -484,7 +484,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 					string content = currentElement->getOverridenLimits()[1].length() ? currentElement->getOverridenLimits()[1] : currentElement->formatNumber(limits[1] * currentElement->getLimitHorizontalMultiplier());
 					nvgFontSize(ctx, currentElement->getMainTickFontSize());
 					nvgText(ctx, xPos + graphRangeX, new_yPos + direction * (currentElement->getMajorTickSize() + 3),
-						content.c_str(), NULL);
+							content.c_str(), NULL);
 				}
 				nvgStroke(ctx);
 
@@ -514,11 +514,11 @@ void CustomGraph::draw(NVGcontext* ctx)
 					nvgTextAlign(ctx, NVG_ALIGN_BOTTOM | NVG_ALIGN_CENTER);
 
 					string content = currentElement->getHorizontalName();
-					if (currentElement->getHorizontalUnits().length() > 0) content += " [" + currentElement->getHorizontalUnits() + "]";
+					if (currentElement->getHorizontalUnits().length() > 0)
+						content += " [" + currentElement->getHorizontalUnits() + "]";
 					nvgText(ctx, xPos + graphRangeX / 2.f, new_yPos + direction * (currentElement->getMajorTickSize() + currentElement->getHorizontalTextOffset()),
-						content.c_str(), NULL);
+							content.c_str(), NULL);
 				}
-
 			}
 		}
 	}
@@ -526,7 +526,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 	// Draw pointers on a new layer
 	for (size_t index = 0; index < mActualGraphNumber; index++)
 	{
-		GraphElement* current = graphs[index];
+		GraphElement *current = graphs[index];
 		if (current->getEnabled())
 		{
 			// Draw vertical pointer
@@ -549,7 +549,7 @@ void CustomGraph::draw(NVGcontext* ctx)
 				{
 					if (current->graphType() == 1)
 					{
-						finalY = (float)(((Plot*)current)->getYat(((Plot*)current)->getPlotEnd()));
+						finalY = (float)(((Plot *)current)->getYat(((Plot *)current)->getPlotEnd()));
 					}
 					else
 					{
@@ -625,14 +625,13 @@ void CustomGraph::draw(NVGcontext* ctx)
 				nvgFill(ctx);
 			}
 		}
-
 	}
 
-	//Draw bar graphs
+	// Draw bar graphs
 	for (size_t plotIndex = 0; plotIndex < (size_t)barGraphNumber_; plotIndex++)
 	{
-		BarGraph* current = barPlots[plotIndex];
-		size_t* range = current->getRange();
+		BarGraph *current = barPlots[plotIndex];
+		size_t *range = current->getRange();
 		float spacing = graphRangeX / (2.f * (range[1] - range[0] + 1) + 1.f);
 		// Set outline width
 		nvgStrokeWidth(ctx, current->getOutlineWidth());
@@ -691,14 +690,13 @@ void CustomGraph::setPadding(float left, float top, float right, float bottom)
 	padding[3] = bottom;
 }
 
-BarGraph* CustomGraph::addBarGraph()
+BarGraph *CustomGraph::addBarGraph()
 {
 	barPlots.push_back(new BarGraph());
 	return barPlots[barGraphNumber_++];
 }
 
-BarGraph* CustomGraph::getBarGraph(size_t index)
+BarGraph *CustomGraph::getBarGraph(size_t index)
 {
 	return barPlots[index];
 }
-

@@ -437,7 +437,7 @@ bool CustomTabHeader::mouseButtonEvent(const Vector2i& p, int button, bool down,
 void CustomTabHeader::draw(NVGcontext* ctx)
 {
 	// Draw controls.
-	Widget::draw(ctx);
+	CustomWidget::draw(ctx);
 	if (mOverflowing)
 		drawControls(ctx);
 

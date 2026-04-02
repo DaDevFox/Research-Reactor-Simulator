@@ -3,8 +3,8 @@
 	GUI screen
 */
 #define NOMINMAX
-#define SCROLL_BAR_THICKNESS	12
-#define SCROLL_BAR_ROUND		.8f
+#define SCROLL_BAR_THICKNESS 12
+#define SCROLL_BAR_ROUND .8f
 
 #include <nanogui/common.h>
 #include "../include/CustomGraph.h"
@@ -45,6 +45,7 @@
 #include <string>
 #include <nanogui/nanogui.h>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <math.h>
 #include "../include/Settings.h"
@@ -57,24 +58,24 @@
 #include <CustomTabWidget.h>
 
 /* Resolution formats supported:
-*	HD 720	(1280 x 720)
-*	WXGA	(1280 x 768)
-*	laptop	(1366 x 768)
-*	SXGA	(1280 x 1024)
-*	WXGA	(1280 x 800)
-*	better	(1200+ x 700+)
-*/
-#define WINDOW_DEFAULT_WIDTH	1280	// HD 720p width
-#define WINDOW_DEFAULT_HEIGHT	720		// HD 720p height
+ *	HD 720	(1280 x 720)
+ *	WXGA	(1280 x 768)
+ *	laptop	(1366 x 768)
+ *	SXGA	(1280 x 1024)
+ *	WXGA	(1280 x 800)
+ *	better	(1200+ x 700+)
+ */
+#define WINDOW_DEFAULT_WIDTH 1280 // HD 720p width
+#define WINDOW_DEFAULT_HEIGHT 720 // HD 720p height
 
-#define WINDOW_ICON_NUM			7		// Number of icon formats
+#define WINDOW_ICON_NUM 7 // Number of icon formats
 
 // SIMULATOR VERSION
 // major.minor.revision.build
-#define VERSION_MAJOR		1
-#define VERSION_MINOR		4
-#define VERSION_REVISION	1
-#define VERSION_BUILD		0		// Setting this to 0 doesn't display the build number
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 4
+#define VERSION_REVISION 1
+#define VERSION_BUILD 0 // Setting this to 0 doesn't display the build number
 
 // RECIEVING
 #define BOX_ID "IJS_F8_BOX3"
@@ -111,15 +112,15 @@
 
 #define SIM_TIME_FACTOR_NUMBER 21
 
-#define SCI_NUMBER_FORMAT	"[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
-#define SCI_NUMBER_FORMAT_NEG	"[-]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
+#define SCI_NUMBER_FORMAT "[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
+#define SCI_NUMBER_FORMAT_NEG "[-]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
 
 using namespace nanogui;
-using std::cout;
 using std::cerr;
+using std::cout;
 using std::endl;
-using std::string;
 using std::max;
+using std::string;
 using std::to_string;
 
 class SimulatorGUI : public nanogui::Screen
@@ -127,33 +128,34 @@ class SimulatorGUI : public nanogui::Screen
 private:
 	const string box_auth = BOX_ID;
 	pair<bool, bool> isZero = pair<bool, bool>(false, false);
-	double simulationTimes[SIM_TIME_FACTOR_NUMBER] = { 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1., 1.5, 2., 4., 5., 7.5, 10., 15., 20., 50., 100., 250., 500. };
-	const std::vector<string> modes = { "Manual",
+	double simulationTimes[SIM_TIME_FACTOR_NUMBER] = {0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1., 1.5, 2., 4., 5., 7.5, 10., 15., 20., 50., 100., 250., 500.};
+	const std::vector<string> modes = {
+		"Manual",
 		//"Square wave","Sine wave","Saw tooth",
 		"Automatic"
-		//, "Pulse" 
+		//, "Pulse"
 	};
-	const std::vector<string> ns_modes = { "Constant", "Square wave", "Sine wave", "Saw tooth" };
-	const std::vector<string> sineModes = { "Normal","Quadratic" };
-	string sqw_settingNames[4] = { "Wave up start: ", "Wave up end: ", "Wave down start: ", "Wave down end: " };
-	string saw_settingNames[6] = { "Tooth up start: ","Tooth up peak: ","Tooth up end: ","Tooth down start: ","Tooth down peak: ","Tooth down end: " };
+	const std::vector<string> ns_modes = {"Constant", "Square wave", "Sine wave", "Saw tooth"};
+	const std::vector<string> sineModes = {"Normal", "Quadratic"};
+	string sqw_settingNames[4] = {"Wave up start: ", "Wave up end: ", "Wave down start: ", "Wave down end: "};
+	string saw_settingNames[6] = {"Tooth up start: ", "Tooth up peak: ", "Tooth up end: ", "Tooth down start: ", "Tooth down peak: ", "Tooth down end: "};
 	double lastBoxCheck;
 	bool layoutStart = false;
 	float fpsSum = 0.f;
 	char fpsCount = 0;
 	const std::string degCelsiusUnit = std::string(utf8(0xBA).data()) + "C";
 	const std::string alpha = std::string(utf8(0x3B1).data());
-	double alphaX[3] = { 0., 0., 0. };
-	float alphaY[3] = { 0.f, 0.f, 0.f };
-public:
+	double alphaX[3] = {0., 0., 0.};
+	float alphaY[3] = {0.f, 0.f, 0.f};
 
+public:
 	Simulator::PulseData lastPulseData;
 	bool pulsePerformed = false;
 	double viewStart = -1.;
 	double timeAtLastChange = 0.;
 	string startScript = "";
 
-	Settings* properties;
+	Settings *properties;
 
 	const std::string version()
 	{
@@ -166,142 +168,142 @@ public:
 #endif
 	}
 #if defined(_WIN32)
-	Serial* theBox;
+	Serial *theBox;
 #endif
-	Simulator* reactor;
-	CustomGraph* canvas;
-	CustomGraph* delayedGroupsGraph;
-	CustomGraph* pulseGraph;
-	CustomGraph* sourceGraph;
-	BoxLayout* layout;
-	CustomWindow* baseWindow;
-	RelativeGridLayout* relativeLayout; // layout for the main window
-	CustomLabel* fpsLabel;
-	Plot* reactivityPlot;
-	Plot* rodReactivityPlot;
-	Plot* powerPlot;
-	Plot* temperaturePlot;
-	Plot* delayedGroups[6];
-	Plot* pulsePlots[4];
-	ToolButton* slowDown;
-	ToolButton* playPause;
-	ToolButton* speedUp;
+	Simulator *reactor;
+	CustomGraph *canvas;
+	CustomGraph *delayedGroupsGraph;
+	CustomGraph *pulseGraph;
+	CustomGraph *sourceGraph;
+	BoxLayout *layout;
+	CustomWindow *baseWindow;
+	RelativeGridLayout *relativeLayout; // layout for the main window
+	CustomLabel *fpsLabel;
+	Plot *reactivityPlot;
+	Plot *rodReactivityPlot;
+	Plot *powerPlot;
+	Plot *temperaturePlot;
+	Plot *delayedGroups[6];
+	Plot *pulsePlots[4];
+	ToolButton *slowDown;
+	ToolButton *playPause;
+	ToolButton *speedUp;
 	size_t selectedTime = 8;
-	BezierCurve* rodCurves[NUMBER_OF_CONTROL_RODS];
-	Plot* rodDerivatives[NUMBER_OF_CONTROL_RODS];
-	CustomTabWidget* tabControl;
+	BezierCurve *rodCurves[NUMBER_OF_CONTROL_RODS];
+	Plot *rodDerivatives[NUMBER_OF_CONTROL_RODS];
+	CustomTabWidget *tabControl;
 
-	CustomWidget* sourceSettings;
-	Plot* neutronSourcePlot;
-	Plot* neutronSourceTracker;
-	ComboBox* neutronSourceModeBox;
-	ComboBox* neutronSourceSINEModeBox;
-	FloatBox<float>* neutronSourcePeriodBoxes[3];
-	FloatBox<float>* neutronSourceAmplitudeBoxes[3];
-	IntBox<int>* neutronSourceSQWBoxes[4];
-	IntBox<int>* neutronSourceSAWBoxes[6];
+	CustomWidget *sourceSettings;
+	Plot *neutronSourcePlot;
+	Plot *neutronSourceTracker;
+	ComboBox *neutronSourceModeBox;
+	ComboBox *neutronSourceSINEModeBox;
+	FloatBox<float> *neutronSourcePeriodBoxes[3];
+	FloatBox<float> *neutronSourceAmplitudeBoxes[3];
+	IntBox<int> *neutronSourceSQWBoxes[4];
+	IntBox<int> *neutronSourceSAWBoxes[6];
 
-	CustomWidget* displayPanel1;
-	CustomWidget* displayPanel2;
-	ControlRodDisplay* rodDisplay;
-	PeriodDisplay* periodDisplay;
-	ComboBox* rodMode;
-	IntBox<int>* rodBox[NUMBER_OF_CONTROL_RODS];
-	SliderCheckBox* neutronSourceCB;
-	SliderCheckBox* cooling;
+	CustomWidget *displayPanel1;
+	CustomWidget *displayPanel2;
+	ControlRodDisplay *rodDisplay;
+	PeriodDisplay *periodDisplay;
+	ComboBox *rodMode;
+	IntBox<int> *rodBox[NUMBER_OF_CONTROL_RODS];
+	SliderCheckBox *neutronSourceCB;
+	SliderCheckBox *cooling;
 
-	IntBox<int>* graphSizeBox;
-	SliderCheckBox* curveFillBox;
-	SliderCheckBox* rodReactivityBox;
-	FloatBox<float>* reactivityLimitBox[2];
-	FloatBox<float>* temperatureLimitBox[2];
-	FloatBox<float>* displayBox;
-	SliderCheckBox* logScaleBox;
-	SliderCheckBox* hardcoreBox;
-	IntervalSlider* displayTimeSlider;
-	SliderCheckBox* timeLockedBox;
+	IntBox<int> *graphSizeBox;
+	SliderCheckBox *curveFillBox;
+	SliderCheckBox *rodReactivityBox;
+	FloatBox<float> *reactivityLimitBox[2];
+	FloatBox<float> *temperatureLimitBox[2];
+	FloatBox<float> *displayBox;
+	SliderCheckBox *logScaleBox;
+	SliderCheckBox *hardcoreBox;
+	IntervalSlider *displayTimeSlider;
+	SliderCheckBox *timeLockedBox;
 
-	FloatBox<double>* delayedGroupBoxes[12];
-	SliderCheckBox* delayedGroupsEnabledBoxes[6];
-	FloatBox<double>* coreVolumeBox;
-	FloatBox<double>* waterVolumeInput;
-	SliderCheckBox* tempEffectsBox;
-	SliderCheckBox* fissionProductsBox;
-	FloatBox<float>* excessReactivityBox;
-	FloatBox<double>* sourceActivityBox;
-	FloatBox<double>* coolingPowerBox;
-	FloatBox<double>* promptNeutronLifetimeBox;
-	Plot* alphaPlot;
+	FloatBox<double> *delayedGroupBoxes[12];
+	SliderCheckBox *delayedGroupsEnabledBoxes[6];
+	FloatBox<double> *coreVolumeBox;
+	FloatBox<double> *waterVolumeInput;
+	SliderCheckBox *tempEffectsBox;
+	SliderCheckBox *fissionProductsBox;
+	FloatBox<float> *excessReactivityBox;
+	FloatBox<double> *sourceActivityBox;
+	FloatBox<double> *coolingPowerBox;
+	FloatBox<double> *promptNeutronLifetimeBox;
+	Plot *alphaPlot;
 	const size_t sigmaPoints = 3;
-	FloatBox<float>* alpha0Box;
-	FloatBox<float>* alphaPeakBox;
-	FloatBox<float>* tempPeakBox;
-	FloatBox<float>* alphaSlopeBox;
+	FloatBox<float> *alpha0Box;
+	FloatBox<float> *alphaPeakBox;
+	FloatBox<float> *tempPeakBox;
+	FloatBox<float> *alphaSlopeBox;
 
-	IntBox<int>* rodStepsBox[NUMBER_OF_CONTROL_RODS];
-	FloatBox<float>* rodWorthBox[NUMBER_OF_CONTROL_RODS];
-	FloatBox<float>* rodSpeedBox[NUMBER_OF_CONTROL_RODS];
-	Slider* rodCurveSliders[NUMBER_OF_CONTROL_RODS * 2];
+	IntBox<int> *rodStepsBox[NUMBER_OF_CONTROL_RODS];
+	FloatBox<float> *rodWorthBox[NUMBER_OF_CONTROL_RODS];
+	FloatBox<float> *rodSpeedBox[NUMBER_OF_CONTROL_RODS];
+	Slider *rodCurveSliders[NUMBER_OF_CONTROL_RODS * 2];
 
 	// Rod modes
-	FloatBox<float>* periodBoxes[3];
-	FloatBox<float>* amplitudeBoxes[3];
-	IntBox<int>* squareWaveBoxes[4];
-	SliderCheckBox* squareWaveSpeedBox;
-	ComboBox* sineModeBox;
-	IntBox<int>* sawToothBoxes[6];
-	SliderCheckBox* keepCurrentPowerBox;
-	FloatBox<double>* steadyPowerBox;
-	SliderCheckBox* avoidPeriodScramBox;
-	FloatBox<float>* automaticMarginBox;
+	FloatBox<float> *periodBoxes[3];
+	FloatBox<float> *amplitudeBoxes[3];
+	IntBox<int> *squareWaveBoxes[4];
+	SliderCheckBox *squareWaveSpeedBox;
+	ComboBox *sineModeBox;
+	IntBox<int> *sawToothBoxes[6];
+	SliderCheckBox *keepCurrentPowerBox;
+	FloatBox<double> *steadyPowerBox;
+	SliderCheckBox *avoidPeriodScramBox;
+	FloatBox<float> *automaticMarginBox;
 
 	// Neutron source simulation
-	FloatBox<float>* ns_periodBoxes[3];
-	FloatBox<float>* ns_amplitudeBoxes[3];
-	IntBox<int>* ns_squareWaveBoxes[4];
-	ComboBox* ns_sineModeBox;
-	IntBox<int>* ns_sawToothBoxes[6];
+	FloatBox<float> *ns_periodBoxes[3];
+	FloatBox<float> *ns_amplitudeBoxes[3];
+	IntBox<int> *ns_squareWaveBoxes[4];
+	ComboBox *ns_sineModeBox;
+	IntBox<int> *ns_sawToothBoxes[6];
 
-	SliderCheckBox* scramEnabledBoxes[5];
-	IntBox<float>* periodLimBox;
-	FloatBox<double>* powerLimBox;
-	FloatBox<float>* fuel_tempLimBox;
-	FloatBox<float>* water_tempLimBox;
-	FloatBox<float>* water_levelLimBox;
-	SliderCheckBox* allRodsBox;
-	SliderCheckBox* autoScramBox;
+	SliderCheckBox *scramEnabledBoxes[5];
+	IntBox<float> *periodLimBox;
+	FloatBox<double> *powerLimBox;
+	FloatBox<float> *fuel_tempLimBox;
+	FloatBox<float> *water_tempLimBox;
+	FloatBox<float> *water_levelLimBox;
+	SliderCheckBox *allRodsBox;
+	SliderCheckBox *autoScramBox;
 
-	IntervalSlider* pulseTimer;
+	IntervalSlider *pulseTimer;
 
-	CustomLabel* userScram;
-	CustomLabel* powerScram;
-	CustomLabel* fuelTemperatureScram;
-	CustomLabel* waterTemperatureScram;
-	CustomLabel* waterLevelScram;
-	CustomLabel* periodScram;
+	CustomLabel *userScram;
+	CustomLabel *powerScram;
+	CustomLabel *fuelTemperatureScram;
+	CustomLabel *waterTemperatureScram;
+	CustomLabel *waterLevelScram;
+	CustomLabel *periodScram;
 
-	CustomLabel* timeLabel;
-	CustomLabel* simStatusLabel;
-	CustomLabel* simFactorLabel;
+	CustomLabel *timeLabel;
+	CustomLabel *simStatusLabel;
+	CustomLabel *simFactorLabel;
 
-	CustomLabel* pulseLabels[4];
-	CustomLabel* pulseDisplayLabels[4];
-	CustomLabel* standInCover;
+	CustomLabel *pulseLabels[4];
+	CustomLabel *pulseDisplayLabels[4];
+	CustomLabel *standInCover;
 
-	DataDisplay<double>* powerShow;
-	DataDisplay<float>* reactivityShow;
-	DataDisplay<float>* rodReactivityShow;
-	DataDisplay<float>* temperatureShow;
-	DataDisplay<double>* periodShow;
-	DataDisplay<double>* waterTemperatureShow;
-	DataDisplay<double>* waterLevelShow;
+	DataDisplay<double> *powerShow;
+	DataDisplay<float> *reactivityShow;
+	DataDisplay<float> *rodReactivityShow;
+	DataDisplay<float> *temperatureShow;
+	DataDisplay<double> *periodShow;
+	DataDisplay<double> *waterTemperatureShow;
+	DataDisplay<double> *waterLevelShow;
 
-	Plot* operationModes[3];
-	Plot* operationModesTrackers[3];
+	Plot *operationModes[3];
+	Plot *operationModesTrackers[3];
 
 	Color coolBlue = Color(77, 184, 255, 255);
 
-	BoxLayout* panelsLayout = new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 10);
+	BoxLayout *panelsLayout = new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 10);
 
 	uint16_t LEDstatus = 0;
 	bool boxConnected = false;
@@ -361,7 +363,7 @@ public:
 		reactor = new Simulator(properties);
 		reactor->setDebugMode(debugMode);
 		reactor->setScramCallback([this](int signal)
-			{
+								  {
 				if (signal > 0) LEDstatus += (uint16_t)1 << 13;
 				std::string reason = "";
 				if ((signal & Simulator::ScramSignals::Period) != 0)
@@ -410,10 +412,9 @@ public:
 				cout << "The reactor has SCRAMed!" << endl;
 				cout << "=======REASON=======" << endl;
 				cout << reason << endl;
-				cout << "====================" << endl;
-			});
+				cout << "====================" << endl; });
 		reactor->setResetScramCallback([this]
-			{
+									   {
 				LEDstatus &= RESET_ALARM_KEY;
 				userScram->setGlow(false);
 				userScram->setBackgroundColor(Color(120, 120));
@@ -426,20 +427,18 @@ public:
 				waterLevelScram->setGlow(false);
 				waterLevelScram->setBackgroundColor(Color(120, 120));
 				fuelTemperatureScram->setGlow(false);
-				fuelTemperatureScram->setBackgroundColor(Color(120, 120));
-			});
+				fuelTemperatureScram->setBackgroundColor(Color(120, 120)); });
 		reactor->setPulseCallback([this](Simulator::PulseData data)
-			{
+								  {
 				// Format pulse graph
 				pulsePerformed = true;
 				pulseTimer->setEnabled(true);
 				standInCover->setVisible(false);
 
 				lastPulseData = data;
-				updatePulseTrack(true);
-			});
+				updatePulseTrack(true); });
 		reactor->setSevereErrorCallback([this](int reason)
-			{
+										{
 				toggleBaseWindow(false);
 				std::string msgTxt;
 				switch (reason)
@@ -457,18 +456,18 @@ public:
 					{
 						toggleBaseWindow(true);
 						msg->dispose();
-					});
-			});
+					}); });
 	}
 
 	void updatePulseTrack(bool updateData = false)
 	{
-		if (!pulsePerformed) return;
+		if (!pulsePerformed)
+			return;
 		size_t startIdx, endIdx;
 		startIdx = reactor->getIndexFromTime(reactor->time_[lastPulseData.pulseStartIndex] + pulseTimer->value(0) * 5);
 		endIdx = reactor->getIndexFromTime(reactor->time_[lastPulseData.pulseStartIndex] + pulseTimer->value(1) * 5);
 
-		double timeLimits[2] = { reactor->time_[startIdx], reactor->time_[endIdx] };
+		double timeLimits[2] = {reactor->time_[startIdx], reactor->time_[endIdx]};
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -498,7 +497,7 @@ public:
 			}
 		}
 
-		const int per[2] = { (int)roundf(fmodf(pulseTimer->value(0) * 5, 1.f) * 100) , (int)roundf(fmodf(pulseTimer->value(1) * 5, 1.f) * 100) };
+		const int per[2] = {(int)roundf(fmodf(pulseTimer->value(0) * 5, 1.f) * 100), (int)roundf(fmodf(pulseTimer->value(1) * 5, 1.f) * 100)};
 		pulseDisplayLabels[0]->setCaption(std::to_string((int)(pulseTimer->value(0) * 5)));
 		pulseDisplayLabels[1]->setCaption((per[0] < 10) ? "0" : "" + std::to_string(per[0]));
 		pulseDisplayLabels[2]->setCaption(std::to_string((int)(pulseTimer->value(1) * 5)));
@@ -524,13 +523,14 @@ public:
 		}
 		{ // update range
 			float vals[2];
-			for (int i = 0; i < 2; i++) vals[i] = displayTimeSlider->value(i);
+			for (int i = 0; i < 2; i++)
+				vals[i] = displayTimeSlider->value(i);
 			displayBox->setValue((float)(std::round(1000 * range * (vals[1] - vals[0])) * 1e-3));
 		}
 	}
 
 	// MORE
-	void createDataDisplays(Widget* parent, RelativeGridLayout* rLayout)
+	void createDataDisplays(Widget *parent, RelativeGridLayout *rLayout)
 	{
 		// Create the displays
 		displayPanel1 = parent->add<CustomWidget>();
@@ -686,11 +686,12 @@ public:
 		rodReactivityPlot->setYdata(reactor->rodReactivity_);
 		powerPlot->setXdata(reactor->time_);
 		powerPlot->setYdata(reactor->state_vector_[0]);
-		powerPlot->setValueComputing([this](double* val, const size_t /*index*/) { *val = reactor->powerFromNeutrons(*val); });
+		powerPlot->setValueComputing([this](double *val, const size_t /*index*/)
+									 { *val = reactor->powerFromNeutrons(*val); });
 		temperaturePlot->setXdata(reactor->time_);
 		temperaturePlot->setYdata(reactor->temperature_);
 		// Link plots to display interval
-		//for (size_t i = 0; i < canvas->graphNumber(); i++) {
+		// for (size_t i = 0; i < canvas->graphNumber(); i++) {
 		//	canvas->getPlot(i)->setPlotRange(displayInterval[0], displayInterval[1]);
 		//}
 	}
@@ -706,7 +707,8 @@ public:
 			lastBoxCheck = get_seconds_since_epoch();
 			for (size_t i = 0; i < comPorts.size(); i++)
 			{
-				if (!boxConnected) tryConnectingTo(comPorts[i]);
+				if (!boxConnected)
+					tryConnectingTo(comPorts[i]);
 			}
 		}
 		catch (exception e)
@@ -717,7 +719,8 @@ public:
 
 	void updateCOMports()
 	{
-		if (boxConnected) return;
+		if (boxConnected)
+			return;
 
 		double now = get_seconds_since_epoch();
 		if (now > lastBoxCheck + 5.)
@@ -740,7 +743,8 @@ public:
 								break;
 							}
 						}
-						if (port.length() && !boxConnected) tryConnectingTo(port);
+						if (port.length() && !boxConnected)
+							tryConnectingTo(port);
 					}
 				}
 			}
@@ -757,7 +761,8 @@ public:
 		cout << "Connecting to " << port << "..." << endl;
 		try
 		{
-			theBox = new Serial(port.c_str());;
+			theBox = new Serial(port.c_str());
+			;
 		}
 		catch (exception e)
 		{
@@ -826,7 +831,8 @@ public:
 		pulsePlots[3]->setHorizontalUnits("s");
 		pulsePlots[3]->setHorizontalTextOffset(20.f);
 		pulsePlots[3]->setYdata(reactor->state_vector_[0]);
-		pulsePlots[3]->setValueComputing([this](double* val, const size_t /*index*/) { *val = reactor->powerFromNeutrons(*val); }); // convert neutrons to watts
+		pulsePlots[3]->setValueComputing([this](double *val, const size_t /*index*/)
+										 { *val = reactor->powerFromNeutrons(*val); }); // convert neutrons to watts
 
 		pulsePlots[2]->setName("Reactivity");
 		pulsePlots[2]->setUnits("pcm");
@@ -862,11 +868,12 @@ public:
 	{
 		cout << "======= Research reactor simulator " << version() << " =======" << endl;
 
-		//Load settings
+		// Load settings
 		properties = new Settings();
 
-		//Keyboard
-		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) lastKeyPressed[i] = false;
+		// Keyboard
+		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
+			lastKeyPressed[i] = false;
 
 		// Theme
 		this->mTheme->mTabInnerMargin = 0;
@@ -877,7 +884,7 @@ public:
 		this->mTheme->mTabButtonVerticalPadding = 7.f;
 		this->mTheme->mBorderDark = coolBlue;
 		this->mTheme->mBorderLight = Color(coolBlue.r(), coolBlue.g(), coolBlue.b(), 0.4f);
-		//this->mTheme->mBorderWidth = 0.8f;
+		// this->mTheme->mBorderWidth = 0.8f;
 		this->mTheme->mTextBoxFontSize = 18.f;
 		// Set minimum size
 		glfwSetWindowSizeLimits(mGLFWWindow, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
@@ -894,7 +901,6 @@ public:
 		}
 		glfwSetWindowIcon(mGLFWWindow, WINDOW_ICON_NUM, icons);
 
-
 		// Initialize the reactor simulator
 		initializeSimulator();
 
@@ -908,7 +914,7 @@ public:
 			std::cout << "===========The Box Mk. III===========" << std::endl;
 		}
 #endif
-		RelativeGridLayout* baseLayout = new RelativeGridLayout();
+		RelativeGridLayout *baseLayout = new RelativeGridLayout();
 		baseLayout->appendCol(1.f);
 		baseLayout->appendRow(1.f);
 		this->setLayout(baseLayout);
@@ -918,15 +924,15 @@ public:
 		// Create a layout for the window
 		relativeLayout = new RelativeGridLayout();
 		relativeLayout->appendCol(1.f);
-		relativeLayout->appendRow(properties->graphSize);													// 0 graph
-		relativeLayout->appendRow(1.f - properties->graphSize);												// 1 controls
-		relativeLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));		// 2 border
-		relativeLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 3 bottom panel
+		relativeLayout->appendRow(properties->graphSize);												// 0 graph
+		relativeLayout->appendRow(1.f - properties->graphSize);											// 1 controls
+		relativeLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));	// 2 border
+		relativeLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed)); // 3 bottom panel
 		baseWindow->setLayout(relativeLayout);
 		baseWindow->setBackgroundColor(Color(80, 255));
 		baseWindow->setDrawBackground(true);
 
-		CustomWidget* bottomBorder = baseWindow->add<CustomWidget>();
+		CustomWidget *bottomBorder = baseWindow->add<CustomWidget>();
 		bottomBorder->setBackgroundColor(Color(255, 255));
 		bottomBorder->setDrawBackground(true);
 		bottomBorder->setBackgroundColor(coolBlue);
@@ -957,12 +963,12 @@ public:
 		// Create rod settings tab
 		createRodSettingsTab();
 
-		//Create delayed groups tab
+		// Create delayed groups tab
 		createDelayedGroupsTab();
 
-		//Create data in/out tab
-		//Widget* data_tab = tabControl->createTab("Data tab settings");
-		//data_tab->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum, 10, 10));
+		// Create data in/out tab
+		// Widget* data_tab = tabControl->createTab("Data tab settings");
+		// data_tab->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum, 10, 10));
 
 		// Create operation modes tab
 		createOperationModesTab();
@@ -985,35 +991,35 @@ public:
 	// Bottom panel initialization
 	void createBottomPanel()
 	{
-		CustomWidget* bottomPanel = baseWindow->add<CustomWidget>();
+		CustomWidget *bottomPanel = baseWindow->add<CustomWidget>();
 		bottomPanel->setId("bottom panel");
 		bottomPanel->setDrawBackground(true);
 		bottomPanel->setBackgroundColor(Color(35, 255));
 		relativeLayout->setAnchor(bottomPanel, RelativeGridLayout::makeAnchor(0, 3));
-		RelativeGridLayout* bottomLayout = new RelativeGridLayout();
+		RelativeGridLayout *bottomLayout = new RelativeGridLayout();
 		bottomLayout->appendRow(1.f);
-		bottomLayout->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed));	// 0 version label
-		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	// 1 border
-		bottomLayout->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));	// 2 fps label
-		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	// 3 border
-		bottomLayout->appendCol(1.f);																	// 4 speed label
-		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	// 5 border
-		bottomLayout->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));	// 6 buttons
-		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	// 7 border
-		bottomLayout->appendCol(RelativeGridLayout::Size(80.f, RelativeGridLayout::SizeType::Fixed));	// 8 simulation time factor
-		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	// 9 border
-		bottomLayout->appendCol(RelativeGridLayout::Size(150.f, RelativeGridLayout::SizeType::Fixed));	// 10 time label
+		bottomLayout->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed)); // 0 version label
+		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));   // 1 border
+		bottomLayout->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed)); // 2 fps label
+		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));   // 3 border
+		bottomLayout->appendCol(1.f);																   // 4 speed label
+		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));   // 5 border
+		bottomLayout->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed)); // 6 buttons
+		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));   // 7 border
+		bottomLayout->appendCol(RelativeGridLayout::Size(80.f, RelativeGridLayout::SizeType::Fixed));  // 8 simulation time factor
+		bottomLayout->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));   // 9 border
+		bottomLayout->appendCol(RelativeGridLayout::Size(150.f, RelativeGridLayout::SizeType::Fixed)); // 10 time label
 		bottomPanel->setLayout(bottomLayout);
 
 		for (int i = 1; i < 11; i += 2)
 		{
-			CustomWidget* border = bottomPanel->add<CustomWidget>();
+			CustomWidget *border = bottomPanel->add<CustomWidget>();
 			border->setDrawBackground(true);
 			border->setBackgroundColor(coolBlue);
 			bottomLayout->setAnchor(border, RelativeGridLayout::makeAnchor(i, 0));
 		}
 
-		CustomLabel* versionLabel = bottomPanel->add<CustomLabel>("v " + version());
+		CustomLabel *versionLabel = bottomPanel->add<CustomLabel>("v " + version());
 		versionLabel->setTextAlignment(CustomLabel::TextAlign::LEFT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		versionLabel->setPadding(0, 5.f);
 		versionLabel->setFontSize(20.f);
@@ -1027,39 +1033,35 @@ public:
 		fpsLabel->setPadding(0, 5.f);
 		bottomLayout->setAnchor(fpsLabel, RelativeGridLayout::makeAnchor(2, 0));
 
-		CustomLabel* speedText = bottomPanel->add<CustomLabel>("Simulation speed:");
+		CustomLabel *speedText = bottomPanel->add<CustomLabel>("Simulation speed:");
 		speedText->setPadding(2, 5);
 		speedText->setColor(Color(255, 255));
 		speedText->setFontSize(20.f);
 		speedText->setTextAlignment(CustomLabel::TextAlign::RIGHT | CustomLabel::TextAlign::VERTICAL_CENTER);
 		bottomLayout->setAnchor(speedText, RelativeGridLayout::makeAnchor(4, 0, 1, 1, Alignment::Maximum));
 
-		Widget* speedToolPanel = bottomPanel->add<Widget>();
+		Widget *speedToolPanel = bottomPanel->add<Widget>();
 		bottomLayout->setAnchor(speedToolPanel, RelativeGridLayout::makeAnchor(6, 0, 1, 1, Alignment::Middle));
 		speedToolPanel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 5));
 		slowDown = speedToolPanel->add<ToolButton>(ENTYPO_ICON_FB);
 		slowDown->setFlags(Button::Flags::NormalButton);
 		slowDown->setCallback([this]()
-			{
+							  {
 				if (!reactor->isPaused())
 				{
 					this->setSimulationTime(std::max((int)selectedTime - 1, 0));
-				}
-			});
+				} });
 		playPause = speedToolPanel->add<ToolButton>(ENTYPO_ICON_PAUS);
 		playPause->setChangeCallback([this](bool value)
-			{
-				playPauseSimulation(!value);
-			});
+									 { playPauseSimulation(!value); });
 		speedUp = speedToolPanel->add<ToolButton>(ENTYPO_ICON_FF);
 		speedUp->setFlags(Button::Flags::NormalButton);
 		speedUp->setCallback([this]()
-			{
+							 {
 				if (!this->reactor->isPaused())
 				{
 					this->setSimulationTime(std::min((int)selectedTime + 1, SIM_TIME_FACTOR_NUMBER - 1));
-				}
-			});
+				} });
 
 		simFactorLabel = bottomPanel->add<CustomLabel>("real-time");
 		simFactorLabel->setColor(Color(255, 255));
@@ -1083,9 +1085,9 @@ public:
 
 	void createMainTab()
 	{
-		Widget* mainTabBase = tabControl->createTab("Main controls");
+		Widget *mainTabBase = tabControl->createTab("Main controls");
 		mainTabBase->setId("main tab");
-		RelativeGridLayout* rel3 = new RelativeGridLayout();
+		RelativeGridLayout *rel3 = new RelativeGridLayout();
 		rel3->appendCol(RelativeGridLayout::Size(250.f, RelativeGridLayout::SizeType::Fixed)); // 0 first column
 		rel3->appendCol(RelativeGridLayout::Size(250.f, RelativeGridLayout::SizeType::Fixed)); // 1 second column
 		rel3->appendCol(RelativeGridLayout::Size(80.f, RelativeGridLayout::SizeType::Fixed));  // 2 reactivitycolumn
@@ -1101,7 +1103,7 @@ public:
 		createDataDisplays(mainTabBase, rel3);
 
 		// Create a panel for the buttons of the main window
-		Widget* main_right = mainTabBase->add<Widget>();
+		Widget *main_right = mainTabBase->add<Widget>();
 		rel3->setAnchor(main_right, RelativeGridLayout::makeAnchor(6, 0));
 		main_right->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 10, 10));
 
@@ -1109,29 +1111,30 @@ public:
 		/*Widget* reactivityPanel = main_right->add<Widget>();
 		reactivityPanel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 20));*/
 
-		Widget* controlButtonsPanel = main_right->add<Widget>();
+		Widget *controlButtonsPanel = main_right->add<Widget>();
 		controlButtonsPanel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 20));
-		Button* scram;
+		Button *scram;
 		scram = controlButtonsPanel->add<Button>("SCRAM", ENTYPO_ICON_NEW);
 		scram->setBackgroundColor(Color(255, 0, 0, 100));
 		scram->setFixedSize(Vector2i(150, 45));
 		scram->setTextColor(Color(255, 255));
-		scram->setCallback([this] { reactor->scram(Simulator::ScramSignals::User); });
-		Button* fire;
+		scram->setCallback([this]
+						   { reactor->scram(Simulator::ScramSignals::User); });
+		Button *fire;
 		fire = controlButtonsPanel->add<Button>("FIRE");
 		fire->setBackgroundColor(Color(255, 0, 0, 100));
 		fire->setFixedSize(Vector2i(150, 45));
 		fire->setTextColor(Color(255, 255));
-		fire->setCallback([this] { reactor->beginPulse(); });
-
+		fire->setCallback([this]
+						  { reactor->beginPulse(); });
 
 		// Rod mode
-		Widget* panel = main_right->add<Widget>();
+		Widget *panel = main_right->add<Widget>();
 		panel->setLayout(panelsLayout);
 		rodMode = panel->add<ComboBox>(modes);
 		rodMode->setFixedWidth(150);
 		rodMode->setCallback([this](int change)
-			{
+							 {
 				switch (change)
 				{
 				case 0:
@@ -1156,32 +1159,33 @@ public:
 					//case 5:
 					//	reactor->regulatingRod()->setOperationMode(ControlRod::OperationModes::Pulse);
 					//	break;
-				}
-			});
+				} });
 		rodMode->setSelectedIndex(0);
 
-		Button* unscram;
+		Button *unscram;
 		unscram = main_right->add<Button>("RESET SCRAM", ENTYPO_ICON_CCW);
 		unscram->setTextColor(Color(255, 255));
 		unscram->setFixedWidth(150);
-		unscram->setCallback([this] { reactor->scram(Simulator::ScramSignals::None); });
+		unscram->setCallback([this]
+							 { reactor->scram(Simulator::ScramSignals::None); });
 
 		// Create reactivity display
 		periodDisplay = mainTabBase->add<PeriodDisplay>();
 		rel3->setAnchor(periodDisplay, RelativeGridLayout::makeAnchor(2, 0));
 
 		// Create rod display
-		Widget* controlRodBase = mainTabBase->add<Widget>();
+		Widget *controlRodBase = mainTabBase->add<Widget>();
 		rel3->setAnchor(controlRodBase, RelativeGridLayout::makeAnchor(4, 0));
-		RelativeGridLayout* rodLayout = new RelativeGridLayout();
+		RelativeGridLayout *rodLayout = new RelativeGridLayout();
 		rodLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));
 		rodLayout->appendRow(1.f);
 		rodLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));
-		for (int i = 0; i < 3; i++) rodLayout->appendCol(1.f);
+		for (int i = 0; i < 3; i++)
+			rodLayout->appendCol(1.f);
 		controlRodBase->setLayout(rodLayout);
 
-		CustomLabel* temp;
-		CustomWidget* backg = controlRodBase->add<CustomWidget>();
+		CustomLabel *temp;
+		CustomWidget *backg = controlRodBase->add<CustomWidget>();
 		backg->setDrawBackground(true);
 		backg->setBackgroundColor(Color(.15f, 1.f));
 		rodLayout->setAnchor(backg, RelativeGridLayout::makeAnchor(0, 0, 3));
@@ -1191,7 +1195,8 @@ public:
 			temp = controlRodBase->add<CustomLabel>(i ? ((i == 1) ? "R" : "C") : "S", "sans-bold");
 			temp->setFontSize(25.f);
 			temp->setColor(Color(255, 255));
-			if (i != 1) temp->setPadding(2 - i, ControlRodDisplay::getRodSpacing() * 2 / 3);
+			if (i != 1)
+				temp->setPadding(2 - i, ControlRodDisplay::getRodSpacing() * 2 / 3);
 			temp->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 			rodLayout->setAnchor(temp, RelativeGridLayout::makeAnchor(i, 0));
 			rodDisplay->setRod(i, reactor->rods[i]->getRodSteps(), reactor->rods[i]->getActualPosition(), reactor->rods[i]->getExactPosition(), reactor->rods[i]->isEnabled());
@@ -1199,22 +1204,22 @@ public:
 		rodLayout->setAnchor(rodDisplay, RelativeGridLayout::makeAnchor(0, 1, 3));
 
 		// Create a panel for alarms
-		CustomWidget* alarmPanel = mainTabBase->add<CustomWidget>();
+		CustomWidget *alarmPanel = mainTabBase->add<CustomWidget>();
 		alarmPanel->setDrawBackground(true);
 		alarmPanel->setBackgroundColor(Color(40, 255));
 		rel3->setAnchor(alarmPanel, RelativeGridLayout::makeAnchor(7, 0));
-		RelativeGridLayout* alarmLayout = new RelativeGridLayout();
+		RelativeGridLayout *alarmLayout = new RelativeGridLayout();
 		alarmLayout->appendCol(1.f);
 		alarmLayout->appendRow(RelativeGridLayout::Size(35.f, RelativeGridLayout::SizeType::Fixed));
 		alarmPanel->setLayout(alarmLayout);
 
-		CustomLabel* alarmHeader = alarmPanel->add<CustomLabel>("SCRAMs");
+		CustomLabel *alarmHeader = alarmPanel->add<CustomLabel>("SCRAMs");
 		alarmHeader->setFontSize(24.f);
 		alarmHeader->setTextAlignment(CustomLabel::TextAlign::HORIZONTAL_CENTER | CustomLabel::TextAlign::VERTICAL_CENTER);
 		alarmLayout->setAnchor(alarmHeader, RelativeGridLayout::makeAnchor(0, 0));
 		// Alarm labels
-		CustomLabel* alarmLabels[6];
-		std::string text[6] = { "MAN", "PER", "FTEMP", "WTEMP", "POW", "WLEVEL" };
+		CustomLabel *alarmLabels[6];
+		std::string text[6] = {"MAN", "PER", "FTEMP", "WTEMP", "POW", "WLEVEL"};
 		RelativeGridLayout::Anchor a;
 		for (int i = 0; i < 6; i++)
 		{
@@ -1263,7 +1268,7 @@ public:
 				rodBox[i]->setMinMaxValues(0, (int)*reactor->rods[i]->getRodSteps());
 				rodBox[i]->setSpinnable(true);
 				rodBox[i]->setCallback([this, i](const int change)
-					{
+									   {
 						try
 						{
 							this->reactor->rods[i]->commandMove((size_t)change);
@@ -1272,22 +1277,20 @@ public:
 						{
 							return false;
 						}
-						return true;
-					});
+						return true; });
 			}
-
 		}
 
 		// Checkboxes
 		{
-			Widget* checkBoxCooling = main_right->add<Widget>();
+			Widget *checkBoxCooling = main_right->add<Widget>();
 			checkBoxCooling->setLayout(panelsLayout);
 			checkBoxCooling->add<CustomLabel>("Cooling :", "sans-bold");
 			cooling = checkBoxCooling->add<SliderCheckBox>();
 			cooling->setFontSize(16);
 			cooling->setChecked(false);
 			cooling->setCallback([this](bool value)
-				{
+								 {
 					properties->waterCooling = value;
 					reactor->setWaterCooling(value);
 					if (value)
@@ -1297,28 +1300,26 @@ public:
 					else
 					{
 						//cooling->setCaption("disabled");
-					}
-				});
+					} });
 
-			Widget* checkBoxPanelNeutronSource = main_right->add<Widget>();
+			Widget *checkBoxPanelNeutronSource = main_right->add<Widget>();
 			checkBoxPanelNeutronSource->setLayout(panelsLayout);
 			checkBoxPanelNeutronSource->add<CustomLabel>("Neutron source :", "sans-bold");
 			neutronSourceCB = checkBoxPanelNeutronSource->add<SliderCheckBox>();
 			neutronSourceCB->setFontSize(16);
 			neutronSourceCB->setChecked(reactor->getNeutronSourceInserted());
 			neutronSourceCB->setCallback([this](bool value)
-				{
+										 {
 					reactor->setNeutronSourceInserted(value);
-					properties->neutronSourceInserted = value;
-				});
+					properties->neutronSourceInserted = value; });
 		}
 	}
 
 	void createGraphSettingsTab()
 	{
-		Widget* graph_controls = tabControl->createTab("Graph controls");
+		Widget *graph_controls = tabControl->createTab("Graph controls");
 		graph_controls->setId("graph controls");
-		RelativeGridLayout* graphControlsLayout = new RelativeGridLayout();
+		RelativeGridLayout *graphControlsLayout = new RelativeGridLayout();
 		graphControlsLayout->appendRow(RelativeGridLayout::Size(140.f, RelativeGridLayout::SizeType::Fixed));
 		graphControlsLayout->appendRow(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed));
 		graphControlsLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));
@@ -1328,16 +1329,16 @@ public:
 		graphControlsLayout->appendCol(1.f);
 		graphControlsLayout->appendCol(1.f);
 		graph_controls->setLayout(graphControlsLayout);
-		CustomWidget* border = graph_controls->add<CustomWidget>();
+		CustomWidget *border = graph_controls->add<CustomWidget>();
 		border->setBackgroundColor(coolBlue);
 		border->setDrawBackground(true);
 		graphControlsLayout->setAnchor(border, RelativeGridLayout::makeAnchor(0, 2, 2, 1));
 
 		// Create a panel for graph size
-		Widget* generalLeftPanel = new Widget(graph_controls);
+		Widget *generalLeftPanel = new Widget(graph_controls);
 		graphControlsLayout->setAnchor(generalLeftPanel, RelativeGridLayout::makeAnchor(0, 0));
 		generalLeftPanel->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Minimum, 10, 10));
-		Widget* graphSizePanel = generalLeftPanel->add<Widget>();
+		Widget *graphSizePanel = generalLeftPanel->add<Widget>();
 		graphSizePanel->setLayout(panelsLayout);
 
 		graphSizePanel->add<Label>("Graph size :", "sans-bold");
@@ -1351,34 +1352,35 @@ public:
 		graphSizeBox->setMaxValue(70);
 		graphSizeBox->setValueIncrement(1);
 		graphSizeBox->setCallback([this](int a)
-			{
+								  {
 				if (a > 70) a = 70;
 				if (a < 30) a = 30;
 				relativeLayout->setRowSize(0, a / 100.f);
 				relativeLayout->setRowSize(1, 1.f - a / 100.f);
 				performLayout();
-				properties->graphSize = a / 100.f;
-			});
+				properties->graphSize = a / 100.f; });
 
 		// Create a panel for display time
-		Widget* timePanel = generalLeftPanel->add<Widget>();
+		Widget *timePanel = generalLeftPanel->add<Widget>();
 		timePanel->setLayout(panelsLayout);
 
 		// Create a panel for graph limits
-		Widget* reactivityLimitsPanel = generalLeftPanel->add<Widget>();
+		Widget *reactivityLimitsPanel = generalLeftPanel->add<Widget>();
 		reactivityLimitsPanel->setLayout(panelsLayout);
 
 		// Create another panel for graph limits
-		Widget* temperatureLimitsPanel = generalLeftPanel->add<Widget>();
+		Widget *temperatureLimitsPanel = generalLeftPanel->add<Widget>();
 		temperatureLimitsPanel->setLayout(panelsLayout);
 
 		// Create a panel for curve fill, rod reactivity line visibility, log scale power and hardcore mode
-		Widget* sliderPanel = graph_controls->add<Widget>();
+		Widget *sliderPanel = graph_controls->add<Widget>();
 		graphControlsLayout->setAnchor(sliderPanel, RelativeGridLayout::makeAnchor(1, 0, 1, 1, Alignment::Maximum, Alignment::Fill));
 
-		RelativeGridLayout* sliderLayout = new RelativeGridLayout();
-		for (int i = 0; i < 4; i++) sliderLayout->appendCol((i % 2) ? RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed) : 1.f);
-		for (int i = 0; i < 4; i++) sliderLayout->appendRow(1.f);
+		RelativeGridLayout *sliderLayout = new RelativeGridLayout();
+		for (int i = 0; i < 4; i++)
+			sliderLayout->appendCol((i % 2) ? RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed) : 1.f);
+		for (int i = 0; i < 4; i++)
+			sliderLayout->appendRow(1.f);
 		sliderPanel->setLayout(sliderLayout);
 
 		sliderLayout->setAnchor(sliderPanel->add<Label>("Rod reactivity plot:", "sans-bold"), RelativeGridLayout::makeAnchor(0, 0, 1, 1, Alignment::Minimum, Alignment::Middle));
@@ -1387,10 +1389,9 @@ public:
 		rodReactivityBox->setFontSize(16);
 		rodReactivityBox->setChecked(properties->rodReactivityPlot);
 		rodReactivityBox->setCallback([this](bool value)
-			{
+									  {
 				properties->rodReactivityPlot = value;
-				rodReactivityPlot->setEnabled(value && !properties->reactivityHardcore);
-			});
+				rodReactivityPlot->setEnabled(value && !properties->reactivityHardcore); });
 
 		sliderLayout->setAnchor(sliderPanel->add<Label>("Curve fill:", "sans-bold"), RelativeGridLayout::makeAnchor(0, 1, 1, 1, Alignment::Minimum, Alignment::Middle));
 		curveFillBox = sliderPanel->add<SliderCheckBox>();
@@ -1398,13 +1399,12 @@ public:
 		curveFillBox->setFontSize(16);
 		curveFillBox->setChecked(properties->curveFill);
 		curveFillBox->setCallback([this](bool value)
-			{
+								  {
 				rodReactivityPlot->setFill(value);
 				reactivityPlot->setFill(value);
 				powerPlot->setFill(value);
 				temperaturePlot->setFill(value);
-				properties->curveFill = value;
-			});
+				properties->curveFill = value; });
 
 		timePanel->add<Label>("Display time :", "sans-bold");
 		displayBox = timePanel->add<FloatBox<float>>(properties->displayTime);
@@ -1417,15 +1417,14 @@ public:
 		displayBox->setMinMaxValues(0.5f, (float)reactor->getDeleteOldValues());
 		displayBox->setValueIncrement(1.f);
 		displayBox->setCallback([this](float a)
-			{
+								{
 				properties->displayTime = std::min((float)reactor->getDeleteOldValues(), std::max(a, 0.5f));
 				std::string limit = formatDecimalsDouble((double)properties->displayTime, 1) + " seconds ago";
 				powerPlot->setLimitOverride(0, limit);
-				delayedGroups[0]->setLimitOverride(0, limit);
-			});
+				delayedGroups[0]->setLimitOverride(0, limit); });
 
 		{
-			Label* temp = reactivityLimitsPanel->add<Label>("Reactivity graph:  from ", "sans-bold");
+			Label *temp = reactivityLimitsPanel->add<Label>("Reactivity graph:  from ", "sans-bold");
 			temp->setFixedWidth(160);
 			reactivityLimitBox[0] = reactivityLimitsPanel->add<FloatBox<float>>(properties->reactivityGraphLimits[0]);
 			reactivityLimitBox[0]->setFixedSize(Vector2i(100, 20));
@@ -1436,9 +1435,7 @@ public:
 			reactivityLimitBox[0]->setSpinnable(true);
 			reactivityLimitBox[0]->setValueIncrement(1.f);
 			reactivityLimitBox[0]->setCallback([this](float a)
-				{
-					properties->reactivityGraphLimits[0] = a;
-				});
+											   { properties->reactivityGraphLimits[0] = a; });
 
 			reactivityLimitsPanel->add<Label>(" to ", "sans-bold");
 			reactivityLimitBox[1] = reactivityLimitsPanel->add<FloatBox<float>>(properties->reactivityGraphLimits[1]);
@@ -1450,20 +1447,17 @@ public:
 			reactivityLimitBox[1]->setSpinnable(true);
 			reactivityLimitBox[1]->setValueIncrement(1.f);
 			reactivityLimitBox[1]->setCallback([this](float a)
-				{
-					properties->reactivityGraphLimits[1] = a;
-				});
-			Button* btn = reactivityLimitsPanel->add<Button>("Reset");
+											   { properties->reactivityGraphLimits[1] = a; });
+			Button *btn = reactivityLimitsPanel->add<Button>("Reset");
 			btn->setCallback([this]()
-				{
+							 {
 					reactivityLimitBox[0]->setValue(reactor->getExcessReactivity() - reactor->getTotalRodWorth());
-					reactivityLimitBox[1]->setValue(static_cast<int>(reactor->getExcessReactivity()));
-				});
+					reactivityLimitBox[1]->setValue(static_cast<int>(reactor->getExcessReactivity())); });
 		}
 
 		{
 			// Temperature stuff
-			Label* temp = temperatureLimitsPanel->add<Label>("Temperature graph:  from ", "sans-bold");
+			Label *temp = temperatureLimitsPanel->add<Label>("Temperature graph:  from ", "sans-bold");
 			temp->setFixedWidth(160);
 			temperatureLimitBox[0] = temperatureLimitsPanel->add<FloatBox<float>>(properties->temperatureGraphLimits[0]);
 			temperatureLimitBox[0]->setFixedSize(Vector2i(100, 20));
@@ -1475,9 +1469,7 @@ public:
 			temperatureLimitBox[0]->setSpinnable(true);
 			temperatureLimitBox[0]->setValueIncrement(1.f);
 			temperatureLimitBox[0]->setCallback([this](float a)
-				{
-					properties->temperatureGraphLimits[0] = a;
-				});
+												{ properties->temperatureGraphLimits[0] = a; });
 
 			temperatureLimitsPanel->add<Label>(" to ", "sans-bold");
 			temperatureLimitBox[1] = temperatureLimitsPanel->add<FloatBox<float>>(properties->temperatureGraphLimits[1]);
@@ -1490,16 +1482,13 @@ public:
 			temperatureLimitBox[1]->setSpinnable(true);
 			temperatureLimitBox[1]->setValueIncrement(1.f);
 			temperatureLimitBox[1]->setCallback([this](float a)
-				{
-					properties->temperatureGraphLimits[1] = a;
-				});
+												{ properties->temperatureGraphLimits[1] = a; });
 
-			Button* btn = temperatureLimitsPanel->add<Button>("Reset");
+			Button *btn = temperatureLimitsPanel->add<Button>("Reset");
 			btn->setCallback([this]()
-				{
+							 {
 					temperatureLimitBox[0]->setValue(TEMPERATURE_GRAPH_FROM_DEFAULT);
-					temperatureLimitBox[1]->setValue(TEMPERATURE_GRAPH_TO_DEFAULT);
-				});
+					temperatureLimitBox[1]->setValue(TEMPERATURE_GRAPH_TO_DEFAULT); });
 		}
 
 		sliderLayout->setAnchor(sliderPanel->add<Label>("Power log scale:", "sans-bold"), RelativeGridLayout::makeAnchor(0, 2, 1, 1, Alignment::Minimum, Alignment::Middle));
@@ -1508,10 +1497,9 @@ public:
 		logScaleBox->setFontSize(16);
 		logScaleBox->setChecked(properties->yAxisLog);
 		logScaleBox->setCallback([this](bool value)
-			{
+								 {
 				properties->yAxisLog = value;
-				powerPlot->setYlog(value);
-			});
+				powerPlot->setYlog(value); });
 
 		sliderLayout->setAnchor(sliderPanel->add<Label>("Hide reactivity:", "sans-bold"), RelativeGridLayout::makeAnchor(0, 3, 1, 1, Alignment::Minimum, Alignment::Middle));
 		hardcoreBox = sliderPanel->add<SliderCheckBox>();
@@ -1519,24 +1507,23 @@ public:
 		hardcoreBox->setFontSize(16);
 		hardcoreBox->setChecked(properties->yAxisLog);
 		hardcoreBox->setCallback([this](bool value)
-			{
+								 {
 				properties->reactivityHardcore = value;
-				hardcoreMode(value);
-			});
+				hardcoreMode(value); });
 
-		CustomLabel* timeAdjLabel = graph_controls->add<CustomLabel>("Edit display range", "sans-bold");
+		CustomLabel *timeAdjLabel = graph_controls->add<CustomLabel>("Edit display range", "sans-bold");
 		timeAdjLabel->setFontSize(25);
 		timeAdjLabel->setPadding(0, 15);
 		graphControlsLayout->setAnchor(timeAdjLabel, RelativeGridLayout::makeAnchor(0, 3, 1, 1, Alignment::Minimum, Alignment::Minimum));
 
-		Widget* timeLockPanel = graph_controls->add<Widget>();
+		Widget *timeLockPanel = graph_controls->add<Widget>();
 		graphControlsLayout->setAnchor(timeLockPanel, RelativeGridLayout::makeAnchor(0, 4, 1, 1, Alignment::Minimum, Alignment::Fill));
-		RelativeGridLayout* tlLayout = new RelativeGridLayout();
+		RelativeGridLayout *tlLayout = new RelativeGridLayout();
 		tlLayout->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed));
 		tlLayout->appendCol(1.f);
 		tlLayout->appendRow(1.f);
 		timeLockPanel->setLayout(tlLayout);
-		CustomLabel* tmp = timeLockPanel->add<CustomLabel>("Lock view:", "sans-bold");
+		CustomLabel *tmp = timeLockPanel->add<CustomLabel>("Lock view:", "sans-bold");
 		tlLayout->setAnchor(tmp, RelativeGridLayout::makeAnchor(0, 0));
 		tmp->setPadding(0, 25);
 		tmp->setPadding(2, 10);
@@ -1545,7 +1532,7 @@ public:
 		timeLockedBox->setFontSize(16);
 		timeLockedBox->setChecked(false);
 		timeLockedBox->setCallback([this](bool value)
-			{
+								   {
 				if (value)
 				{
 					this->viewingIntervalChanged(true);
@@ -1553,8 +1540,7 @@ public:
 				else
 				{
 					timeAtLastChange = this->reactor->getCurrentTime();
-				}
-			});
+				} });
 
 		displayTimeSlider = new IntervalSlider(graph_controls);
 		RelativeGridLayout::Anchor acr = RelativeGridLayout::makeAnchor(0, 5, 2, 1, Alignment::Fill, Alignment::Minimum);
@@ -1564,47 +1550,45 @@ public:
 		displayTimeSlider->setSteps((unsigned int)DELETE_OLD_DATA_TIME_DEFAULT * 1000U);
 		displayTimeSlider->setEnabled(true);
 		displayTimeSlider->setFixedHeight(25);
-		for (int i = 0; i < 2; i++) displayTimeSlider->setCallback(i, [this, i](float /*change*/)
-			{
+		for (int i = 0; i < 2; i++)
+			displayTimeSlider->setCallback(i, [this, i](float /*change*/)
+										   {
 				this->viewingIntervalChanged(i == 0);
 				if (i == 0 && !timeLockedBox->checked())
 				{
 					timeAtLastChange = this->reactor->getCurrentTime();
-				}
-			});
-		Button* displayResetBtn = new Button(graph_controls, "Reset view to newest");
+				} });
+		Button *displayResetBtn = new Button(graph_controls, "Reset view to newest");
 		RelativeGridLayout::Anchor acr2 = RelativeGridLayout::makeAnchor(1, 3, 1, 1, Alignment::Maximum, Alignment::Middle);
 		acr2.padding = Vector4i(0, 0, 10, 0);
 		graphControlsLayout->setAnchor(displayResetBtn, acr2);
-		displayResetBtn->setCallback([this]()
-			{ // reset the view to default
-				this->viewStart = -1.;
-				timeLockedBox->setChecked(false);
-				timeLockedBox->callback()(false);
-			});
+		displayResetBtn->setCallback([this]() { // reset the view to default
+			this->viewStart = -1.;
+			timeLockedBox->setChecked(false);
+			timeLockedBox->callback()(false);
+		});
 	}
 
 	void createPhysicsSettingsTab()
 	{
-		Widget* physics_settings_base = tabControl->createTab("Physics settings", false);
-		CustomTabWidget* modeTabs = physics_settings_base->add<CustomTabWidget>();
+		Widget *physics_settings_base = tabControl->createTab("Physics settings", false);
+		CustomTabWidget *modeTabs = physics_settings_base->add<CustomTabWidget>();
 		modeTabs->header()->setStretch(true);
 		modeTabs->header()->setButtonAlignment(NVGalign::NVG_ALIGN_MIDDLE | NVGalign::NVG_ALIGN_CENTER);
-		RelativeGridLayout* grid = new RelativeGridLayout();
+		RelativeGridLayout *grid = new RelativeGridLayout();
 		grid->appendCol(1.f);
 		grid->appendRow(1.f);
 		physics_settings_base->setLayout(grid);
 		grid->setAnchor(modeTabs, RelativeGridLayout::makeAnchor(0, 0));
 
 		// Create titles, periods and amplitudes
-		std::string titles[2] = { "Physics","Neutron source" };
-		//RelativeGridLayout* layouts[2];
-		//Widget* tabs[2];
+		std::string titles[2] = {"Physics", "Neutron source"};
+		// RelativeGridLayout* layouts[2];
+		// Widget* tabs[2];
 
-
-		Widget* physics_settings = modeTabs->createTab("Physics");
+		Widget *physics_settings = modeTabs->createTab("Physics");
 		physics_settings->setId("Physics tab");
-		RelativeGridLayout* physicsLayout = new RelativeGridLayout();
+		RelativeGridLayout *physicsLayout = new RelativeGridLayout();
 		physicsLayout->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));
 		physicsLayout->appendRow(RelativeGridLayout::Size(4 * 46.f, RelativeGridLayout::SizeType::Fixed));
 		physicsLayout->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));
@@ -1615,21 +1599,23 @@ public:
 		physicsLayout->appendCol(1.f);
 		physicsLayout->appendCol(RelativeGridLayout::Size(10.f + SCROLL_BAR_THICKNESS, RelativeGridLayout::SizeType::Fixed));
 		physics_settings->setLayout(physicsLayout);
-		CustomWidget* delayedPanel = physics_settings->add<CustomWidget>();
+		CustomWidget *delayedPanel = physics_settings->add<CustomWidget>();
 		physicsLayout->setAnchor(delayedPanel, RelativeGridLayout::makeAnchor(1, 1, 2, 1));
 		delayedPanel->setDrawBackground(true);
 		delayedPanel->setBackgroundColor(Color(40, 40, 40, 255));
-		RelativeGridLayout* relPhysics = new RelativeGridLayout();
-		for (int i = 1; i < 10; i++)relPhysics->appendRow(RelativeGridLayout::Size((i % 2) ? 1.f : 45.f, RelativeGridLayout::SizeType::Fixed));
+		RelativeGridLayout *relPhysics = new RelativeGridLayout();
+		for (int i = 1; i < 10; i++)
+			relPhysics->appendRow(RelativeGridLayout::Size((i % 2) ? 1.f : 45.f, RelativeGridLayout::SizeType::Fixed));
 		relPhysics->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));
 		relPhysics->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));
-		for (int i = 0; i < 13; i++) relPhysics->appendCol((i % 2) ? 1.f : RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));
+		for (int i = 0; i < 13; i++)
+			relPhysics->appendCol((i % 2) ? 1.f : RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));
 		delayedPanel->setLayout(relPhysics);
 
 		// Source settings tab
 		sourceSettings = modeTabs->createTab("Neutron source");
 		sourceSettings->setId("Neutron source tab");
-		RelativeGridLayout* sourceLayout = new RelativeGridLayout();
+		RelativeGridLayout *sourceLayout = new RelativeGridLayout();
 		sourceLayout->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));
 		for (int j = 0; j < 11; j++)
 		{
@@ -1643,7 +1629,7 @@ public:
 		sourceLayout->appendCol(RelativeGridLayout::Size(SCROLL_BAR_THICKNESS, RelativeGridLayout::SizeType::Fixed));
 		sourceSettings->setLayout(sourceLayout);
 		// source seperator
-		CustomWidget* ns_border = sourceSettings->add<CustomWidget>();
+		CustomWidget *ns_border = sourceSettings->add<CustomWidget>();
 		ns_border->setDrawBackground(true);
 		ns_border->setBackgroundColor(coolBlue);
 		sourceLayout->setAnchor(ns_border, RelativeGridLayout::makeAnchor(1, 3, 2));
@@ -1659,19 +1645,17 @@ public:
 		sourceActivityBox->setFormat(SCI_NUMBER_FORMAT);
 		sourceActivityBox->setUnits("n/s");
 		sourceActivityBox->setCallback([this](double change)
-			{
+									   {
 				properties->neutronSourceActivity = change;
-				reactor->setNeutronSourceActivity(change);
-			});
+				reactor->setNeutronSourceActivity(change); });
 		neutronSourceModeBox = makeSettingLabel<ComboBox>(sourceSettings, "Source type:", 100, ns_modes);
 		sourceLayout->setAnchor(neutronSourceModeBox->parent(), RelativeGridLayout::makeAnchor(2, 2, 1, 1, Alignment::Minimum, Alignment::Middle));
 		neutronSourceModeBox->setFixedWidth(125);
 		neutronSourceModeBox->setCallback([this](int change)
-			{
+										  {
 				properties->ns_mode = (char)change;
 				reactor->setNeutronSourceMode((SimulationModes)change);
-				updateNeutronSourceTab();
-			});
+				updateNeutronSourceTab(); });
 		neutronSourceModeBox->setSelectedIndex(0);
 		// Source graph
 		sourceGraph = sourceSettings->add<CustomGraph>(2, "Neutron source simulation");
@@ -1682,7 +1666,7 @@ public:
 		sourceGraph->setPlotBackgroundColor(Color(60, 255));
 		sourceGraph->setPlotGridColor(Color(177, 255));
 		sourceGraph->setPlotBorderColor(Color(200, 255));
-		PeriodicalMode* per;
+		PeriodicalMode *per;
 		// source general
 		for (int i = 0; i < 3; i++)
 		{
@@ -1698,7 +1682,7 @@ public:
 			neutronSourcePeriodBoxes[i]->setSpinnable(true);
 			neutronSourcePeriodBoxes[i]->setDefaultValue(formatDecimalsDouble(per->getPeriod(), 1));
 			neutronSourcePeriodBoxes[i]->setCallback([this, i, per](float change)
-				{
+													 {
 					switch (i)
 					{
 					case 0: properties->squareWave.period = change; break;
@@ -1706,8 +1690,7 @@ public:
 					case 2: properties->sawToothMode.period = change; break;
 					}
 					per->setPeriod(change);
-					updateNeutronSourceTab();
-				});
+					updateNeutronSourceTab(); });
 			neutronSourceAmplitudeBoxes[i] = makeSettingLabel<FloatBox<float>>(sourceSettings, "Intensity: ", 100, per->getAmplitude());
 			sourceLayout->setAnchor(neutronSourceAmplitudeBoxes[i]->parent(), RelativeGridLayout::makeAnchor(2, 5));
 			neutronSourceAmplitudeBoxes[i]->setAlignment(TextBox::Alignment::Left);
@@ -1719,7 +1702,7 @@ public:
 			neutronSourceAmplitudeBoxes[i]->setSpinnable(true);
 			neutronSourceAmplitudeBoxes[i]->setDefaultValue(to_string(per->getAmplitude()));
 			neutronSourceAmplitudeBoxes[i]->setCallback([per, i, this](float change)
-				{
+														{
 					switch (i)
 					{
 					case 0: properties->squareWave.amplitude = change; break;
@@ -1727,8 +1710,7 @@ public:
 					case 2: properties->sawToothMode.amplitude = change; break;
 					}
 					per->setAmplitude(change);
-					updateNeutronSourceTab();
-				});
+					updateNeutronSourceTab(); });
 		}
 		// source SQW
 		float sqPeriod = properties->ns_squareWave.period;
@@ -1737,7 +1719,7 @@ public:
 			neutronSourceSQWBoxes[sqw] = makeSimulationSetting(sourceSettings, (int)roundf(properties->ns_squareWave.xIndex[sqw] * 100), sqw_settingNames[sqw]);
 			sourceLayout->setAnchor(neutronSourceSQWBoxes[sqw]->parent(), RelativeGridLayout::makeAnchor(2, 6 + sqw));
 			neutronSourceSQWBoxes[sqw]->setCallback([this, sqw, sqPeriod](int change)
-				{
+													{
 					float val = change / 100.f;
 					reactor->source_sqw->xIndex[sqw] = val;
 					properties->squareWave.xIndex[sqw] = val;
@@ -1747,19 +1729,17 @@ public:
 						if (neutronSourceSQWBoxes[sqw + 1]->value() < change) { squareWaveBoxes[sqw + 1]->setValue(change); }
 						else { updateNeutronSourceTab(); }
 					}
-					else { updateNeutronSourceTab(); }
-				});
+					else { updateNeutronSourceTab(); } });
 		}
 		// source sine
 		neutronSourceSINEModeBox = makeSettingLabel<ComboBox>(sourceSettings, "Sine type: ", 100, sineModes);
 		sourceLayout->setAnchor(neutronSourceSINEModeBox->parent(), RelativeGridLayout::makeAnchor(2, 6));
 		neutronSourceSINEModeBox->setFixedWidth(125);
 		neutronSourceSINEModeBox->setCallback([this](int change)
-			{
+											  {
 				properties->ns_sineMode.mode = (Settings::SineSettings::SineMode)change;
 				reactor->source_sinMode->mode = (Sine::SineMode)change;
-				updateNeutronSourceTab();
-			});
+				updateNeutronSourceTab(); });
 		// source saw tooth
 		float stPeriod = properties->ns_sawToothMode.period;
 		for (int saw = 0; saw < 6; saw++)
@@ -1767,7 +1747,7 @@ public:
 			neutronSourceSAWBoxes[saw] = makeSimulationSetting(sourceSettings, (int)roundf(properties->sawToothMode.xIndex[saw] * 100), saw_settingNames[saw]);
 			sourceLayout->setAnchor(neutronSourceSAWBoxes[saw]->parent(), RelativeGridLayout::makeAnchor(2, 6 + saw));
 			neutronSourceSAWBoxes[saw]->setCallback([this, stPeriod, saw](int change)
-				{
+													{
 					float val = change / 100.f;
 					properties->ns_sawToothMode.xIndex[saw] = val;
 					reactor->source_saw->xIndex[saw] = val;
@@ -1777,8 +1757,7 @@ public:
 						if (neutronSourceSAWBoxes[saw + 1]->value() < change) { neutronSourceSAWBoxes[saw + 1]->setValue(change); }
 						else { updateNeutronSourceTab(); }
 					}
-					else { updateNeutronSourceTab(); }
-				});
+					else { updateNeutronSourceTab(); } });
 		}
 		updateNeutronSourceTab();
 
@@ -1786,10 +1765,10 @@ public:
 		// Texts and borders
 		for (int i = 0; i < 6; i++)
 		{
-			Label* textLabel = delayedPanel->add<Label>("Group " + std::to_string(i + 1) + ((i == 5 || i == 0) ? (i == 5 ? " (fastest)" : " (slowest)") : ""), "sans-bold");
+			Label *textLabel = delayedPanel->add<Label>("Group " + std::to_string(i + 1) + ((i == 5 || i == 0) ? (i == 5 ? " (fastest)" : " (slowest)") : ""), "sans-bold");
 			relPhysics->setAnchor(textLabel, RelativeGridLayout::makeAnchor((i + 1) * 2 + 1, 1, 1, 1, Alignment::Middle, Alignment::Middle));
 		}
-		CustomWidget* border;
+		CustomWidget *border;
 		for (int i = 0; i < 8; i++)
 		{
 			border = delayedPanel->add<CustomWidget>();
@@ -1797,8 +1776,8 @@ public:
 			border->setBackgroundColor(coolBlue);
 			relPhysics->setAnchor(border, RelativeGridLayout::makeAnchor(i * 2, 0, 1, 9));
 		}
-		CustomLabel* textLabel;
-		std::string rowText[3] = { "Beta(i):","Lambda(i):","Enabled:" };
+		CustomLabel *textLabel;
+		std::string rowText[3] = {"Beta(i):", "Lambda(i):", "Enabled:"};
 		for (int i = 0; i < 3; i++)
 		{
 			textLabel = delayedPanel->add<CustomLabel>(rowText[i], "sans-bold");
@@ -1823,10 +1802,9 @@ public:
 					delayedGroupsEnabledBoxes[i]->setChecked(properties->groupsEnabled[i]);
 					relPhysics->setAnchor(delayedGroupsEnabledBoxes[i], RelativeGridLayout::makeAnchor(2 * (i + 1) + 1, 7, 1, 1, Alignment::Middle, Alignment::Middle));
 					delayedGroupsEnabledBoxes[i]->setCallback([this, i](bool change)
-						{
+															  {
 							properties->groupsEnabled[i] = change;
-							reactor->setDelayedGroupEnabled(i, change);
-						});
+							reactor->setDelayedGroupEnabled(i, change); });
 				}
 				break;
 			}
@@ -1853,7 +1831,7 @@ public:
 					delayedGroupBoxes[index]->setMinValue(0.0000001f);
 					delayedGroupBoxes[index]->setFormat(SCI_NUMBER_FORMAT);
 					delayedGroupBoxes[index]->setCallback([this, row, i](double change)
-						{
+														  {
 							if (row)
 							{
 								properties->lambdas[i] = change;
@@ -1863,20 +1841,19 @@ public:
 							{
 								properties->betas[i] = change;
 								reactor->setDelayedGroupFraction(i, change);
-							}
-						});
+							} });
 				}
 			}
 			}
 		}
 
 		// Create panel for lower left settings
-		Widget* settingsVert = physics_settings->add<Widget>();
+		Widget *settingsVert = physics_settings->add<Widget>();
 		physicsLayout->setAnchor(settingsVert, RelativeGridLayout::makeAnchor(1, 3, 1, 1));
 		settingsVert->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 0, 15));
 
 		// Core volume
-		Widget* corePanel = settingsVert->add<Widget>();
+		Widget *corePanel = settingsVert->add<Widget>();
 
 		corePanel->setLayout(panelsLayout);
 		corePanel->add<Label>("Core volume: ", "sans-bold");
@@ -1890,12 +1867,11 @@ public:
 		coreVolumeBox->setFormat(SCI_NUMBER_FORMAT);
 		coreVolumeBox->setUnits("L");
 		coreVolumeBox->setCallback([this](double change)
-			{
+								   {
 				reactor->setReactorCoreVolume(change * 1e-03);
-				properties->coreVolume = change * 1e-03;
-			});
+				properties->coreVolume = change * 1e-03; });
 
-		Widget* waterPanel = settingsVert->add<Widget>();
+		Widget *waterPanel = settingsVert->add<Widget>();
 		waterPanel->setLayout(panelsLayout);
 		waterPanel->add<Label>("Water volume: ", "sans-bold");
 		waterVolumeInput = waterPanel->add<FloatBox<double>>(properties->waterVolume);
@@ -1908,25 +1884,24 @@ public:
 		waterVolumeInput->setFormat(SCI_NUMBER_FORMAT);
 		waterVolumeInput->setUnits("m" + string(utf8(0xB3).data()));
 		waterVolumeInput->setCallback([this](double change)
-			{
+									  {
 				reactor->setWaterVolume(change);
-				properties->waterVolume = change;
-			});
+				properties->waterVolume = change; });
 
 		// Create a panel for temperature effects
-		Widget* checkBoxPanelTemperatureEffects = settingsVert->add<Widget>();
+		Widget *checkBoxPanelTemperatureEffects = settingsVert->add<Widget>();
 		checkBoxPanelTemperatureEffects->setLayout(panelsLayout);
 		// Create a panel for Fission poisoning
-		Widget* checkBoxPanelFissionPoisoning = settingsVert->add<Widget>();
+		Widget *checkBoxPanelFissionPoisoning = settingsVert->add<Widget>();
 		checkBoxPanelFissionPoisoning->setLayout(panelsLayout);
 		// Create a panel for excess reactivity
-		Widget* excessPanel = settingsVert->add<Widget>();
+		Widget *excessPanel = settingsVert->add<Widget>();
 		excessPanel->setLayout(panelsLayout);
 		// Create a panel for cooling power
-		Widget* waterCoolingPowerPanel = settingsVert->add<Widget>();
+		Widget *waterCoolingPowerPanel = settingsVert->add<Widget>();
 		waterCoolingPowerPanel->setLayout(panelsLayout);
 		// Create a panel for prompt neutron lifetime
-		Widget* promptPanel = settingsVert->add<Widget>();
+		Widget *promptPanel = settingsVert->add<Widget>();
 		promptPanel->setLayout(panelsLayout);
 
 		{
@@ -1935,10 +1910,9 @@ public:
 			tempEffectsBox->setFontSize(16);
 			tempEffectsBox->setChecked(properties->temperatureEffects);
 			tempEffectsBox->setCallback([this](bool value)
-				{
+										{
 					reactor->setTemperatureEffectsEnabled(value);
-					properties->temperatureEffects = value;
-				});
+					properties->temperatureEffects = value; });
 		}
 		{
 			checkBoxPanelFissionPoisoning->add<Label>("Xe poisoning: ", "sans-bold");
@@ -1946,10 +1920,9 @@ public:
 			fissionProductsBox->setFontSize(16);
 			fissionProductsBox->setChecked(properties->fissionPoisons);
 			fissionProductsBox->setCallback([this](bool value)
-				{
+											{
 					reactor->setFissionPoisoningEffectsEnabled(value);
-					properties->fissionPoisons = value;
-				});
+					properties->fissionPoisons = value; });
 		}
 
 		excessPanel->add<Label>("Excess reactivity: ", "sans-bold");
@@ -1963,10 +1936,9 @@ public:
 		excessReactivityBox->setDefaultValue(std::to_string(excessReactivityBox->value()));
 		excessReactivityBox->setValueIncrement(10.);
 		excessReactivityBox->setCallback([this](float change)
-			{
+										 {
 				properties->excessReactivity = change;
-				reactor->setExcessReactivity(change);
-			});
+				reactor->setExcessReactivity(change); });
 
 		// Water cooling power
 		waterCoolingPowerPanel->add<Label>("Water cooling power: ", "sans-bold");
@@ -1980,10 +1952,9 @@ public:
 		coolingPowerBox->setFormat(SCI_NUMBER_FORMAT);
 		coolingPowerBox->setUnits("W");
 		coolingPowerBox->setCallback([this](double change)
-			{
+									 {
 				properties->waterCoolingPower = change;
-				reactor->setCoolingPower(change);
-			});
+				reactor->setCoolingPower(change); });
 
 		// Prompt neutron lifetime
 		promptPanel->add<Label>("Prompt neutron lifetime: ", "sans-bold");
@@ -1997,17 +1968,16 @@ public:
 		promptNeutronLifetimeBox->setFormat(SCI_NUMBER_FORMAT);
 		promptNeutronLifetimeBox->setUnits("s");
 		promptNeutronLifetimeBox->setCallback([this](double change)
-			{
+											  {
 				properties->promptNeutronLifetime = change;
-				reactor->setPromptNeutronLifetime(change);
-			});
+				reactor->setPromptNeutronLifetime(change); });
 
 		// Alpha panel
-		Widget* alphaPanel = physics_settings->add<Widget>();
+		Widget *alphaPanel = physics_settings->add<Widget>();
 		physicsLayout->setAnchor(alphaPanel, RelativeGridLayout::makeAnchor(2, 3, 1, 1));
 		alphaPanel->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 0, 10));
 		// Temperature reactivity coef.
-		CustomGraph* alphaGraph = alphaPanel->add<CustomGraph>(1, "Temp. reactivity coef.");
+		CustomGraph *alphaGraph = alphaPanel->add<CustomGraph>(1, "Temp. reactivity coef.");
 		alphaGraph->setBackgroundColor(Color(60, 255));
 		alphaGraph->setDrawBackground(true);
 		alphaGraph->setFixedHeight(250);
@@ -2049,72 +2019,83 @@ public:
 		alphaPlot->setYdata(alphaY);
 
 		// Alpha settings
-		string alphaText[4] = { "Starting " + alpha + ":","Peak temp.:",alpha + " at peak temp.:","Slope after peak temp.:" };
-		float vals[4] = { properties->alpha0, properties->alphaT1, properties->alphaAtT1, (float)properties->alphaK };
-		float increments[4] = { .1f, 5.f, .1f, .001f };
-		float maxVals[3] = { 20.f, 1000.f, 120.f };
-		string units[4] = { "pcm/" + degCelsiusUnit, degCelsiusUnit, "pcm/" + degCelsiusUnit, "pcm/" + degCelsiusUnit + string(utf8(0xB2).data()) };
+		string alphaText[4] = {"Starting " + alpha + ":", "Peak temp.:", alpha + " at peak temp.:", "Slope after peak temp.:"};
+		float vals[4] = {properties->alpha0, properties->alphaT1, properties->alphaAtT1, (float)properties->alphaK};
+		float increments[4] = {.1f, 5.f, .1f, .001f};
+		float maxVals[3] = {20.f, 1000.f, 120.f};
+		string units[4] = {"pcm/" + degCelsiusUnit, degCelsiusUnit, "pcm/" + degCelsiusUnit, "pcm/" + degCelsiusUnit + string(utf8(0xB2).data())};
 		for (int i = 0; i < 4; i++)
 		{
 			// Create a panel for prompt neutron lifetime
-			Widget* alphaSettingPanel = alphaPanel->add<Widget>();
+			Widget *alphaSettingPanel = alphaPanel->add<Widget>();
 			alphaSettingPanel->setLayout(panelsLayout);
 			alphaSettingPanel->add<Label>(alphaText[i] + " ", "sans-bold");
-			FloatBox<float>* temp = alphaSettingPanel->add<FloatBox<float>>(vals[i]);
+			FloatBox<float> *temp = alphaSettingPanel->add<FloatBox<float>>(vals[i]);
 			temp->setAlignment(TextBox::Alignment::Left);
 			temp->setFixedSize(Vector2i(150, 30));
 			temp->setSpinnable(true);
 			temp->setValueIncrement(increments[i]);
 			temp->setDefaultValue(std::to_string(temp->value()));
-			if (i < 3) { temp->setMinMaxValues((i == 1) ? 0.f : -maxVals[i], maxVals[i]); }
-			else { temp->setMinMaxValues(-4.f, 4.f); }
+			if (i < 3)
+			{
+				temp->setMinMaxValues((i == 1) ? 0.f : -maxVals[i], maxVals[i]);
+			}
+			else
+			{
+				temp->setMinMaxValues(-4.f, 4.f);
+			}
 			temp->setFormat((i == 1) ? SCI_NUMBER_FORMAT : SCI_NUMBER_FORMAT_NEG);
 			temp->setUnits(units[i]);
 			switch (i)
 			{
-			case 0: alpha0Box = temp; break;
-			case 1: tempPeakBox = temp; break;
-			case 2: alphaPeakBox = temp; break;
-			case 3: alphaSlopeBox = temp; break;
+			case 0:
+				alpha0Box = temp;
+				break;
+			case 1:
+				tempPeakBox = temp;
+				break;
+			case 2:
+				alphaPeakBox = temp;
+				break;
+			case 3:
+				alphaSlopeBox = temp;
+				break;
 			}
 		}
 
 		alpha0Box->setCallback([this](float change)
-			{
+							   {
 				properties->alpha0 = change;
 				reactor->setAlpha0(change);
-				updateAlphaGraph();
-			});
+				updateAlphaGraph(); });
 		tempPeakBox->setCallback([this](float change)
-			{
+								 {
 				properties->alphaT1 = change;
 				reactor->setAlphaTempPeak(change);
-				updateAlphaGraph();
-			});
+				updateAlphaGraph(); });
 		alphaPeakBox->setCallback([this](float change)
-			{
+								  {
 				properties->alphaAtT1 = change;
 				reactor->setAlphaPeak(change);
-				updateAlphaGraph();
-			});
+				updateAlphaGraph(); });
 		alphaSlopeBox->setCallback([this](float change)
-			{
+								   {
 				properties->alphaK = (double)change;
 				reactor->setAlphaSlope((double)change);
-				updateAlphaGraph();
-			});
+				updateAlphaGraph(); });
 
 		modeTabs->setActiveTab(0);
 	}
 
 	void createRodSettingsTab()
 	{
-		Widget* rod_settings = tabControl->createTab("Control rods");
+		Widget *rod_settings = tabControl->createTab("Control rods");
 		rod_settings->setId("Rod settings tab");
-		RelativeGridLayout* rod_settings_layout = new RelativeGridLayout();									  /* COLUMNS */
+		RelativeGridLayout *rod_settings_layout = new RelativeGridLayout(); /* COLUMNS */
 		for (int i = 0; i < 9; i++)
 		{
-			if (i == 3 || i == 6) rod_settings_layout->appendCol(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));
+			if (i == 3 || i == 6)
+				rod_settings_layout->appendCol(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));
 			rod_settings_layout->appendCol(1.f);
 		}
 		/* ROWS */
@@ -2135,18 +2116,18 @@ public:
 		// Create borders
 		for (int i = 0; i < 2; i++)
 		{
-			CustomWidget* border = rod_settings->add<CustomWidget>();
+			CustomWidget *border = rod_settings->add<CustomWidget>();
 			rod_settings_layout->setAnchor(border, RelativeGridLayout::makeAnchor(i ? 3 : 7, 0, 1, 13));
 			border->setBackgroundColor(coolBlue);
 			border->setDrawBackground(true);
 		}
-		CustomWidget* border = rod_settings->add<CustomWidget>();
+		CustomWidget *border = rod_settings->add<CustomWidget>();
 		rod_settings_layout->setAnchor(border, RelativeGridLayout::makeAnchor(0, 8, 11, 1));
 		border->setBackgroundColor(coolBlue);
 		border->setDrawBackground(true);
 
-		Label* tempLabel;
-		ControlRod* useRod;
+		Label *tempLabel;
+		ControlRod *useRod;
 		// for each rod
 		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
 		{
@@ -2170,11 +2151,10 @@ public:
 			rodStepsBox[i]->setValueIncrement(10);
 			rodStepsBox[i]->setFormat("[0-9]+");
 			rodStepsBox[i]->setCallback([useRod, i, this](int change)
-				{
+										{
 					properties->rodSettings[i].rodSteps = change;
 					useRod->setRodSteps((size_t)change);
-					rodCurves[i]->setLimitHorizontalMultiplier((double)*useRod->getRodSteps());
-				});
+					rodCurves[i]->setLimitHorizontalMultiplier((double)*useRod->getRodSteps()); });
 
 			// Rod worth setting
 			tempLabel = rod_settings->add<Label>("Rod worth:", "sans-bold");
@@ -2189,10 +2169,9 @@ public:
 			rodWorthBox[i]->setValueIncrement(10.f);
 			rodWorthBox[i]->setFormat("[0-9]*\\.?[0-9]+");
 			rodWorthBox[i]->setCallback([useRod, i, this](float change)
-				{
+										{
 					properties->rodSettings[i].rodWorth = change;
-					useRod->setRodWorth(change);
-				});
+					useRod->setRodWorth(change); });
 
 			// Rod speed setting
 			tempLabel = rod_settings->add<Label>("Rod speed:", "sans-bold");
@@ -2207,14 +2186,15 @@ public:
 			rodSpeedBox[i]->setValueIncrement(1.f);
 			rodSpeedBox[i]->setFormat("[0-9]*\\.?[0-9]+");
 			rodSpeedBox[i]->setCallback([useRod, i, this](float change)
-				{
-					properties->rodSettings[i].rodSpeed = change;
-					useRod->setRodSpeed(change);
-					if (i == 1) reactor->regulatingRod()->sine()->fillXYaxis(operationModesPlots[0][1], operationModesPlots[1][1]); // Update SQW graph
-				});
+										{
+											properties->rodSettings[i].rodSpeed = change;
+											useRod->setRodSpeed(change);
+											if (i == 1)
+												reactor->regulatingRod()->sine()->fillXYaxis(operationModesPlots[0][1], operationModesPlots[1][1]); // Update SQW graph
+										});
 
 			// Display tool
-			CustomGraph* rodControl = rod_settings->add<CustomGraph>(1);
+			CustomGraph *rodControl = rod_settings->add<CustomGraph>(1);
 			rod_settings_layout->setAnchor(rodControl, RelativeGridLayout::makeAnchor(i * 4, 5, 3, 1, Alignment::Middle));
 			rodControl->setFixedWidth(320);
 			rodControl->setBackgroundColor(Color(60, 255));
@@ -2260,23 +2240,20 @@ public:
 				rodCurveSliders[sliderIndex]->setFixedSize(Vector2i(340, 15));
 				rodCurveSliders[sliderIndex]->setValue(properties->rodSettings[i].rodCurve[j]);
 				rodCurveSliders[sliderIndex]->setCallback([this, i, j](float change)
-					{
-						rodCurves[i]->setParameter(j * 2, change);
-					});
+														  { rodCurves[i]->setParameter(j * 2, change); });
 				rodCurveSliders[sliderIndex]->setFinalCallback([useRod, j, i, this](float stop)
-					{
+															   {
 						rodCurves[i]->setParameter(j * 2, stop);
 						properties->rodSettings[i].rodCurve[j] = stop;
 						useRod->setParameter(j, stop);
-						handleDerivativeChange();
-					});
+						handleDerivativeChange(); });
 			}
 
 			// Derivative graphs
 			tempLabel = rod_settings->add<Label>("Differential\nrod worth curve", "sans-bold", 25);
 			rod_settings_layout->setAnchor(tempLabel, RelativeGridLayout::makeAnchor(i * 4, 10, 3, 1, Alignment::Middle, Alignment::Maximum));
 
-			CustomGraph* rodDerDisplay = rod_settings->add<CustomGraph>(1);
+			CustomGraph *rodDerDisplay = rod_settings->add<CustomGraph>(1);
 			rod_settings_layout->setAnchor(rodDerDisplay, RelativeGridLayout::makeAnchor(i * 4, 11, 3, 1, Alignment::Middle, Alignment::Minimum));
 			rodDerDisplay->setFixedSize(Vector2i(320, 320));
 			rodDerDisplay->setBackgroundColor(Color(60, 255));
@@ -2314,55 +2291,54 @@ public:
 			rodDerivatives[i]->setHorizontalUnits("steps");
 			rodDerivatives[i]->setXdataLin(0L);
 			rodDerivatives[i]->setPlotRange(0, *useRod->getRodSteps());
-			rodDerivatives[i]->setValueComputing([this, i](double* v, size_t /*in*/)
-				{
-					*v *= reactor->rods[i]->getRodWorth();
-				});
+			rodDerivatives[i]->setValueComputing([this, i](double *v, size_t /*in*/)
+												 { *v *= reactor->rods[i]->getRodWorth(); });
 		}
 		handleDerivativeChange();
 	}
 
 	void createDelayedGroupsTab()
 	{
-		Widget* delayed_tab = tabControl->createTab("Delayed neutrons");
+		Widget *delayed_tab = tabControl->createTab("Delayed neutrons");
 		delayed_tab->setId("delayed tab");
-		RelativeGridLayout* delayedLayout = new RelativeGridLayout();
-		delayedLayout->appendCol(1.f);	// graph area
-		delayedLayout->appendRow(1.f);	// graph area
+		RelativeGridLayout *delayedLayout = new RelativeGridLayout();
+		delayedLayout->appendCol(1.f); // graph area
+		delayedLayout->appendRow(1.f); // graph area
 		delayed_tab->setLayout(delayedLayout);
 
-		CustomWidget* topHost = delayed_tab->add<CustomWidget>();
+		CustomWidget *topHost = delayed_tab->add<CustomWidget>();
 		topHost->setBackgroundColor(Color(240, 255));
 		topHost->setDrawBackground(true);
 		delayedLayout->setAnchor(topHost, RelativeGridLayout::makeAnchor(0, 0));
-		RelativeGridLayout* topLayout = new RelativeGridLayout();
-		topLayout->appendCol(1.f); // graph
+		RelativeGridLayout *topLayout = new RelativeGridLayout();
+		topLayout->appendCol(1.f);																	// graph
 		topLayout->appendCol(RelativeGridLayout::Size(158.f, RelativeGridLayout::SizeType::Fixed)); // key
 		topLayout->appendRow(1.f);
 		topHost->setLayout(topLayout);
 
-		Color dataColors[7] = { Color(255,255), Color(34,116,165,255), Color(247, 92, 3,255), Color(241, 196, 15, 255), Color(0, 204, 102, 255), Color(240, 58, 71, 255), Color(153, 0, 153, 255) };
+		Color dataColors[7] = {Color(255, 255), Color(34, 116, 165, 255), Color(247, 92, 3, 255), Color(241, 196, 15, 255), Color(0, 204, 102, 255), Color(240, 58, 71, 255), Color(153, 0, 153, 255)};
 
-		CustomWidget* keyPanel = topHost->add<CustomWidget>();
+		CustomWidget *keyPanel = topHost->add<CustomWidget>();
 		topLayout->setAnchor(keyPanel, RelativeGridLayout::makeAnchor(1, 0, 1, 1, Alignment::Minimum, Alignment::Middle));
 		keyPanel->setDrawBackground(true);
 		keyPanel->setBackgroundColor(Color(65, 255));
 		keyPanel->setBorder(Border::BOTTOM | Border::LEFT | Border::TOP | Border::RIGHT);
 		keyPanel->setBorderColor(coolBlue);
 		keyPanel->setBorderWidth(1.f);
-		RelativeGridLayout* rel = new RelativeGridLayout();
+		RelativeGridLayout *rel = new RelativeGridLayout();
 		rel->appendCol(RelativeGridLayout::Size(50.f, RelativeGridLayout::SizeType::Fixed)); // colors
-		rel->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed)); // border
+		rel->appendCol(RelativeGridLayout::Size(1.f, RelativeGridLayout::SizeType::Fixed));	 // border
 		rel->appendCol(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed)); // local padding
 		rel->appendCol(RelativeGridLayout::Size(70.f, RelativeGridLayout::SizeType::Fixed)); // text
-		for (int i = 0; i < 7; i++) rel->appendRow(RelativeGridLayout::Size(35.f, RelativeGridLayout::SizeType::Fixed)); // data rows
-		rel->appendRow(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed)); // padding
+		for (int i = 0; i < 7; i++)
+			rel->appendRow(RelativeGridLayout::Size(35.f, RelativeGridLayout::SizeType::Fixed)); // data rows
+		rel->appendRow(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed));		 // padding
 		keyPanel->setLayout(rel);
-		Label* tempLabelKey = keyPanel->add<Label>("Color", "sans-bold");
+		Label *tempLabelKey = keyPanel->add<Label>("Color", "sans-bold");
 		rel->setAnchor(tempLabelKey, RelativeGridLayout::makeAnchor(0, 0, 1, 1, Alignment::Middle, Alignment::Middle));
 		tempLabelKey = keyPanel->add<Label>("Group No.", "sans-bold");
 		rel->setAnchor(tempLabelKey, RelativeGridLayout::makeAnchor(3, 0, 1, 1, Alignment::Minimum, Alignment::Middle));
-		CustomWidget* temp = keyPanel->add<CustomWidget>();
+		CustomWidget *temp = keyPanel->add<CustomWidget>();
 		rel->setAnchor(temp, RelativeGridLayout::makeAnchor(1, 0));
 		temp->setDrawBackground(true);
 		temp->setBackgroundColor(coolBlue);
@@ -2373,7 +2349,7 @@ public:
 			temp->setDrawBackground(true);
 			temp->setBackgroundColor(dataColors[i]);
 			temp->setFixedSize(Vector2i(25, 25));
-			Label* tempLabel = keyPanel->add<Label>(to_string(i), "sans-bold");
+			Label *tempLabel = keyPanel->add<Label>(to_string(i), "sans-bold");
 			rel->setAnchor(tempLabel, RelativeGridLayout::makeAnchor(3, i, 1, 1, Alignment::Minimum, Alignment::Middle));
 		}
 
@@ -2381,7 +2357,7 @@ public:
 		delayedGroupsGraph->setPadding(90.f, 20.f, 60.f, 50.f);
 		delayedGroupsGraph->setTextColor(Color(0, 255));
 		topLayout->setAnchor(delayedGroupsGraph, RelativeGridLayout::makeAnchor(0, 0));
-		//double betaLambda = reactor->prompt_lifetime;
+		// double betaLambda = reactor->prompt_lifetime;
 		double betaLambda = 0;
 		double sumBeta = 0, sumLambdaC = 0;
 		/*
@@ -2390,7 +2366,7 @@ public:
 		*/
 		for (int i = 0; i < 6; i++)
 		{
-			//betaLambda += reactor->beta_neutrons[i] / reactor->delayed_decay_time[i];
+			// betaLambda += reactor->beta_neutrons[i] / reactor->delayed_decay_time[i];
 			sumBeta += reactor->beta_neutrons[i];
 		}
 		for (int i = 0; i < 6; i++)
@@ -2403,14 +2379,13 @@ public:
 			delayedGroups[i]->setPointerColor(dataColors[i + 1]);
 			delayedGroups[i]->setAxisPosition((i < 3) ? GraphElement::AxisLocation::Right : GraphElement::AxisLocation::Left);
 			delayedGroups[i]->setPixelDrawRatio(0.3f); // skip 70% of pixels when drawing
-			delayedGroups[i]->setValueComputing([this, sumBeta, sumLambdaC, i](double* val, const size_t index)
-				{
+			delayedGroups[i]->setValueComputing([this, sumBeta, sumLambdaC, i](double *val, const size_t index)
+												{
 					//*val = *val * sumLambdaC * reactor->delayed_decay_time[i] / (reactor->state_vector_[7][index] * reactor->beta_neutrons[i]);
 					double sumLambdaC = 0;
 					for (int j = 0; j < 6; j++)
 						sumLambdaC += reactor->delayed_decay_time[j] * reactor->state_vector_[j + 1][index];
-					*val = *val * sumBeta * reactor->delayed_decay_time[i] / (sumLambdaC * reactor->beta_neutrons[i]);
-				});
+					*val = *val * sumBeta * reactor->delayed_decay_time[i] / (sumLambdaC * reactor->beta_neutrons[i]); });
 			if (!i)
 			{
 				delayedGroups[i]->setAxisShown(true);
@@ -2432,24 +2407,24 @@ public:
 		};
 	}
 
-	double* operationModesPlots[2][3];
-	const int simModeFields[3] = { 7, 3, 8 };
+	double *operationModesPlots[2][3];
+	const int simModeFields[3] = {7, 3, 8};
 	void createOperationModesTab()
 	{
-		Widget* modes_base = tabControl->createTab("Operation modes", false);
-		CustomTabWidget* modeTabs = modes_base->add<CustomTabWidget>();
+		Widget *modes_base = tabControl->createTab("Operation modes", false);
+		CustomTabWidget *modeTabs = modes_base->add<CustomTabWidget>();
 		modeTabs->header()->setStretch(true);
 		modeTabs->header()->setButtonAlignment(NVGalign::NVG_ALIGN_MIDDLE | NVGalign::NVG_ALIGN_CENTER);
-		RelativeGridLayout* grid = new RelativeGridLayout();
+		RelativeGridLayout *grid = new RelativeGridLayout();
 		grid->appendCol(1.f);
 		grid->appendRow(1.f);
 		modes_base->setLayout(grid);
 		grid->setAnchor(modeTabs, RelativeGridLayout::makeAnchor(0, 0));
 
 		// Create titles, periods and amplitudes
-		std::string titles[3] = { "Square wave","Sine wave","Saw tooth" };
-		RelativeGridLayout* layouts[3];
-		CustomWidget* tabs[3];
+		std::string titles[3] = {"Square wave", "Sine wave", "Saw tooth"};
+		RelativeGridLayout *layouts[3];
+		CustomWidget *tabs[3];
 		for (int i = 0; i < 3; i++)
 		{
 			tabs[i] = modeTabs->createTab(titles[i]);
@@ -2458,24 +2433,24 @@ public:
 			tabs[i]->setBackgroundColor(Color(100, 255));
 
 			layouts[i] = new RelativeGridLayout();
-			layouts[i]->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// left border
-			layouts[i]->appendCol(RelativeGridLayout::Size(250.f, RelativeGridLayout::SizeType::Fixed));	// settings
-			layouts[i]->appendCol(1.f);																		// graph
-			layouts[i]->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// right border
-			layouts[i]->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// top border
+			layouts[i]->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));	 // left border
+			layouts[i]->appendCol(RelativeGridLayout::Size(250.f, RelativeGridLayout::SizeType::Fixed)); // settings
+			layouts[i]->appendCol(1.f);																	 // graph
+			layouts[i]->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));	 // right border
+			layouts[i]->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));	 // top border
 			for (int j = 0; j < simModeFields[i]; j++)
 			{
 				layouts[i]->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));
 			}
-			layouts[i]->appendRow(1.f);																		// empty space
-			layouts[i]->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed));		// bottom border
+			layouts[i]->appendRow(1.f);																	// empty space
+			layouts[i]->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed)); // bottom border
 			tabs[i]->setLayout(layouts[i]);
 
-			PeriodicalMode* use = reactor->regulatingRod()->getMode((SimulationModes)(i + 1));
+			PeriodicalMode *use = reactor->regulatingRod()->getMode((SimulationModes)(i + 1));
 			size_t arraySize = use->num_points();
 
 			// create graph first just for event binding
-			CustomGraph* graph = tabs[i]->add<CustomGraph>(2, titles[i]);
+			CustomGraph *graph = tabs[i]->add<CustomGraph>(2, titles[i]);
 			graph->setDrawBackground(true);
 			graph->setBackgroundColor(Color(32, 255));
 			layouts[i]->setAnchor(graph, RelativeGridLayout::makeAnchor(2, 0, 2, simModeFields[i] + 3, Alignment::Fill, Alignment::Fill));
@@ -2498,9 +2473,9 @@ public:
 			operationModesTrackers[i]->setYdata(trackerY);
 			operationModesTrackers[i]->setLimits(0., use->getPeriod(), 0., 1.);
 
-
 			// Make arrays
-			for (size_t p = 0; p < 2; p++) operationModesPlots[p][i] = new double[arraySize];
+			for (size_t p = 0; p < 2; p++)
+				operationModesPlots[p][i] = new double[arraySize];
 			// Fill arrays
 			use->fillXYaxis(operationModesPlots[0][i], operationModesPlots[1][i]);
 
@@ -2516,7 +2491,7 @@ public:
 			periodBoxes[i]->setSpinnable(true);
 			periodBoxes[i]->setDefaultValue(formatDecimalsDouble(use->getPeriod(), 1));
 			periodBoxes[i]->setCallback([use, i, this](float change)
-				{
+										{
 					switch (i)
 					{
 					case 0: properties->squareWave.period = change; break;
@@ -2526,8 +2501,7 @@ public:
 					use->setPeriod(change);
 					use->fillXYaxis(operationModesPlots[0][i], operationModesPlots[1][i]);
 					operationModes[i]->setLimits(0., change, -1.5 * use->getAmplitude(), 1.5 * use->getAmplitude());
-					operationModesTrackers[i]->setLimits(0., use->getPeriod(), 0., 1.);
-				});
+					operationModesTrackers[i]->setLimits(0., use->getPeriod(), 0., 1.); });
 
 			// amplitude
 			amplitudeBoxes[i] = makeSettingLabel<FloatBox<float>>(tabs[i], "Amplitude: ", 100, use->getAmplitude());
@@ -2541,7 +2515,7 @@ public:
 			amplitudeBoxes[i]->setSpinnable(true);
 			amplitudeBoxes[i]->setDefaultValue(to_string(use->getAmplitude()));
 			amplitudeBoxes[i]->setCallback([use, i, this](float change)
-				{
+										   {
 					switch (i)
 					{
 					case 0: properties->squareWave.amplitude = change; break;
@@ -2550,8 +2524,7 @@ public:
 					}
 					use->setAmplitude(change);
 					use->fillXYaxis(operationModesPlots[0][i], operationModesPlots[1][i]);
-					operationModes[i]->setLimits(0., use->getPeriod(), -1.5 * change, 1.5 * change);
-				});
+					operationModes[i]->setLimits(0., use->getPeriod(), -1.5 * change, 1.5 * change); });
 
 			operationModes[i]->setMainTickFontSize(18.f);
 			operationModes[i]->setMajorTickFontSize(16.f);
@@ -2586,7 +2559,7 @@ public:
 			squareWaveBoxes[sqw] = makeSimulationSetting(tabs[0], (int)roundf(properties->squareWave.xIndex[sqw] * 100), sqw_settingNames[sqw]);
 			layouts[0]->setAnchor(squareWaveBoxes[sqw]->parent(), RelativeGridLayout::makeAnchor(1, 3 + sqw, 1, 1, Alignment::Minimum, Alignment::Middle));
 			squareWaveBoxes[sqw]->setCallback([this, sqw](int change)
-				{
+											  {
 					float val = change / 100.f;
 					reactor->regulatingRod()->squareWave()->xIndex[sqw] = val;
 					properties->squareWave.xIndex[sqw] = val;
@@ -2595,13 +2568,12 @@ public:
 						squareWaveBoxes[sqw + 1]->setMinValue(change);
 						if (squareWaveBoxes[sqw + 1]->value() < change) squareWaveBoxes[sqw + 1]->setValue(change);
 					}
-					reactor->regulatingRod()->squareWave()->fillXYaxis(operationModesPlots[0][0], operationModesPlots[1][0]);
-				});
+					reactor->regulatingRod()->squareWave()->fillXYaxis(operationModesPlots[0][0], operationModesPlots[1][0]); });
 		}
 		squareWaveSpeedBox = makeSettingLabel<SliderCheckBox>(tabs[0], "Use finite rod speed: ");
 		layouts[0]->setAnchor(squareWaveSpeedBox->parent(), RelativeGridLayout::makeAnchor(1, 7, 1, 1, Alignment::Minimum, Alignment::Middle));
 		squareWaveSpeedBox->setCallback([this](bool change)
-			{
+										{
 				properties->squareWaveUsesRodSpeed = change;
 				if (change)
 				{
@@ -2611,19 +2583,17 @@ public:
 				{
 					reactor->regulatingRod()->squareWave()->rodSpeed = 0.f;
 				}
-				reactor->regulatingRod()->squareWave()->fillXYaxis(operationModesPlots[0][0], operationModesPlots[1][0]);
-			});
+				reactor->regulatingRod()->squareWave()->fillXYaxis(operationModesPlots[0][0], operationModesPlots[1][0]); });
 
 		/* SINE MODE */
 		sineModeBox = makeSettingLabel<ComboBox>(tabs[1], "Sine type: ", 0, sineModes);
 		layouts[1]->setAnchor(sineModeBox->parent(), RelativeGridLayout::makeAnchor(1, 3, 1, 1, Alignment::Minimum, Alignment::Middle));
 		sineModeBox->setFixedWidth(150);
 		sineModeBox->setCallback([this](int change)
-			{
+								 {
 				properties->sineMode.mode = (Settings::SineSettings::SineMode)change;
 				reactor->regulatingRod()->sine()->mode = (Sine::SineMode)change;
-				reactor->regulatingRod()->sine()->fillXYaxis(operationModesPlots[0][1], operationModesPlots[1][1]);
-			});
+				reactor->regulatingRod()->sine()->fillXYaxis(operationModesPlots[0][1], operationModesPlots[1][1]); });
 
 		/* SAW TOOTH */
 		for (int saw = 0; saw < 6; saw++)
@@ -2631,7 +2601,7 @@ public:
 			sawToothBoxes[saw] = makeSimulationSetting(tabs[2], (int)roundf(properties->sawToothMode.xIndex[saw] * 100), saw_settingNames[saw]);
 			layouts[2]->setAnchor(sawToothBoxes[saw]->parent(), RelativeGridLayout::makeAnchor(1, 3 + saw, 1, 1, Alignment::Minimum, Alignment::Middle));
 			sawToothBoxes[saw]->setCallback([this, saw](int change)
-				{
+											{
 					float val = change / 100.f;
 					reactor->regulatingRod()->sawTooth()->xIndex[saw] = val;
 					properties->sawToothMode.xIndex[saw] = val;
@@ -2640,17 +2610,17 @@ public:
 						sawToothBoxes[saw + 1]->setMinValue(change);
 						if (sawToothBoxes[saw + 1]->value() < change) sawToothBoxes[saw + 1]->setValue(change);
 					}
-					reactor->regulatingRod()->sawTooth()->fillXYaxis(operationModesPlots[0][2], operationModesPlots[1][2]);
-				});
+					reactor->regulatingRod()->sawTooth()->fillXYaxis(operationModesPlots[0][2], operationModesPlots[1][2]); });
 		}
 
 		// AUTOMATIC
-		CustomWidget* autoTab = modeTabs->createTab("Automatic");
-		RelativeGridLayout* autoLayout = new RelativeGridLayout();
+		CustomWidget *autoTab = modeTabs->createTab("Automatic");
+		RelativeGridLayout *autoLayout = new RelativeGridLayout();
 		autoLayout->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // left border
-		autoLayout->appendCol(1.f); // everything else
+		autoLayout->appendCol(1.f);																	// everything else
 		autoLayout->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // top border
-		for (int i = 0; i < 4; i++) autoLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed)); // 4 rows for 4 settings
+		for (int i = 0; i < 4; i++)
+			autoLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed)); // 4 rows for 4 settings
 		autoTab->setLayout(autoLayout);
 
 		keepCurrentPowerBox = makeSettingLabel<SliderCheckBox>(autoTab, "Current power stability: ", 0);
@@ -2668,30 +2638,27 @@ public:
 		autoLayout->setAnchor(steadyPowerBox->parent(), RelativeGridLayout::makeAnchor(1, 2, 1, 1, Alignment::Minimum, Alignment::Middle));
 
 		keepCurrentPowerBox->setCallback([this](bool checked)
-			{
+										 {
 				steadyPowerBox->setEnabled(!checked);
 				properties->steadyCurrentPower = checked;
-				reactor->setKeepCurrentPower(checked);
-			});
+				reactor->setKeepCurrentPower(checked); });
 
 		steadyPowerBox->setCallback([this](double newValue)
-			{
+									{
 				if (newValue > 0.)
 				{
 					properties->steadyGoalPower = newValue;
 					reactor->setAutomaticSteadyPower(newValue);
-				}
-			});
+				} });
 
 		avoidPeriodScramBox = makeSettingLabel<SliderCheckBox>(autoTab, "Avoid period SCRAM: ", 0);
 		avoidPeriodScramBox->setChecked(reactor->getKeepCurrentPower());
 		autoLayout->setAnchor(avoidPeriodScramBox->parent(), RelativeGridLayout::makeAnchor(1, 3, 1, 1, Alignment::Minimum, Alignment::Middle));
 
 		avoidPeriodScramBox->setCallback([this](bool checked)
-			{
+										 {
 				properties->avoidPeriodScram = checked;
-				reactor->setAutomaticAvoidPeriodScram(checked);
-			});
+				reactor->setAutomaticAvoidPeriodScram(checked); });
 
 		automaticMarginBox = makeSettingLabel<FloatBox<float>>(autoTab, "Maximum power deviation: ", 0, properties->steadyMargin * 100);
 		automaticMarginBox->setUnits("%");
@@ -2703,33 +2670,32 @@ public:
 		autoLayout->setAnchor(automaticMarginBox->parent(), RelativeGridLayout::makeAnchor(1, 4, 1, 1, Alignment::Minimum, Alignment::Middle));
 
 		automaticMarginBox->setCallback([this](float change)
-			{
+										{
 				properties->steadyMargin = change / 100;
-				reactor->setAutomaticDeviation(change / 100);
-			});
+				reactor->setAutomaticDeviation(change / 100); });
 
 		modeTabs->setActiveTab(0);
 	}
 
-	const std::string labels[5] = { "Period","Power","Fuel temperature","Water temperature","Water level" };
-	const Simulator::ScramSignals reasons[5] = { Simulator::ScramSignals::Period, Simulator::ScramSignals::Power, Simulator::ScramSignals::FuelTemperature, Simulator::ScramSignals::WaterTemperature, Simulator::ScramSignals::WaterLevel };
+	const std::string labels[5] = {"Period", "Power", "Fuel temperature", "Water temperature", "Water level"};
+	const Simulator::ScramSignals reasons[5] = {Simulator::ScramSignals::Period, Simulator::ScramSignals::Power, Simulator::ScramSignals::FuelTemperature, Simulator::ScramSignals::WaterTemperature, Simulator::ScramSignals::WaterLevel};
 	void createOperationalLimitsTab()
 	{
-		CustomWidget* limits_tab = tabControl->createTab("Operational limits");
+		CustomWidget *limits_tab = tabControl->createTab("Operational limits");
 		limits_tab->setId("op. limits tab");
-		RelativeGridLayout* rel = new RelativeGridLayout();
-		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// left border
-		rel->appendCol(RelativeGridLayout::Size(200.f, RelativeGridLayout::SizeType::Fixed));		// text
-		rel->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));		// data
-		rel->appendCol(1.f);																		// check boxes
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// top border
+		RelativeGridLayout *rel = new RelativeGridLayout();
+		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // left border
+		rel->appendCol(RelativeGridLayout::Size(200.f, RelativeGridLayout::SizeType::Fixed)); // text
+		rel->appendCol(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed)); // data
+		rel->appendCol(1.f);																  // check boxes
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // top border
 		limits_tab->setLayout(rel);
 
 		// Skips water level
 		for (int i = 0; i < 4; i++)
 		{
 			rel->appendRow(RelativeGridLayout::Size(27.5f, RelativeGridLayout::SizeType::Fixed));
-			Label* temp = limits_tab->add<Label>(labels[i] + " SCRAM :", "sans-bold");
+			Label *temp = limits_tab->add<Label>(labels[i] + " SCRAM :", "sans-bold");
 			rel->setAnchor(temp, RelativeGridLayout::makeAnchor(1, 1 + i, 1, 1, Alignment::Minimum, Alignment::Middle));
 			scramEnabledBoxes[i] = limits_tab->add<SliderCheckBox>();
 			RelativeGridLayout::Anchor a = RelativeGridLayout::makeAnchor(3, 1 + i, 1, 1, Alignment::Minimum, Alignment::Middle);
@@ -2737,7 +2703,7 @@ public:
 			rel->setAnchor(scramEnabledBoxes[i], a);
 			scramEnabledBoxes[i]->setChecked(reactor->getScramEnabled(reasons[i]));
 			scramEnabledBoxes[i]->setCallback([this, i](bool checked)
-				{
+											  {
 					reactor->setScramEnabled(reasons[i], checked);
 					switch (i)
 					{
@@ -2746,11 +2712,10 @@ public:
 					case 2: properties->tempScram = checked; break;
 					case 3: properties->waterTempScram = checked; break;
 					case 4: properties->waterLevelScram = checked; break;
-					}
-				});
+					} });
 		}
 
-		// Create the period limit 
+		// Create the period limit
 		periodLimBox = limits_tab->add<IntBox<float>>((float)properties->periodLimit);
 		rel->setAnchor(periodLimBox, RelativeGridLayout::makeAnchor(2, 1, 1, 1, Alignment::Fill, Alignment::Middle));
 		periodLimBox->setFixedSize(Vector2i(100, 20));
@@ -2761,10 +2726,9 @@ public:
 		periodLimBox->setMinMaxValues(0.f, 3600.f);
 		periodLimBox->setValueIncrement(0.1f);
 		periodLimBox->setCallback([this](float a)
-			{
+								  {
 				properties->periodLimit = a;
-				reactor->setPeriodLimit(a);
-			});
+				reactor->setPeriodLimit(a); });
 
 		// Create the power limit
 		powerLimBox = limits_tab->add<FloatBox<double>>(properties->powerLimit / 1000.);
@@ -2777,10 +2741,9 @@ public:
 		powerLimBox->setMinMaxValues(0., 1e12);
 		powerLimBox->setValueIncrement(1e2);
 		powerLimBox->setCallback([this](double a)
-			{
+								 {
 				properties->powerLimit = a * 1e3;
-				reactor->setPowerLimit(a * 1e3);
-			});
+				reactor->setPowerLimit(a * 1e3); });
 
 		// Create the fuel temperature limit
 		fuel_tempLimBox = limits_tab->add<FloatBox<float>>(properties->tempLimit);
@@ -2793,10 +2756,9 @@ public:
 		fuel_tempLimBox->setMinValue((int)ENVIRONMENT_TEMPERATURE_DEFAULT);
 		fuel_tempLimBox->setValueIncrement(10);
 		fuel_tempLimBox->setCallback([this](float a)
-			{
+									 {
 				properties->tempLimit = a;
-				reactor->setFuelTemperatureLimit(a);
-			});
+				reactor->setFuelTemperatureLimit(a); });
 
 		// Create the water temperature limit
 		water_tempLimBox = limits_tab->add<FloatBox<float>>(properties->waterTempLimit);
@@ -2809,10 +2771,9 @@ public:
 		water_tempLimBox->setMinMaxValues(0, 100);
 		water_tempLimBox->setValueIncrement(10);
 		water_tempLimBox->setCallback([this](float a)
-			{
+									  {
 				properties->waterTempLimit = a;
-				reactor->setWaterTemperatureLimit(a);
-			});
+				reactor->setWaterTemperatureLimit(a); });
 
 		// Create the water level limit
 		/*water_levelLimBox = limits_tab->add<FloatBox<float>>(properties->waterLevelLimit);
@@ -2833,7 +2794,7 @@ public:
 
 		// Create a panel for rod reactivity plot visibility
 		rel->appendRow(RelativeGridLayout::Size(27.5f, RelativeGridLayout::SizeType::Fixed));
-		CustomWidget* checkBoxPanelRods = limits_tab->add<CustomWidget>();
+		CustomWidget *checkBoxPanelRods = limits_tab->add<CustomWidget>();
 		rel->setAnchor(checkBoxPanelRods, RelativeGridLayout::makeAnchor(1, 5));
 		checkBoxPanelRods->setLayout(panelsLayout);
 		checkBoxPanelRods->add<Label>("All control rods at once: ", "sans-bold");
@@ -2841,13 +2802,11 @@ public:
 		allRodsBox->setFontSize(16);
 		allRodsBox->setChecked(properties->allRodsAtOnce);
 		allRodsBox->setCallback([this](bool value)
-			{
-				properties->allRodsAtOnce = value;
-			});
+								{ properties->allRodsAtOnce = value; });
 
 		// Create a panel for rod reactivity plot visibility
 		rel->appendRow(RelativeGridLayout::Size(27.5f, RelativeGridLayout::SizeType::Fixed));
-		CustomWidget* checkBoxPanelAutoScram = limits_tab->add<CustomWidget>();
+		CustomWidget *checkBoxPanelAutoScram = limits_tab->add<CustomWidget>();
 		rel->setAnchor(checkBoxPanelAutoScram, RelativeGridLayout::makeAnchor(1, 6));
 		checkBoxPanelAutoScram->setLayout(panelsLayout);
 		checkBoxPanelAutoScram->add<Label>("SCRAM after pulse: ", "sans-bold");
@@ -2855,23 +2814,22 @@ public:
 		autoScramBox->setFontSize(16);
 		autoScramBox->setChecked(properties->automaticPulseScram);
 		autoScramBox->setCallback([this](bool value)
-			{
+								  {
 				properties->automaticPulseScram = value;
-				reactor->setAutoScram(value);
-			});
+				reactor->setAutoScram(value); });
 	}
 
 	void createPulseTab()
 	{
-		CustomWidget* pulse_tab = tabControl->createTab("Pulse");
+		CustomWidget *pulse_tab = tabControl->createTab("Pulse");
 		pulse_tab->setId("pulse tab");
-		RelativeGridLayout* rel = new RelativeGridLayout();
-		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 left border
-		rel->appendCol(2.f);																		// 1 pulse graph
-		rel->appendCol(1.f);																		// 2 info panel
-		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 3 right border
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 top border
-		rel->appendRow(1.f);																		// 1 content
+		RelativeGridLayout *rel = new RelativeGridLayout();
+		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // 0 left border
+		rel->appendCol(2.f);																 // 1 pulse graph
+		rel->appendCol(1.f);																 // 2 info panel
+		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // 3 right border
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed)); // 0 top border
+		rel->appendRow(1.f);																 // 1 content
 		pulse_tab->setLayout(rel);
 
 		pulseGraph = pulse_tab->add<CustomGraph>(4, "Last pulse");
@@ -2886,35 +2844,35 @@ public:
 		standInCover->setColor(Color(255, 255));
 		standInCover->setVisible(true);
 
-		CustomWidget* dataSheet = pulse_tab->add<CustomWidget>();
+		CustomWidget *dataSheet = pulse_tab->add<CustomWidget>();
 		rel->setAnchor(dataSheet, RelativeGridLayout::makeAnchor(2, 1));
 
-		RelativeGridLayout* rel2 = new RelativeGridLayout();
-		rel2->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 left border
-		rel2->appendCol(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed));		// 1 color border
-		rel2->appendCol(1.f);																		// 2 content
-		rel2->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 3 seperation border
-		rel2->appendCol(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed));		// 4 color border
-		rel2->appendCol(1.f);																		// 5 content
-		rel2->appendRow(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));		// 0 content
-		rel2->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 1 seperation border
-		rel2->appendRow(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed));		// 2 content
-		rel2->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 3 bottom border
-		rel2->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed));		// 4 time interval
-		rel2->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed));		// 5 time labels
-		rel2->appendRow(1.f);																		// 6 display label
+		RelativeGridLayout *rel2 = new RelativeGridLayout();
+		rel2->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 0 left border
+		rel2->appendCol(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed));   // 1 color border
+		rel2->appendCol(1.f);																   // 2 content
+		rel2->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 3 seperation border
+		rel2->appendCol(RelativeGridLayout::Size(5.f, RelativeGridLayout::SizeType::Fixed));   // 4 color border
+		rel2->appendCol(1.f);																   // 5 content
+		rel2->appendRow(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed)); // 0 content
+		rel2->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 1 seperation border
+		rel2->appendRow(RelativeGridLayout::Size(100.f, RelativeGridLayout::SizeType::Fixed)); // 2 content
+		rel2->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 3 bottom border
+		rel2->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed));  // 4 time interval
+		rel2->appendRow(RelativeGridLayout::Size(20.f, RelativeGridLayout::SizeType::Fixed));  // 5 time labels
+		rel2->appendRow(1.f);																   // 6 display label
 		dataSheet->setLayout(rel2);
 
-		Color colors[4] = { Color(255,0,0,255), Color(0,255), Color(0,255,0,255), Color(255,0,255,255) };
-		std::string text[4] = { "Peak power","FWHM","Peak fuel temp.","Pulse energy" };
+		Color colors[4] = {Color(255, 0, 0, 255), Color(0, 255), Color(0, 255, 0, 255), Color(255, 0, 255, 255)};
+		std::string text[4] = {"Peak power", "FWHM", "Peak fuel temp.", "Pulse energy"};
 		for (int i = 0; i < 4; i++)
 		{
-			CustomWidget* marker = dataSheet->add<CustomWidget>();
+			CustomWidget *marker = dataSheet->add<CustomWidget>();
 			rel2->setAnchor(marker, RelativeGridLayout::makeAnchor((i % 2) * 3 + 1, (i / 2) * 2));
 			marker->setDrawBackground(true);
 			marker->setBackgroundColor(colors[i]);
 
-			CustomLabel* baseLabel = dataSheet->add<CustomLabel>(text[i], "sans-bold");
+			CustomLabel *baseLabel = dataSheet->add<CustomLabel>(text[i], "sans-bold");
 			rel2->setAnchor(baseLabel, RelativeGridLayout::makeAnchor((i % 2) * 3 + 2, (i / 2) * 2));
 			baseLabel->setPadding(0, 7.f);
 			baseLabel->setPadding(1, 5.f);
@@ -2924,7 +2882,7 @@ public:
 			baseLabel->setFontSize(25.f);
 			baseLabel->setColor(Color(170, 255));
 
-			RelativeGridLayout* rel3 = new RelativeGridLayout();
+			RelativeGridLayout *rel3 = new RelativeGridLayout();
 			rel3->appendCol(1.f);
 			rel3->appendRow(1.f);
 			baseLabel->setLayout(rel3);
@@ -2942,11 +2900,10 @@ public:
 		pulseTimer->setEnabled(false);
 		pulseTimer->setHighlightColor(coolBlue);
 		pulseTimer->setSteps(50U);
-		for (int i = 0; i < 2; i++) pulseTimer->setCallback(i, [this](float /*change*/)
-			{
-				updatePulseTrack();
-			});
-		CustomLabel* infoLbl;
+		for (int i = 0; i < 2; i++)
+			pulseTimer->setCallback(i, [this](float /*change*/)
+									{ updatePulseTrack(); });
+		CustomLabel *infoLbl;
 		for (int i = 0; i < 2; i++)
 		{
 			infoLbl = dataSheet->add<CustomLabel>(i ? "5s later" : "pulse start", "sans-bold");
@@ -2956,11 +2913,11 @@ public:
 			rel2->setAnchor(infoLbl, RelativeGridLayout::makeAnchor(1, 5, 5, 1, i ? Alignment::Maximum : Alignment::Minimum, Alignment::Minimum));
 		}
 
-		CustomWidget* displayPanel = dataSheet->add<CustomWidget>();
+		CustomWidget *displayPanel = dataSheet->add<CustomWidget>();
 		rel2->setAnchor(displayPanel, RelativeGridLayout::makeAnchor(1, 6, 5, 1, Alignment::Middle, Alignment::Middle));
 		displayPanel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Fill));
 
-		CustomLabel* temp;
+		CustomLabel *temp;
 		temp = displayPanel->add<CustomLabel>("From", "sans-bold", 25);
 		temp->setPadding(2, 10);
 		pulseDisplayLabels[0] = displayPanel->add<CustomLabel>("0", "sans", 30);
@@ -2980,32 +2937,32 @@ public:
 
 	void createOtherTab()
 	{
-		CustomWidget* other_tab = tabControl->createTab("Other");
+		CustomWidget *other_tab = tabControl->createTab("Other");
 		other_tab->setId("other tab");
-		RelativeGridLayout* rel = new RelativeGridLayout();
-		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 left border
-		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed));		// 1 save button
-		rel->appendCol(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed));		// 2 border
-		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed));		// 3 load button
-		rel->appendCol(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed));		// 2 border
-		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed));		// 5 division thing
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 0 top border
-		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 1 Load and save settings
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 2 Seperating space
-		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 3 Load and save log
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 4 Seperating space
-		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 5 Rod Curves
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 6 Seperating space
-		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 7 Reset simulator
-		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));		// 8 Seperating space
-		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));		// 9 Load script
+		RelativeGridLayout *rel = new RelativeGridLayout();
+		rel->appendCol(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 0 left border
+		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed)); // 1 save button
+		rel->appendCol(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed));  // 2 border
+		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed)); // 3 load button
+		rel->appendCol(RelativeGridLayout::Size(10.f, RelativeGridLayout::SizeType::Fixed));  // 2 border
+		rel->appendCol(RelativeGridLayout::Size(120.f, RelativeGridLayout::SizeType::Fixed)); // 5 division thing
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 0 top border
+		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));  // 1 Load and save settings
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 2 Seperating space
+		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));  // 3 Load and save log
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 4 Seperating space
+		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));  // 5 Rod Curves
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 6 Seperating space
+		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));  // 7 Reset simulator
+		rel->appendRow(RelativeGridLayout::Size(15.f, RelativeGridLayout::SizeType::Fixed));  // 8 Seperating space
+		rel->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed));  // 9 Load script
 
 		other_tab->setLayout(rel);
 
-		Button* saveBtn = other_tab->add<Button>("Save settings");
+		Button *saveBtn = other_tab->add<Button>("Save settings");
 		rel->setAnchor(saveBtn, RelativeGridLayout::makeAnchor(1, 1));
 		saveBtn->setCallback([this]()
-			{
+							 {
 				toggleBaseWindow(false);
 				std::string saveFileName = file_dialog({ { "rrs", "Simulator settings file" } }, true);
 				if (saveFileName.substr((size_t)std::max(0, (int)saveFileName.length() - 4), std::min((size_t)4, saveFileName.length())) != ".rrs")
@@ -3013,36 +2970,33 @@ public:
 					saveFileName = saveFileName.append(".rrs");
 				}
 				//saveSettings(saveFileName);
-				saveArchive(saveFileName);
-			});
+				saveArchive(saveFileName); });
 
-		Button* loadBtn = other_tab->add<Button>("Load settings");
+		Button *loadBtn = other_tab->add<Button>("Load settings");
 		rel->setAnchor(loadBtn, RelativeGridLayout::makeAnchor(3, 1));
 		loadBtn->setCallback([this]()
-			{
+							 {
 				toggleBaseWindow(false);
 				std::string loadFileName = file_dialog({ { "rrs", "Simulator settings file" } }, false);
 				// loadSettingsFromFile(loadFileName);
 				loadArchive(loadFileName);
 				std::cout << "Graph size after GUI: " << properties->graphSize << std::endl;
-				updateSettings();
-			});
+				updateSettings(); });
 
-		Button* saveLogBtn = other_tab->add<Button>("Save data");
+		Button *saveLogBtn = other_tab->add<Button>("Save data");
 		rel->setAnchor(saveLogBtn, RelativeGridLayout::makeAnchor(1, 3));
 		saveLogBtn->setCallback([this]()
-			{
+								{
 				std::string logFileName = file_dialog(
 					{ { "dat", "Data file" },{ "txt", "Text file" } }, true);
-				reactor->dataToFile(logFileName);
-			});
+				reactor->dataToFile(logFileName); });
 
-		CustomLabel* divisionLabel = other_tab->add<CustomLabel>("Save each steps:");
+		CustomLabel *divisionLabel = other_tab->add<CustomLabel>("Save each steps:");
 		rel->setAnchor(divisionLabel, RelativeGridLayout::makeAnchor(3, 3));
 
-		IntBox<int>* divisionBox = other_tab->add<IntBox<int>>(reactor->data_division);
+		IntBox<int> *divisionBox = other_tab->add<IntBox<int>>(reactor->data_division);
 		rel->setAnchor(divisionBox, RelativeGridLayout::makeAnchor(5, 3));
-		//divisionBox->setUnits("%");
+		// divisionBox->setUnits("%");
 		divisionBox->setDefaultValue(to_string(reactor->data_division));
 		divisionBox->setFontSize(16);
 		divisionBox->setFormat("[0-9]+");
@@ -3051,37 +3005,31 @@ public:
 		divisionBox->setMaxValue(100);
 		divisionBox->setValueIncrement(1);
 		divisionBox->setCallback([this](int a)
-			{
-				reactor->data_division = a;
-			});
+								 { reactor->data_division = a; });
 
-		Button* saveRodCurves = other_tab->add<Button>("Rod curves");
+		Button *saveRodCurves = other_tab->add<Button>("Rod curves");
 		rel->setAnchor(saveRodCurves, RelativeGridLayout::makeAnchor(1, 5));
 		saveRodCurves->setCallback([this]()
-			{
+								   {
 				std::string logFileName = file_dialog(
 					{ { "dat", "Data file" },{ "txt", "Text file" } }, true);
-				reactor->rodsToFile(logFileName);
-			});
+				reactor->rodsToFile(logFileName); });
 
-		Button* loadScriptBtn = other_tab->add<Button>("Load script");
+		Button *loadScriptBtn = other_tab->add<Button>("Load script");
 		rel->setAnchor(loadScriptBtn, RelativeGridLayout::makeAnchor(1, 9));
 		loadScriptBtn->setCallback([this]()
-			{
+								   {
 				toggleBaseWindow(false);
 				std::string loadFileName = file_dialog({ { "rrs", "Simulator Script file" } }, false);
-				loadScriptFromFile(loadFileName);
-			});
+				loadScriptFromFile(loadFileName); });
 
-		Button* resetBtn = other_tab->add<Button>("Reset simulator");
+		Button *resetBtn = other_tab->add<Button>("Reset simulator");
 		rel->setAnchor(resetBtn, RelativeGridLayout::makeAnchor(1, 7));
 		resetBtn->setCallback([this]()
-			{
-				this->resetSimToStart();
-			});
+							  { this->resetSimToStart(); });
 	}
 
-	double trackerY[2] = { 0.,1. };
+	double trackerY[2] = {0., 1.};
 
 	void resetSimToStart()
 	{
@@ -3116,19 +3064,20 @@ public:
 		performLayout();
 	}
 
-	template<typename WidgetClass, typename... Args>
-	WidgetClass* makeSettingLabel(Widget* parent, std::string text, int fixedWidth = 0, const Args&... args)
+	template <typename WidgetClass, typename... Args>
+	WidgetClass *makeSettingLabel(Widget *parent, std::string text, int fixedWidth = 0, const Args &...args)
 	{
-		Widget* panel = parent->add<Widget>();
+		Widget *panel = parent->add<Widget>();
 		panel->setLayout(panelsLayout);
-		CustomLabel* temp = panel->add<CustomLabel>(text, "sans-bold");
-		if (fixedWidth) temp->setFixedWidth(fixedWidth);
+		CustomLabel *temp = panel->add<CustomLabel>(text, "sans-bold");
+		if (fixedWidth)
+			temp->setFixedWidth(fixedWidth);
 		return panel->add<WidgetClass>(args...);
 	}
 
-	IntBox<int>* makeSimulationSetting(CustomWidget* parent, int initialValue, std::string text)
+	IntBox<int> *makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
 	{
-		IntBox<int>* tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
+		IntBox<int> *tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
 		tempBox->setFixedWidth(100);
 		tempBox->setFormat("[0-9]+");
 		tempBox->setUnits("%");
@@ -3167,7 +3116,8 @@ public:
 			}
 		}
 #if defined(_WIN32)
-		if (boxConnected) delete theBox;
+		if (boxConnected)
+			delete theBox;
 #endif
 	}
 
@@ -3175,11 +3125,15 @@ public:
 	{
 		if (Screen::keyboardEvent(key, scancode, action, modifiers))
 			return true;
-		if (!baseWindow->enabled()) return false;
+		if (!baseWindow->enabled())
+			return false;
 
 		if (action == GLFW_PRESS)
 		{
-			if (last10keys.size() == 10) { last10keys.pop_front(); }
+			if (last10keys.size() == 10)
+			{
+				last10keys.pop_front();
+			}
 			last10keys.push_back(key);
 			size_t keyN = last10keys.size();
 			bool isGodMode = false;
@@ -3215,7 +3169,6 @@ public:
 				debugMode = !debugMode;
 
 				handleDebugChanged();
-
 			}
 			if (isReset)
 			{
@@ -3233,7 +3186,8 @@ public:
 			}
 			else
 			{
-				if (properties->allRodsAtOnce || !(lastKeyPressed[1] || lastKeyPressed[2])) lastKeyPressed[0] = true;
+				if (properties->allRodsAtOnce || !(lastKeyPressed[1] || lastKeyPressed[2]))
+					lastKeyPressed[0] = true;
 			}
 		}
 		else if (key == enableSafetyCommand && action == GLFW_PRESS)
@@ -3249,7 +3203,8 @@ public:
 			}
 			else
 			{
-				if (properties->allRodsAtOnce || !(lastKeyPressed[0] || lastKeyPressed[2])) lastKeyPressed[1] = true;
+				if (properties->allRodsAtOnce || !(lastKeyPressed[0] || lastKeyPressed[2]))
+					lastKeyPressed[1] = true;
 			}
 		}
 		else if (key == enableRegCommand && action == GLFW_PRESS)
@@ -3265,7 +3220,8 @@ public:
 			}
 			else
 			{
-				if (properties->allRodsAtOnce || !(lastKeyPressed[0] || lastKeyPressed[1])) lastKeyPressed[2] = true;
+				if (properties->allRodsAtOnce || !(lastKeyPressed[0] || lastKeyPressed[1]))
+					lastKeyPressed[2] = true;
 			}
 		}
 		else if (key == enableShimCommand && action == GLFW_PRESS)
@@ -3284,7 +3240,8 @@ public:
 			{
 				for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
 				{
-					if (lastKeyPressed[i]) reactor->rods[i]->commandToTop();
+					if (lastKeyPressed[i])
+						reactor->rods[i]->commandToTop();
 				}
 			}
 		} // Move rod down
@@ -3300,7 +3257,8 @@ public:
 			{
 				for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
 				{
-					if (lastKeyPressed[i]) reactor->rods[i]->commandToBottom();
+					if (lastKeyPressed[i])
+						reactor->rods[i]->commandToBottom();
 				}
 			}
 		} // SCRAM
@@ -3381,9 +3339,10 @@ public:
 		return true;
 	}
 
-	virtual bool resizeEvent(const Eigen::Vector2i& size)
+	virtual bool resizeEvent(const Eigen::Vector2i &size)
 	{
-		if (Screen::resizeEvent(size)) return true;
+		if (Screen::resizeEvent(size))
+			return true;
 		if (layoutStart)
 		{
 			performLayout();
@@ -3393,6 +3352,26 @@ public:
 			layoutStart = true;
 		}
 		return true;
+	}
+
+	// DEBUG: Override to trace mouse events
+	virtual bool mouseButtonEvent(const nanogui::Vector2i &p, int button, bool down, int modifiers) override
+	{
+		static std::ofstream debugLog("debug_clicks.txt", std::ios::app);
+		debugLog << "[DEBUG] mouseButtonEvent at (" << p.x() << ", " << p.y() << ") button=" << button << " down=" << down << std::endl;
+		Widget *target = findWidget(p);
+		if (target)
+		{
+			debugLog << "[DEBUG] findWidget found: " << typeid(*target).name() << std::endl;
+		}
+		else
+		{
+			debugLog << "[DEBUG] findWidget found: nullptr" << std::endl;
+		}
+		bool result = Screen::mouseButtonEvent(p, button, down, modifiers);
+		debugLog << "[DEBUG] Screen::mouseButtonEvent returned: " << result << std::endl;
+		debugLog.flush();
+		return result;
 	}
 
 private:
@@ -3415,12 +3394,12 @@ private:
 	int sourceToggleCommand = GLFW_KEY_N;
 	int demoModeCommand = GLFW_KEY_D;
 	int demoModeHighPowerCommand = GLFW_KEY_F;
-	int cheat1[7] = { GLFW_KEY_G, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_M, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_E };
-	int cheat2[5] = { GLFW_KEY_D, GLFW_KEY_E, GLFW_KEY_B, GLFW_KEY_U, GLFW_KEY_G };
-	int cheat3[5] = { GLFW_KEY_R, GLFW_KEY_E, GLFW_KEY_S, GLFW_KEY_E, GLFW_KEY_T };
+	int cheat1[7] = {GLFW_KEY_G, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_M, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_E};
+	int cheat2[5] = {GLFW_KEY_D, GLFW_KEY_E, GLFW_KEY_B, GLFW_KEY_U, GLFW_KEY_G};
+	int cheat3[5] = {GLFW_KEY_R, GLFW_KEY_E, GLFW_KEY_S, GLFW_KEY_E, GLFW_KEY_T};
 	bool debugMode = false;
 	deque<int> last10keys = deque<int>();
-	size_t displayInterval[2] = { 0,0 };
+	size_t displayInterval[2] = {0, 0};
 	bool btns[11];
 	int lastModeState = 0;
 
@@ -3461,7 +3440,7 @@ private:
 public:
 	double lastTime = get_seconds_since_epoch();
 
-	virtual void draw(NVGcontext* ctx)
+	virtual void draw(NVGcontext *ctx)
 	{
 		double reactorElapsed = reactor->getCurrentTime();
 		if (startScript.size())
@@ -3472,7 +3451,6 @@ public:
 
 		// Run new calculation
 		reactor->runLoop();
-
 
 		// Get from which index to which index the data will be drawn and update view slider
 		const double sliderRange = std::min(DELETE_OLD_DATA_TIME_DEFAULT, reactorElapsed);
@@ -3524,18 +3502,18 @@ public:
 				if (isZero.first && isZero.second)
 				{
 					powerPlot->setLimits(timeStart, timeEnd,
-						0., 1.);
+										 0., 1.);
 				}
 				else
 				{
 					powerPlot->setLimits(timeStart, timeEnd,
-						0., pow(10., std::max(newExtremes.first, newExtremes.second)));
+										 0., pow(10., std::max(newExtremes.first, newExtremes.second)));
 				}
 			}
 			else
 			{
 				powerPlot->setLimits(timeStart, timeEnd,
-					/*(newExtremes.first < -3) ? 0. : pow(10., newExtremes.first)*/ powerPlot->getYlog() ? pow(10., newExtremes.first) : 0., pow(10., newExtremes.second));
+									 /*(newExtremes.first < -3) ? 0. : pow(10., newExtremes.first)*/ powerPlot->getYlog() ? pow(10., newExtremes.first) : 0., pow(10., newExtremes.second));
 			}
 			// Set temperature scaling
 			temperaturePlot->setLimits(timeStart, timeEnd, properties->temperatureGraphLimits[0], properties->temperatureGraphLimits[1]);
@@ -3551,7 +3529,8 @@ public:
 		}
 		catch (exception e)
 		{
-			cerr << "Index out of bounds: SimulatorGUI.draw" << "\n" << e.what() << endl;
+			cerr << "Index out of bounds: SimulatorGUI.draw" << "\n"
+				 << e.what() << endl;
 		}
 
 		// re-draw control rods
@@ -3578,10 +3557,10 @@ public:
 		rodReactivityShow->setData(reactor->rodReactivity_[curIndx]);
 		temperatureShow->setData(reactor->temperature_[curIndx]);
 		waterTemperatureShow->setData(*reactor->getWaterTemperature());
-		//waterLevelShow->setData(*reactor->getWaterLevel() * 100.);
+		// waterLevelShow->setData(*reactor->getWaterLevel() * 100.);
 		periodShow->setData(*reactor->getReactorPeriod());
 
-		//Data for graphical reactor period display
+		// Data for graphical reactor period display
 		periodDisplay->setPeriod(*reactor->getReactorPeriod());
 
 		double newTime = get_seconds_since_epoch();
@@ -3604,7 +3583,8 @@ public:
 		alphaPlot->setPointerPosition((float)((reactor->getReactivityCoefficient(tempNow) - alphaPlot->limits()[2]) / (alphaPlot->limits()[3] - alphaPlot->limits()[2])));
 
 		// Update the text
-		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) rodBox[i]->setValue((int)std::ceil(*reactor->rods[i]->getExactPosition()));
+		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
+			rodBox[i]->setValue((int)std::ceil(*reactor->rods[i]->getExactPosition()));
 
 		// Update time
 		timeLabel->setCaption(getTimeSinceStart());
@@ -3658,7 +3638,8 @@ public:
 #if defined(_WIN32)
 		if (boxConnected)
 		{
-			if (theBox->IsConnected()) handleBox();
+			if (theBox->IsConnected())
+				handleBox();
 		}
 		else
 		{
@@ -3674,15 +3655,29 @@ public:
 		LEDstatus = (uint16_t)0;
 		// Write LED status
 		int scramS = reactor->getScramStatus();
-		if (Simulator::ScramSignals::Period & scramS) LEDstatus |= SCRAM_PER;
-		if (Simulator::ScramSignals::FuelTemperature & scramS) LEDstatus |= SCRAM_FT;
-		if (Simulator::ScramSignals::WaterTemperature & scramS) LEDstatus |= SCRAM_WT;
-		if (Simulator::ScramSignals::Power & scramS) LEDstatus |= SCRAM_POW;
-		if (Simulator::ScramSignals::User & scramS) LEDstatus |= SCRAM_MAN;
+		if (Simulator::ScramSignals::Period & scramS)
+			LEDstatus |= SCRAM_PER;
+		if (Simulator::ScramSignals::FuelTemperature & scramS)
+			LEDstatus |= SCRAM_FT;
+		if (Simulator::ScramSignals::WaterTemperature & scramS)
+			LEDstatus |= SCRAM_WT;
+		if (Simulator::ScramSignals::Power & scramS)
+			LEDstatus |= SCRAM_POW;
+		if (Simulator::ScramSignals::User & scramS)
+			LEDstatus |= SCRAM_MAN;
 
-		if (reactor->safetyRod()->isEnabled()) { LEDstatus |= ROD_SAFETY_ENBL; }
-		if (reactor->regulatingRod()->isEnabled()) { LEDstatus |= ROD_REG_ENBL; }
-		if (reactor->shimRod()->isEnabled()) { LEDstatus |= ROD_SHIM_ENBL; }
+		if (reactor->safetyRod()->isEnabled())
+		{
+			LEDstatus |= ROD_SAFETY_ENBL;
+		}
+		if (reactor->regulatingRod()->isEnabled())
+		{
+			LEDstatus |= ROD_REG_ENBL;
+		}
+		if (reactor->shimRod()->isEnabled())
+		{
+			LEDstatus |= ROD_SHIM_ENBL;
+		}
 
 		if (reactor->safetyRod()->getCommandType() == ControlRod::CommandType::Top || *reactor->safetyRod()->getExactPosition() == (float)*reactor->safetyRod()->getRodSteps())
 		{
@@ -3754,7 +3749,6 @@ public:
 			}
 			return;
 		}
-
 	}
 #endif
 	bool shouldUpdateNeutronSource = false;
@@ -3789,7 +3783,7 @@ public:
 		{
 			sourceGraph->removeGraphElement(i);
 		}
-		PeriodicalMode* ns_mode = reactor->getSourceModeClass(reactor->getNeutronSourceMode());
+		PeriodicalMode *ns_mode = reactor->getSourceModeClass(reactor->getNeutronSourceMode());
 		size_t dataP = ns_mode->num_points();
 		neutronSourcePlot = sourceGraph->addPlot(dataP);
 		neutronSourcePlot->setPlotRange(0, dataP - 1);
@@ -3830,8 +3824,8 @@ public:
 			neutronSourceTracker->setYdata(trackerY);
 			neutronSourceTracker->setLimits(0., ns_mode->getPeriod(), 0., 1.);
 		}
-		double* xAxis = new double[dataP];
-		double* yAxis = new double[dataP];
+		double *xAxis = new double[dataP];
+		double *yAxis = new double[dataP];
 		ns_mode->fillXYaxis(xAxis, yAxis);
 
 		neutronSourcePlot->setXdata(xAxis);
@@ -3843,86 +3837,104 @@ public:
 	{
 		lastData = now;
 		bool rodsMoving[NUMBER_OF_CONTROL_RODS];
-		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) rodsMoving[i] = (reactor->rods[i]->getCommandType() == ControlRod::CommandType::None);
+		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
+			rodsMoving[i] = (reactor->rods[i]->getCommandType() == ControlRod::CommandType::None);
 		if (box_data & SCRAM_BTN)
 		{
-			if (!btns[0]) reactor->scram(Simulator::ScramSignals::User);
+			if (!btns[0])
+				reactor->scram(Simulator::ScramSignals::User);
 		}
 		if (box_data & FIRE_BTN)
 		{
 			if (!btns[1])
 			{
-				if (reactor->getScramStatus() == 0)reactor->beginPulse();
+				if (reactor->getScramStatus() == 0)
+					reactor->beginPulse();
 			}
 		}
 		if (box_data & ENABLE_SAFETY_BTN)
 		{
 			if (!btns[2])
 			{
-				if (reactor->getScramStatus() == 0) reactor->safetyRod()->setEnabled(!reactor->safetyRod()->isEnabled());
+				if (reactor->getScramStatus() == 0)
+					reactor->safetyRod()->setEnabled(!reactor->safetyRod()->isEnabled());
 			}
 		}
 		if (box_data & UP_SAFETY_BTN)
 		{
-			if (!btns[3] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce)) reactor->safetyRod()->commandToTop();
+			if (!btns[3] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce))
+				reactor->safetyRod()->commandToTop();
 		}
 		else
 		{
-			if (btns[3]) reactor->safetyRod()->clearCommands(ControlRod::CommandType::Top);
+			if (btns[3])
+				reactor->safetyRod()->clearCommands(ControlRod::CommandType::Top);
 		}
 		if (box_data & DOWN_SAFETY_BTN)
 		{
-			if (!btns[4] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce)) reactor->safetyRod()->commandToBottom();
+			if (!btns[4] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce))
+				reactor->safetyRod()->commandToBottom();
 		}
 		else
 		{
-			if (btns[4]) reactor->safetyRod()->clearCommands(ControlRod::CommandType::Bottom);
+			if (btns[4])
+				reactor->safetyRod()->clearCommands(ControlRod::CommandType::Bottom);
 		}
 		if (box_data & ENABLE_REG_BTN)
 		{
 			if (!btns[5])
 			{
-				if (reactor->getScramStatus() == 0) reactor->regulatingRod()->setEnabled(!reactor->regulatingRod()->isEnabled());
+				if (reactor->getScramStatus() == 0)
+					reactor->regulatingRod()->setEnabled(!reactor->regulatingRod()->isEnabled());
 			}
 		}
 		if (box_data & UP_REG_BTN)
 		{
-			if (!btns[6] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce)) reactor->regulatingRod()->commandToTop();
+			if (!btns[6] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce))
+				reactor->regulatingRod()->commandToTop();
 		}
 		else
 		{
-			if (btns[6]) reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Top);
+			if (btns[6])
+				reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Top);
 		}
 		if (box_data & DOWN_REG_BTN)
 		{
-			if (!btns[7] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce)) reactor->regulatingRod()->commandToBottom();
+			if (!btns[7] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce))
+				reactor->regulatingRod()->commandToBottom();
 		}
 		else
 		{
-			if (btns[7]) reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Bottom);
+			if (btns[7])
+				reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Bottom);
 		}
 		if (box_data & ENABLE_SHIM_BTN)
 		{
 			if (!btns[8])
 			{
-				if (reactor->getScramStatus() == 0) reactor->shimRod()->setEnabled(!reactor->shimRod()->isEnabled());
+				if (reactor->getScramStatus() == 0)
+					reactor->shimRod()->setEnabled(!reactor->shimRod()->isEnabled());
 			}
 		}
 		if (box_data & UP_SHIM_BTN)
 		{
-			if (!btns[9] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce)) reactor->shimRod()->commandToTop();
+			if (!btns[9] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce))
+				reactor->shimRod()->commandToTop();
 		}
 		else
 		{
-			if (btns[9]) reactor->shimRod()->clearCommands(ControlRod::CommandType::Top);
+			if (btns[9])
+				reactor->shimRod()->clearCommands(ControlRod::CommandType::Top);
 		}
 		if (box_data & DOWN_SHIM_BTN)
 		{
-			if (!btns[10] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce)) reactor->shimRod()->commandToBottom();
+			if (!btns[10] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce))
+				reactor->shimRod()->commandToBottom();
 		}
 		else
 		{
-			if (btns[10]) reactor->shimRod()->clearCommands(ControlRod::CommandType::Bottom);
+			if (btns[10])
+				reactor->shimRod()->clearCommands(ControlRod::CommandType::Bottom);
 		}
 		btns[0] = (box_data & SCRAM_BTN) != 0;
 		btns[1] = (box_data & FIRE_BTN) != 0;
@@ -3944,7 +3956,7 @@ public:
 		}
 	}
 
-	//static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
+	// static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
 	//{
 	//	stringstream ss;
 	//	ss << fixed;
@@ -3957,7 +3969,7 @@ public:
 	//		if (res.back() == '.') res = res.substr(0, res.length() - 1);
 	//	}
 	//	return res;
-	//}
+	// }
 
 	void reculculateDisplayInterval(double fromTime, double toTime)
 	{
@@ -3982,9 +3994,10 @@ public:
 			size_t startIndex = 0;
 			for (; startIndex < reactor->getOrderChanges(); startIndex++)
 			{
-				if (reactor->getExtremeAt(startIndex).when >= fromTime) break;
+				if (reactor->getExtremeAt(startIndex).when >= fromTime)
+					break;
 			}
-			Simulator::PowerExtreme* firstExtreme;
+			Simulator::PowerExtreme *firstExtreme;
 			if (startIndex)
 			{
 				startIndex--;
@@ -3999,9 +4012,11 @@ public:
 			size_t endIndex = startIndex;
 			for (; endIndex < reactor->getOrderChanges(); endIndex++)
 			{
-				if (reactor->getExtremeAt(endIndex).when > toTime) break;
+				if (reactor->getExtremeAt(endIndex).when > toTime)
+					break;
 			}
-			if (endIndex != 0) endIndex--;
+			if (endIndex != 0)
+				endIndex--;
 			err = 2;
 			// If there is only one order change, return the order
 			if (startIndex == endIndex)
@@ -4048,14 +4063,13 @@ public:
 			isZero.first = true;
 			return pair<int, int>(0, 10);
 		}
-
 	}
 
 	std::vector<string> getCOMports()
 	{
 #ifdef _WIN32
-		TCHAR* ptr = new TCHAR[65535];
-		TCHAR* temp_ptr;
+		TCHAR *ptr = new TCHAR[65535];
+		TCHAR *temp_ptr;
 		unsigned long dwChars = QueryDosDevice(NULL, ptr, 65535);
 		std::vector<string> comPorts_ = std::vector<string>();
 		while (dwChars)
@@ -4100,7 +4114,7 @@ public:
 				std::cerr << "Error opening input file: " << path << std::endl;
 				return;
 			}
-			std::istream& is = static_cast<std::istream&>(ifs);
+			std::istream &is = static_cast<std::istream &>(ifs);
 
 			Command cmd;
 
@@ -4111,22 +4125,17 @@ public:
 				reactor->scriptCommands.push_back(cmd);
 			}
 
-
-			MessageDialog* msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Loaded.");
+			MessageDialog *msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Loaded.");
 			msg->setPosition(Vector2i((this->size().x() - msg->size().x()) / 2, (this->size().y() - msg->size().y()) / 2));
 			msg->setCallback([this](int /*choice*/)
-				{
-					toggleBaseWindow(true);
-				});
+							 { toggleBaseWindow(true); });
 		}
 		else
 		{
-			MessageDialog* msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Bad file name.");
+			MessageDialog *msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Bad file name.");
 			msg->setPosition(Vector2i((this->size().x() - msg->size().x()) / 2, (this->size().y() - msg->size().y()) / 2));
 			msg->setCallback([this](int /*choice*/)
-				{
-					toggleBaseWindow(true);
-				});
+							 { toggleBaseWindow(true); });
 		}
 	}
 
@@ -4163,24 +4172,36 @@ public:
 		neutronSourceAmplitudeBoxes[0]->setValue(properties->ns_squareWave.amplitude);
 		neutronSourceAmplitudeBoxes[1]->setValue(properties->ns_sineMode.amplitude);
 		neutronSourceAmplitudeBoxes[2]->setValue(properties->ns_sawToothMode.amplitude);
-		for (int i = 0; i < 4; i++)	neutronSourceSQWBoxes[i]->setValue((int)(properties->ns_squareWave.xIndex[i] * 100));
+		for (int i = 0; i < 4; i++)
+			neutronSourceSQWBoxes[i]->setValue((int)(properties->ns_squareWave.xIndex[i] * 100));
 		neutronSourceSINEModeBox->setSelectedIndex((int)properties->ns_sineMode.mode);
-		for (int i = 0; i < 6; i++)	neutronSourceSAWBoxes[i]->setValue((int)(properties->ns_sawToothMode.xIndex[i] * 100));
+		for (int i = 0; i < 6; i++)
+			neutronSourceSAWBoxes[i]->setValue((int)(properties->ns_sawToothMode.xIndex[i] * 100));
 		periodLimBox->setValue((float)properties->periodLimit);
 		powerLimBox->setValue(properties->powerLimit * 1e-03);
 		fuel_tempLimBox->setValue(properties->tempLimit);
 		water_tempLimBox->setValue(properties->waterTempLimit);
-		//water_levelLimBox->setValue(properties->waterLevelLimit);
+		// water_levelLimBox->setValue(properties->waterLevelLimit);
 		for (int i = 0; i < 4; i++)
 		{
 			bool value = false;
 			switch (i)
 			{
-			case 0: value = properties->periodScram; break;
-			case 1: value = properties->powerScram; break;
-			case 2: value = properties->tempScram; break;
-			case 3: value = properties->waterTempScram; break;
-			case 4: value = properties->waterLevelScram; break;
+			case 0:
+				value = properties->periodScram;
+				break;
+			case 1:
+				value = properties->powerScram;
+				break;
+			case 2:
+				value = properties->tempScram;
+				break;
+			case 3:
+				value = properties->waterTempScram;
+				break;
+			case 4:
+				value = properties->waterLevelScram;
+				break;
 			}
 			scramEnabledBoxes[i]->setChecked(value);
 			scramEnabledBoxes[i]->callback()(value);
@@ -4208,13 +4229,15 @@ public:
 		}
 		periodBoxes[0]->setValue(properties->squareWave.period);
 		amplitudeBoxes[0]->setValue(properties->squareWave.amplitude);
-		for (int i = 0; i < 4; i++)	squareWaveBoxes[i]->setValue((int)(properties->squareWave.xIndex[i] * 100));
+		for (int i = 0; i < 4; i++)
+			squareWaveBoxes[i]->setValue((int)(properties->squareWave.xIndex[i] * 100));
 		periodBoxes[1]->setValue(properties->sineMode.period);
 		amplitudeBoxes[1]->setValue(properties->sineMode.amplitude);
 		sineModeBox->setSelectedIndex(properties->sineMode.mode);
 		periodBoxes[2]->setValue(properties->sawToothMode.period);
 		amplitudeBoxes[2]->setValue(properties->sawToothMode.amplitude);
-		for (int i = 0; i < 6; i++)	sawToothBoxes[i]->setValue((int)(properties->sawToothMode.xIndex[i] * 100));
+		for (int i = 0; i < 6; i++)
+			sawToothBoxes[i]->setValue((int)(properties->sawToothMode.xIndex[i] * 100));
 		keepCurrentPowerBox->setChecked(properties->steadyCurrentPower);
 		keepCurrentPowerBox->callback()(properties->steadyCurrentPower);
 		steadyPowerBox->setValue(properties->steadyGoalPower);
@@ -4236,21 +4259,22 @@ public:
 		squareWaveSpeedBox->setChecked(properties->squareWaveUsesRodSpeed);
 		squareWaveSpeedBox->callback()(properties->squareWaveUsesRodSpeed);
 
-		if (updateReactor) reactor->setProperties(properties);
+		if (updateReactor)
+			reactor->setProperties(properties);
 	}
 
 	bool prevToggle;
 	void toggleBaseWindow(bool value)
 	{
-		if (!value && baseWindow->enabled()) prevToggle = (reactor->getSpeedFactor() != 0.);
+		if (!value && baseWindow->enabled())
+			prevToggle = (reactor->getSpeedFactor() != 0.);
 		baseWindow->setEnabled(value);
 		baseWindow->setFocused(value);
 		playPauseSimulation(value ? prevToggle : value);
 	}
-
 };
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	try
 	{
@@ -4270,7 +4294,7 @@ int main(int argc, char** argv)
 
 		nanogui::shutdown();
 	}
-	catch (const std::runtime_error& e)
+	catch (const std::runtime_error &e)
 	{
 		std::string error_msg = std::string("Caught a fatal error: ") + std::string(e.what());
 #if defined(_WIN32)

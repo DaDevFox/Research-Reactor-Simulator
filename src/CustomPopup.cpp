@@ -5,15 +5,15 @@
 #include <nanogui/serializer/core.h>
 #include <nanovg/src/nanovg.h>
 
-
 using namespace nanogui;
 
-CustomPopup::CustomPopup(Widget* parent, Window* parentWindow)
+CustomPopup::CustomPopup(Widget *parent, Window *parentWindow)
 	: Window(parent, ""), mParentWindow(parentWindow),
-	mAnchorPos(Vector2i::Zero()), mAnchorHeight(30)
-{}
+	  mAnchorPos(Vector2i::Zero()), mAnchorHeight(30)
+{
+}
 
-void CustomPopup::performLayout(NVGcontext* ctx)
+void CustomPopup::performLayout(NVGcontext *ctx)
 {
 	if (mLayout || (mChildren.size() != 1))
 	{
@@ -37,7 +37,7 @@ void CustomPopup::refreshRelativePlacement()
 	mPos = mParentWindow->position() + mAnchorPos - Vector2i(0, mAnchorHeight);
 }
 
-void CustomPopup::draw(NVGcontext* ctx)
+void CustomPopup::draw(NVGcontext *ctx)
 {
 	refreshRelativePlacement();
 
@@ -69,21 +69,31 @@ void CustomPopup::draw(NVGcontext* ctx)
 	nvgFillColor(ctx, mTheme->mWindowPopup);
 	nvgFill(ctx);
 
-	Widget::draw(ctx);
+	// Draw children without scissor clipping (matching original nanogui behavior)
+	if (!mChildren.empty())
+	{
+		nvgTranslate(ctx, mPos.x(), mPos.y());
+		for (Widget *child : mChildren)
+			if (child->visible())
+				child->draw(ctx);
+		nvgTranslate(ctx, -mPos.x(), -mPos.y());
+	}
 }
 
-void CustomPopup::save(Serializer& s) const
+void CustomPopup::save(Serializer &s) const
 {
 	Window::save(s);
 	s.set("anchorPos", mAnchorPos);
 	s.set("anchorHeight", mAnchorHeight);
 }
 
-bool CustomPopup::load(Serializer& s)
+bool CustomPopup::load(Serializer &s)
 {
-	if (!Window::load(s)) return false;
-	if (!s.get("anchorPos", mAnchorPos)) return false;
-	if (!s.get("anchorHeight", mAnchorHeight)) return false;
+	if (!Window::load(s))
+		return false;
+	if (!s.get("anchorPos", mAnchorPos))
+		return false;
+	if (!s.get("anchorHeight", mAnchorHeight))
+		return false;
 	return true;
 }
-

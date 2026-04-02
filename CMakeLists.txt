@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.12)
+cmake_minimum_required (VERSION 3.5)
 
 # Disable building extras we won't need (pure C++ project)
 set(NANOGUI_BUILD_EXAMPLE OFF CACHE BOOL " " FORCE)

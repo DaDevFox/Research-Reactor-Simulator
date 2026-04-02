@@ -165,7 +165,14 @@ Vector2i CustomTabWidget::preferredSize(NVGcontext* ctx) const
 
 void CustomTabWidget::draw(NVGcontext* ctx)
 {
-	Widget::draw(ctx);
+	// Draw children without scissor clipping (matching original nanogui behavior)
+	if (!mChildren.empty()) {
+		nvgTranslate(ctx, mPos.x(), mPos.y());
+		for (Widget* child : mChildren)
+			if (child->visible())
+				child->draw(ctx);
+		nvgTranslate(ctx, -mPos.x(), -mPos.y());
+	}
 	int tabHeight = mHeader->preferredSize(ctx).y();
 	std::pair<Vector2i, Vector2i> activeArea = mHeader->activeButtonArea();
 	nvgSave(ctx);

@@ -4,9 +4,9 @@
 
 using namespace nanogui;
 
-void ControlRodDisplay::draw(NVGcontext* ctx)
+void ControlRodDisplay::draw(NVGcontext *ctx)
 {
-	Widget::draw(ctx);
+	// Note: ControlRodDisplay has no children, skip Widget::draw() to avoid scissor clipping
 
 	nvgSave(ctx);
 
@@ -40,9 +40,9 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 		{
 			for (int m = 0; m < 2; m++)
 			{
-				upper[m] = nvgLinearGradient(ctx, x[i] + rodWgrad, 0, // startx, starty
-					m ? (x[i] + rodWidth) : x[i], 0, // endx, endy
-					rodEnabled[i] ? mRodExtrudedWhiteColor : mRodDisabledWhiteColor, rodEnabled[i] ? mRodExtrudedColor : mRodDisabledColor); // startcol, endcol
+				upper[m] = nvgLinearGradient(ctx, x[i] + rodWgrad, 0,																								  // startx, starty
+											 m ? (x[i] + rodWidth) : x[i], 0,																						  // endx, endy
+											 rodEnabled[i] ? mRodExtrudedWhiteColor : mRodDisabledWhiteColor, rodEnabled[i] ? mRodExtrudedColor : mRodDisabledColor); // startcol, endcol
 				nvgBeginPath(ctx);
 				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), mPos.y(), (2 - m) * rodWgrad, relPosRod);
 				nvgFillPaint(ctx, upper[m]);
@@ -76,7 +76,7 @@ void ControlRodDisplay::draw(NVGcontext* ctx)
 	nvgRestore(ctx);
 }
 
-Vector2i ControlRodDisplay::preferredSize(NVGcontext*) const
+Vector2i ControlRodDisplay::preferredSize(NVGcontext *) const
 {
 	return Vector2i((int)std::ceil(2 * rodSpacing + 6 * rodBorder), 70);
 }
