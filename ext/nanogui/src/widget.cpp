@@ -214,17 +214,13 @@ void Widget::draw(NVGcontext *ctx) {
     if (mChildren.empty())
         return;
 
-    nvgSave(ctx);
+    // Draw children WITHOUT scissor clipping (matching original ijs-f8 behavior)
+    // The scissor clipping was causing widgets to be incorrectly clipped
     nvgTranslate(ctx, mPos.x(), mPos.y());
-    for (auto child : mChildren) {
-        if (child->visible()) {
-            nvgSave(ctx);
-            nvgIntersectScissor(ctx, child->mPos.x(), child->mPos.y(), child->mSize.x(), child->mSize.y());
+    for (auto child : mChildren)
+        if (child->visible())
             child->draw(ctx);
-            nvgRestore(ctx);
-        }
-    }
-    nvgRestore(ctx);
+    nvgTranslate(ctx, -mPos.x(), -mPos.y());
 }
 
 void Widget::save(Serializer &s) const {

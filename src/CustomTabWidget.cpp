@@ -2,13 +2,13 @@
 #include "../include/CustomTabWidget.h"
 #include "../include/CustomTabHeader.h"
 #include "../include/RelativeGridLayout.h"
+#include "../include/CustomVScrollPanel.h"
 #include <nanogui/tabheader.h>
 #include <nanogui/stackedwidget.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 #include <nanogui/window.h>
 #include <nanogui/screen.h>
-#include <nanogui/vscrollpanel.h>
 #include <nanogui/layout.h>
 #include <algorithm>
 
@@ -47,7 +47,7 @@ CustomWidget* CustomTabWidget::createTab(int index, const std::string& label, bo
 {
 	if (scrolling)
 	{
-		VScrollPanel* scrollMain = new VScrollPanel(nullptr);
+		CustomVScrollPanel* scrollMain = new CustomVScrollPanel(nullptr);
 		addTab(index, label, scrollMain);
 		RelativeGridLayout* rel2 = new RelativeGridLayout();
 		rel2->appendCol(RelativeGridLayout::Size(1.f));
@@ -165,7 +165,8 @@ Vector2i CustomTabWidget::preferredSize(NVGcontext* ctx) const
 
 void CustomTabWidget::draw(NVGcontext* ctx)
 {
-	// Draw children without scissor clipping (matching original nanogui behavior)
+	// Draw children like the original Widget::draw (without scissor clipping)
+	// The ext/nanogui Widget::draw applies scissor to each child which can cause clipping issues
 	if (!mChildren.empty()) {
 		nvgTranslate(ctx, mPos.x(), mPos.y());
 		for (Widget* child : mChildren)
@@ -173,6 +174,7 @@ void CustomTabWidget::draw(NVGcontext* ctx)
 				child->draw(ctx);
 		nvgTranslate(ctx, -mPos.x(), -mPos.y());
 	}
+
 	int tabHeight = mHeader->preferredSize(ctx).y();
 	std::pair<Vector2i, Vector2i> activeArea = mHeader->activeButtonArea();
 	nvgSave(ctx);

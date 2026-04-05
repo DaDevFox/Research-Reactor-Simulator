@@ -23,8 +23,8 @@ CustomMessageDialog::CustomMessageDialog(Widget* parent, Type type, const std::s
 	int icon = 0;
 	switch (type)
 	{
-	case Type::Information: icon = ENTYPO_ICON_CIRCLED_INFO; break;
-	case Type::Question: icon = ENTYPO_ICON_CIRCLED_HELP; break;
+	case Type::Information: icon = ENTYPO_ICON_INFO_WITH_CIRCLE; break;
+	case Type::Question: icon = ENTYPO_ICON_HELP_WITH_CIRCLE; break;
 	case Type::Warning: icon = ENTYPO_ICON_WARNING; break;
 	}
 	CustomLabel* iconLabel = new CustomLabel(panel1, std::string(utf8(icon).data()), "icons");
@@ -40,7 +40,7 @@ CustomMessageDialog::CustomMessageDialog(Widget* parent, Type type, const std::s
 	if (altButton)
 	{
 		relLayout->appendCol(1.f);
-		Button* button = new Button(panel2, altButtonText, ENTYPO_ICON_CIRCLED_CROSS);
+		Button* button = new Button(panel2, altButtonText, ENTYPO_ICON_CIRCLE_WITH_CROSS);
 		relLayout->setAnchor(button, RelativeGridLayout::makeAnchor(1, 0, 1, 1, Alignment::Middle, Alignment::Middle));
 		button->setCallback([&] { if (mCallback) mCallback(1); dispose(); });
 	}

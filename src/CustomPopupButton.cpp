@@ -5,33 +5,33 @@
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>
 #include <iostream>
-#include <nanovg/src/nanovg.h>
 
 using namespace nanogui;
 
-CustomPopupButton::CustomPopupButton(Widget* parent, const std::string& caption,
-	int buttonIcon, int chevronIcon)
+CustomPopupButton::CustomPopupButton(Widget *parent, const std::string &caption,
+									 int buttonIcon, int chevronIcon)
 	: Button(parent, caption, buttonIcon), mChevronIcon(chevronIcon)
 {
 
 	setFlags(Flags::ToggleButton | Flags::PopupButton);
 
-	Window* parentWindow = window();
+	Window *parentWindow = window();
 	mPopup = new Popup(parentWindow->parent(), parentWindow);
 	mPopup->setVisible(false);
 }
 
-Vector2i CustomPopupButton::preferredSize(NVGcontext* ctx) const
+Vector2i CustomPopupButton::preferredSize(NVGcontext *ctx) const
 {
 	return Button::preferredSize(ctx) + Vector2i(15, 0);
 }
 
-void CustomPopupButton::draw(NVGcontext* ctx)
+void CustomPopupButton::draw(NVGcontext *ctx)
 {
 	if (!mEnabled && mPushed)
 		mPushed = false;
 
-	if (!mPopup->visible() && mPushed) mPopup->performLayout(ctx);
+	if (!mPopup->visible() && mPushed)
+		mPopup->performLayout(ctx);
 
 	mPopup->setVisible(mPushed);
 	if (mMoveWindow)
@@ -41,12 +41,12 @@ void CustomPopupButton::draw(NVGcontext* ctx)
 		if (diff > 0)
 		{
 			mPopup->setAnchorPos(Vector2i(posPopup.x() + mSize.x() + 15 - diff,
-				posPopup.y() + mSize.y() / 2));
+										  posPopup.y() + mSize.y() / 2));
 		}
 		else
 		{
 			mPopup->setAnchorPos(Vector2i(posPopup.x() + mSize.x() + 15,
-				posPopup.y() + mSize.y() / 2));
+										  posPopup.y() + mSize.y() / 2));
 		}
 	}
 	Button::draw(ctx);
@@ -64,17 +64,17 @@ void CustomPopupButton::draw(NVGcontext* ctx)
 
 		float iw = nvgTextBounds(ctx, 0, 0, icon.data(), nullptr, nullptr);
 		Vector2f iconPos(mPos.x() + mSize.x() - iw - 8,
-			mPos.y() + mSize.y() * 0.5f - 1);
+						 mPos.y() + mSize.y() * 0.5f - 1);
 
 		nvgText(ctx, iconPos.x(), iconPos.y(), icon.data(), nullptr);
 	}
 }
 
-void CustomPopupButton::performLayout(NVGcontext* ctx)
+void CustomPopupButton::performLayout(NVGcontext *ctx)
 {
 	Widget::performLayout(ctx);
 
-	const Window* parentWindow = window();
+	const Window *parentWindow = window();
 
 	if (mMoveWindow)
 	{
@@ -83,28 +83,28 @@ void CustomPopupButton::performLayout(NVGcontext* ctx)
 		if (diff > 0)
 		{
 			mPopup->setAnchorPos(Vector2i(posPopup.x() + mSize.x() + 15 - diff,
-				posPopup.y() + mSize.y() / 2));
+										  posPopup.y() + mSize.y() / 2));
 		}
 		else
 		{
 			mPopup->setAnchorPos(Vector2i(posPopup.x() + mSize.x() + 15,
-				posPopup.y() + mSize.y() / 2));
+										  posPopup.y() + mSize.y() / 2));
 		};
 	}
 	else
 	{
 		mPopup->setAnchorPos(Vector2i(parentWindow->width() + 15,
-			absolutePosition().y() + mSize.y() / 2));
+									  absolutePosition().y() + mSize.y() / 2));
 	}
 }
 
-void CustomPopupButton::save(Serializer& s) const
+void CustomPopupButton::save(Serializer &s) const
 {
 	Button::save(s);
 	s.set("chevronIcon", mChevronIcon);
 }
 
-bool CustomPopupButton::load(Serializer& s)
+bool CustomPopupButton::load(Serializer &s)
 {
 	if (!Button::load(s))
 		return false;
@@ -112,4 +112,3 @@ bool CustomPopupButton::load(Serializer& s)
 		return false;
 	return true;
 }
-

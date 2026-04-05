@@ -31,7 +31,8 @@ void CustomPopup::performLayout(NVGcontext *ctx)
 
 void CustomPopup::refreshRelativePlacement()
 {
-	mParentWindow->refreshRelativePlacement();
+	// Note: Can't call mParentWindow->refreshRelativePlacement() as it's protected
+	// This is handled by nanogui internally when mParentWindow draws
 	mVisible &= mParentWindow->visibleRecursive();
 	mPos = mParentWindow->position() + mAnchorPos - Vector2i(0, mAnchorHeight);
 }
