@@ -1,7 +1,28 @@
 #include "../include/SimulatorGUI.h"
 
 #include <functional>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 #include <string>
+
+namespace {
+void ensureLogger() {
+  static bool initialized = false;
+  if (initialized) return;
+
+  try {
+    auto logger = spdlog::basic_logger_mt("simulator", "simulator.log", true);
+    spdlog::set_default_logger(logger);
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
+    spdlog::flush_on(spdlog::level::info);
+    spdlog::info("spdlog initialized");
+  } catch (...) {
+    // Keep app running even if logger initialization fails.
+  }
+
+  initialized = true;
+}
+}  // namespace
 
 const std::string SimulatorGUI::version() {
   std::string ver = to_string(VERSION_MAJOR) + "." + to_string(VERSION_MINOR);
@@ -182,6 +203,8 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
       uiStyleConfig(uiConfigProvider->getStyleConfig()),
       uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()),
       coolBlue(uiStyleConfig.accentColor) {
+  ensureLogger();
+  spdlog::info("SimulatorGUI constructor start");
   cout << "======= Research reactor simulator " << version()
        << " =======" << endl;
 
@@ -310,6 +333,7 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
 
   // Create layout
   performLayout();
+  spdlog::info("SimulatorGUI constructor complete");
 }
 
 // Bottom panel initialization
@@ -451,6 +475,11 @@ void SimulatorGUI::handleDerivativeChange() {
 }
 
 void SimulatorGUI::hardcoreMode(bool value) {
+  if (!(reactivityPlot && rodReactivityPlot && canvas)) {
+    spdlog::warn("hardcoreMode skipped: graph widgets not ready");
+    return;
+  }
+
   reactivityPlot->setEnabled(!value);
   rodReactivityPlot->setEnabled(properties->rodReactivityPlot && !value);
 
@@ -727,6 +756,13 @@ std::string SimulatorGUI::getTimeSinceStart() {
 }
 
 void SimulatorGUI::draw(NVGcontext *ctx) {
+  static int startupDrawFrame = 0;
+  startupDrawFrame++;
+  const bool traceStartupDraw = startupDrawFrame <= 8;
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} begin", startupDrawFrame);
+  }
+
   double reactorElapsed = reactor->getCurrentTime();
   if (startScript.size()) {
     loadScriptFromFile(startScript);
@@ -735,6 +771,17 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
 
   // Run new calculation
   reactor->runLoop();
+
+  if (!(displayTimeSlider && timeLockedBox && tabControl)) {
+    static bool warnedMissingCoreWidgets = false;
+    if (!warnedMissingCoreWidgets) {
+      spdlog::error("Core draw widgets missing: displayTimeSlider={} timeLockedBox={} tabControl={}",
+                    (void *)displayTimeSlider, (void *)timeLockedBox,
+                    (void *)tabControl);
+      warnedMissingCoreWidgets = true;
+    }
+    return;
+  }
 
   // Get from which index to which index the data will be drawn and update view
   // slider
@@ -842,6 +889,9 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
           *reactor->rods[i]->getExactPosition() /
           *reactor->rods[i]->getRodSteps());
     }
+
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} after rod redraw", startupDrawFrame);
   }
 
   // Show data
@@ -857,6 +907,10 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
   // Data for graphical reactor period display
   periodDisplay->setPeriod(*reactor->getReactorPeriod());
 
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} after display refresh", startupDrawFrame);
+  }
+
   double newTime = get_seconds_since_epoch();
   float thisFps = powf((float)(newTime - lastTime), -1.f);
   fpsSum += thisFps;
@@ -871,6 +925,10 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
   }
   fpsCount++;
   lastTime = newTime;
+
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} after fps update", startupDrawFrame);
+  }
 
   // Update alpha plot
   float tempNow = reactor->getCurrentTemperature();

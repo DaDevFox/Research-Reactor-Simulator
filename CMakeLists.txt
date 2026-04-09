@@ -8,6 +8,17 @@ set(NANOGUI_INSTALL       OFF CACHE BOOL " " FORCE)
 
 project(SimulatorGui)
 
+find_package(spdlog CONFIG QUIET)
+if(NOT spdlog_FOUND)
+  include(FetchContent)
+  FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.14.1
+  )
+  FetchContent_MakeAvailable(spdlog)
+endif()
+
 # Add the configurations from nanogui
 add_subdirectory("ext/nanogui")
 
@@ -51,7 +62,7 @@ target_include_directories(SimulatorGui PRIVATE ext/nanogui/include ext/cereal/i
 
 # Lastly, additional libraries may have been built for you.  In addition to linking
 # against NanoGUI, we need to link against those as well.
-target_link_libraries(SimulatorGui nanogui ${NANOGUI_EXTRA_LIBS} cereal)
+target_link_libraries(SimulatorGui nanogui ${NANOGUI_EXTRA_LIBS} cereal spdlog::spdlog_header_only)
 
 # include it for your project as well (or append to a list
 # and include that list later, depending on your setup)
