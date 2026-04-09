@@ -269,11 +269,15 @@ string (REGEX REPLACE "([^\\]|^);" "\\1," resources_string "${resources}")
 string (REGEX REPLACE "[\\](.)" "\\1" resources_string "${resources_string}")
 
 # Create command line for running bin2c cmake script
+set(bin2c_script "${CMAKE_CURRENT_SOURCE_DIR}/resources/bin2c.cmake")
+if (NOT EXISTS "${bin2c_script}")
+  set(bin2c_script "${CMAKE_SOURCE_DIR}/resources/bin2c.cmake")
+endif()
 set(bin2c_cmdline
   -DOUTPUT_C=nanogui_resources.cpp
   -DOUTPUT_H=nanogui_resources.h
   "-DINPUT_FILES=${resources_string}"
-  -P "${CMAKE_CURRENT_SOURCE_DIR}/resources/bin2c.cmake")
+  -P "${bin2c_script}")
 
 # Run bin2c on resource files
 add_custom_command(
