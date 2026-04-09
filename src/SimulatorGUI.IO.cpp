@@ -1,19 +1,19 @@
 #include "../include/SimulatorGUI.h"
 
 void SimulatorGUI::saveArchive(std::string path)
-{
+	{
 		properties->saveArchive(path);
 		toggleBaseWindow(true);
 	}
 
 void SimulatorGUI::loadArchive(std::string path)
-{
+	{
 		properties->restoreArchive(path);
 		toggleBaseWindow(true);
 	}
 
 void SimulatorGUI::loadScriptFromFile(std::string path)
-{
+	{
 		double time0 = reactor->getCurrentTime();
 		std::ifstream ifs;
 		if (path.length())
@@ -51,7 +51,7 @@ void SimulatorGUI::loadScriptFromFile(std::string path)
 	}
 
 void SimulatorGUI::updateSettings(bool updateReactor)
-{
+	{
 		curveFillBox->setChecked(properties->curveFill);
 		curveFillBox->callback()(properties->curveFill);
 		avoidPeriodScramBox->setChecked(properties->avoidPeriodScram);

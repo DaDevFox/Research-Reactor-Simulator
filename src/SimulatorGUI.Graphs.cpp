@@ -1,7 +1,7 @@
 #include "../include/SimulatorGUI.h"
 
 void SimulatorGUI::updatePulseTrack(bool updateData)
-{
+	{
 		if (!pulsePerformed)
 			return;
 		size_t startIdx, endIdx;
@@ -54,7 +54,7 @@ void SimulatorGUI::updatePulseTrack(bool updateData)
 	}
 
 void SimulatorGUI::createDataDisplays(Widget *parent, RelativeGridLayout *rLayout)
-{
+	{
 		// Create the displays
 		displayPanel1 = parent->add<CustomWidget>();
 		displayPanel1->setLayout(new BoxLayout(Orientation::Vertical, Alignment::Fill, 10, 5));
@@ -128,7 +128,7 @@ void SimulatorGUI::createDataDisplays(Widget *parent, RelativeGridLayout *rLayou
 	}
 
 void SimulatorGUI::initializeGraph()
-{
+	{
 		// Create a graph object
 		canvas = baseWindow->add<CustomGraph>(4, "Main graph");
 		relativeLayout->setAnchor(canvas, RelativeGridLayout::makeAnchor(0, 0));
@@ -219,7 +219,7 @@ void SimulatorGUI::initializeGraph()
 	}
 
 void SimulatorGUI::initializePulseGraph()
-{
+	{
 		pulseGraph->setBackgroundColor(Color(245, 255));
 		pulseGraph->setTextColor(Color(16, 255));
 		pulseGraph->setDrawBackground(true);

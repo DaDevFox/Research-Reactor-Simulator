@@ -3061,3 +3061,927 @@
 [DEBUG] mouseButtonEvent at (1500, 571) button=0 down=0
 [DEBUG] findWidget found: class CustomWidget
 [DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (211, 408) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (211, 408) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (327, 406) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (327, 406) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (367, 414) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (367, 414) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (604, 410) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (604, 410) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (742, 402) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (742, 402) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (947, 394) button=0 down=1
+[DEBUG] findWidget found: class CustomGraph
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (947, 394) button=0 down=0
+[DEBUG] findWidget found: class CustomGraph
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (976, 403) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (976, 403) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1154, 409) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1154, 409) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1269, 406) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1269, 406) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1448, 422) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1448, 422) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1189, 416) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1189, 416) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (791, 415) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (791, 415) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (988, 396) button=0 down=1
+[DEBUG] findWidget found: class CustomGraph
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (988, 396) button=0 down=0
+[DEBUG] findWidget found: class CustomGraph
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1068, 420) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1068, 420) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (184, 570) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (91, 406) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (91, 406) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1010, 582) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (924, 704) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1011, 583) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (917, 703) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (917, 703) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (917, 703) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (917, 703) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=2 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=2 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1007, 613) button=1 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1046, 618) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1046, 618) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1043, 581) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1043, 581) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (915, 706) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (915, 706) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (879, 679) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (879, 679) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (876, 666) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (876, 666) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (870, 668) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (870, 668) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1028, 852) button=0 down=1
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1028, 852) button=0 down=0
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1

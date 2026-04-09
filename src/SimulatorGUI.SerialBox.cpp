@@ -1,7 +1,7 @@
 #include "../include/SimulatorGUI.h"
 
 void SimulatorGUI::initializeSerial()
-{
+	{
 		try
 		{
 			comPorts = getCOMports();
@@ -20,7 +20,7 @@ void SimulatorGUI::initializeSerial()
 	}
 
 void SimulatorGUI::updateCOMports()
-{
+	{
 		if (boxConnected)
 			return;
 
@@ -59,7 +59,7 @@ void SimulatorGUI::updateCOMports()
 	}
 
 void SimulatorGUI::tryConnectingTo(string port)
-{
+	{
 		cout << "Connecting to " << port << "..." << endl;
 		try
 		{
@@ -325,7 +325,7 @@ void SimulatorGUI::handleBoxData(uint16_t box_data, double now)
 	}
 
 std::vector<string> SimulatorGUI::getCOMports()
-{
+	{
 #ifdef _WIN32
 		TCHAR *ptr = new TCHAR[65535];
 		TCHAR *temp_ptr;
