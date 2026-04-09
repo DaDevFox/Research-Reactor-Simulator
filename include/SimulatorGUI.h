@@ -53,8 +53,10 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../include/Plot.h"
 #include "../include/RelativeGridLayout.h"
@@ -84,7 +86,7 @@
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 4
 #define VERSION_REVISION 1
-#define VERSION_BUILD 0  // Setting this to 0 doesn't display the build number
+#define VERSION_BUILD 1  // Setting this to 0 doesn't display the build number
 
 // RECIEVING
 #define BOX_ID "IJS_F8_BOX3"
@@ -132,6 +134,8 @@ using std::max;
 using std::string;
 using std::to_string;
 
+class Pane;
+
 class SimulatorGUI : public nanogui::Screen {
  private:
   const string box_auth = BOX_ID;
@@ -173,30 +177,30 @@ class SimulatorGUI : public nanogui::Screen {
   const std::string version();
 
 #if defined(_WIN32)
-  Serial *theBox;
+  Serial *theBox = nullptr;
 #endif
-  Simulator *reactor;
-  CustomGraph *canvas;
-  CustomGraph *delayedGroupsGraph;
-  CustomGraph *pulseGraph;
-  CustomGraph *sourceGraph;
+  Simulator *reactor = nullptr;
+  CustomGraph *canvas = nullptr;
+  CustomGraph *delayedGroupsGraph = nullptr;
+  CustomGraph *pulseGraph = nullptr;
+  CustomGraph *sourceGraph = nullptr;
   BoxLayout *layout;
-  CustomWindow *baseWindow;
-  RelativeGridLayout *relativeLayout;  // layout for the main window
-  CustomLabel *fpsLabel;
-  Plot *reactivityPlot;
-  Plot *rodReactivityPlot;
-  Plot *powerPlot;
-  Plot *temperaturePlot;
-  Plot *delayedGroups[6];
+  CustomWindow *baseWindow = nullptr;
+  RelativeGridLayout *relativeLayout = nullptr;  // layout for the main window
+  CustomLabel *fpsLabel = nullptr;
+  Plot *reactivityPlot = nullptr;
+  Plot *rodReactivityPlot = nullptr;
+  Plot *powerPlot = nullptr;
+  Plot *temperaturePlot = nullptr;
+  Plot *delayedGroups[6] = {};
   Plot *pulsePlots[4];
   ToolButton *slowDown;
   ToolButton *playPause;
   ToolButton *speedUp;
   size_t selectedTime = 8;
-  BezierCurve *rodCurves[NUMBER_OF_CONTROL_RODS];
-  Plot *rodDerivatives[NUMBER_OF_CONTROL_RODS];
-  CustomTabWidget *tabControl;
+  BezierCurve *rodCurves[NUMBER_OF_CONTROL_RODS] = {};
+  Plot *rodDerivatives[NUMBER_OF_CONTROL_RODS] = {};
+  CustomTabWidget *tabControl = nullptr;
 
   CustomWidget *sourceSettings;
   Plot *neutronSourcePlot;
@@ -211,7 +215,7 @@ class SimulatorGUI : public nanogui::Screen {
   CustomWidget *displayPanel1;
   CustomWidget *displayPanel2;
   ControlRodDisplay *rodDisplay;
-  PeriodDisplay *periodDisplay;
+  PeriodDisplay *periodDisplay = nullptr;
   ComboBox *rodMode;
   IntBox<int> *rodBox[NUMBER_OF_CONTROL_RODS];
   SliderCheckBox *neutronSourceCB;
@@ -225,8 +229,8 @@ class SimulatorGUI : public nanogui::Screen {
   FloatBox<float> *displayBox;
   SliderCheckBox *logScaleBox;
   SliderCheckBox *hardcoreBox;
-  IntervalSlider *displayTimeSlider;
-  SliderCheckBox *timeLockedBox;
+  IntervalSlider *displayTimeSlider = nullptr;
+  SliderCheckBox *timeLockedBox = nullptr;
 
   FloatBox<double> *delayedGroupBoxes[12];
   SliderCheckBox *delayedGroupsEnabledBoxes[6];
@@ -287,7 +291,7 @@ class SimulatorGUI : public nanogui::Screen {
   CustomLabel *waterLevelScram;
   CustomLabel *periodScram;
 
-  CustomLabel *timeLabel;
+  CustomLabel *timeLabel = nullptr;
   CustomLabel *simStatusLabel;
   CustomLabel *simFactorLabel;
 
@@ -295,12 +299,12 @@ class SimulatorGUI : public nanogui::Screen {
   CustomLabel *pulseDisplayLabels[4];
   CustomLabel *standInCover;
 
-  DataDisplay<double> *powerShow;
-  DataDisplay<float> *reactivityShow;
-  DataDisplay<float> *rodReactivityShow;
-  DataDisplay<float> *temperatureShow;
-  DataDisplay<double> *periodShow;
-  DataDisplay<double> *waterTemperatureShow;
+  DataDisplay<double> *powerShow = nullptr;
+  DataDisplay<float> *reactivityShow = nullptr;
+  DataDisplay<float> *rodReactivityShow = nullptr;
+  DataDisplay<float> *temperatureShow = nullptr;
+  DataDisplay<double> *periodShow = nullptr;
+  DataDisplay<double> *waterTemperatureShow = nullptr;
   DataDisplay<double> *waterLevelShow;
 
   Plot *operationModes[3];
@@ -313,6 +317,10 @@ class SimulatorGUI : public nanogui::Screen {
 
   BoxLayout *panelsLayout = nullptr;
 
+  std::vector<std::unique_ptr<Pane>> panes;
+  std::map<std::pair<int, int>, Pane *> paneLookup;
+  Pane *activePane = nullptr;
+
   uint16_t LEDstatus = 0;
   bool boxConnected = false;
   void setSimulationTime(size_t time);
@@ -322,6 +330,10 @@ class SimulatorGUI : public nanogui::Screen {
   void updateSimulationIcon();
 
   void initializeSimulator();
+
+  void initializePanes();
+
+  bool navigatePane(int dx, int dy);
 
   void updatePulseTrack(bool updateData = false);
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <cereal/archives/json.hpp>
-#include <stdlib.h>
-#include <fstream>
+#include <stdlib>
 #include <ostream>
 #include <string>
 /*==================

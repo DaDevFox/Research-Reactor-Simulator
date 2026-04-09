@@ -1,4 +1,10 @@
 #include "../include/SimulatorGUI.h"
+#include "panes/LowerCenterPane.hpp"
+#include "panes/LowerLeftPane.hpp"
+#include "panes/LowerRightPane.hpp"
+#include "panes/UpperCenterPane.hpp"
+#include "panes/UpperLeftPane.hpp"
+#include "panes/UpperRightPane.hpp"
 
 #include <functional>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -8,7 +14,8 @@
 namespace {
 void ensureLogger() {
   static bool initialized = false;
-  if (initialized) return;
+  if (initialized)
+    return;
 
   try {
     auto logger = spdlog::basic_logger_mt("simulator", "simulator.log", true);
@@ -22,7 +29,7 @@ void ensureLogger() {
 
   initialized = true;
 }
-}  // namespace
+} // namespace
 
 const std::string SimulatorGUI::version() {
   std::string ver = to_string(VERSION_MAJOR) + "." + to_string(VERSION_MINOR);
@@ -77,7 +84,8 @@ void SimulatorGUI::initializeSimulator() {
   reactor = new Simulator(properties);
   reactor->setDebugMode(debugMode);
   reactor->setScramCallback([this](int signal) {
-    if (signal > 0) LEDstatus += (uint16_t)1 << 13;
+    if (signal > 0)
+      LEDstatus += (uint16_t)1 << 13;
     std::string reason = "";
     if ((signal & Simulator::ScramSignals::Period) != 0) {
       reason = "Period too low | " +
@@ -148,24 +156,21 @@ void SimulatorGUI::initializeSimulator() {
     toggleBaseWindow(false);
     std::string msgTxt;
     switch (reason) {
-      case 0:
-        msgTxt =
-            "Power exceeded 10GW - an absurd limit. The reactor will SCRAM, "
-            "since the simulator can't work with infinite numbers (assuming "
-            "the power is still rising)";
-        break;
-      case 1:
-        msgTxt =
-            "Since the Research reactor simulator can't simulate an "
-            "explosion,\n "
-            "the reactor will SCRAM. Information: Fuel temperature exceeded "
-            "950" +
-            degCelsiusUnit + " (the uranium isotope melted)!";
-        break;
-      default:
-        msgTxt =
-            "An unknown error has occured. An automatic SCRAM is mandatory.";
-        break;
+    case 0:
+      msgTxt = "Power exceeded 10GW - an absurd limit. The reactor will SCRAM, "
+               "since the simulator can't work with infinite numbers (assuming "
+               "the power is still rising)";
+      break;
+    case 1:
+      msgTxt = "Since the Research reactor simulator can't simulate an "
+               "explosion,\n "
+               "the reactor will SCRAM. Information: Fuel temperature exceeded "
+               "950" +
+               degCelsiusUnit + " (the uranium isotope melted)!";
+      break;
+    default:
+      msgTxt = "An unknown error has occured. An automatic SCRAM is mandatory.";
+      break;
     }
     MessageDialog *msg = new MessageDialog(this, MessageDialog::Type::Warning,
                                            "Severe error", msgTxt);
@@ -178,6 +183,102 @@ void SimulatorGUI::initializeSimulator() {
   });
 }
 
+// TODO: determine pass-up error control flow style
+void SimulatorGUI::initializePanes() {
+  spdlog::info("Initializing pane registry");
+  panes.clear();
+  paneLookup.clear();
+
+  // TODO: init pane registry via config (v3)
+  panes.emplace_back(std::make_unique<LowerLeftPane>(properties, reactor));
+  panes.emplace_back(std::make_unique<LowerCenterPane>(properties, reactor));
+  panes.emplace_back(std::make_unique<LowerRightPane>(properties, reactor));
+  panes.emplace_back(std::make_unique<UpperLeftPane>(properties, reactor));
+  panes.emplace_back(std::make_unique<UpperCenterPane>(properties, reactor));
+  panes.emplace_back(std::make_unique<UpperRightPane>(properties, reactor));
+
+  for (auto &pane : panes) {
+    const auto c = pane->consoleCoordinates();
+    paneLookup[{c.x(), c.y()}] = pane.get();
+    spdlog::info("Registered pane at ({}, {})", c.x(), c.y());
+  }
+
+  if (paneLookup.empty()) {
+    activePane = nullptr;
+    spdlog::error("No panes registered in pane lookup; none active");
+    return;
+  }
+
+  auto startPane = paneLookup.find({0, -1});
+  if (activePane == paneLookup.end())
+    activePane = paneLookup.begin()->second;
+  else
+    activePane = startPane->second;
+
+  const auto start = activePane->consoleCoordinates();
+  spdlog::info("Showing startup pane ({}, {})", start.x(), start.y());
+  try {
+    activePane->show(*baseWindow);
+  } catch (const std::exception &e) {
+    spdlog::critical("Startup pane show failed: {}", e.what());
+    throw;
+  } catch (...) {
+    spdlog::critical("Startup pane show failed with unknown exception");
+    throw;
+  }
+}
+
+bool SimulatorGUI::navigatePane(int dx, int dy) {
+  if (!activePane)
+    return false;
+
+  const auto current = activePane->consoleCoordinates();
+  auto nextPane = paneLookup.find({current.x() + dx, current.y() + dy});
+  if (nextPane == paneLookup.end()) {
+    spdlog::info("No pane from ({}, {}) with delta ({}, {})", current.x(),
+                 current.y(), dx, dy);
+    return false;
+  }
+
+  Pane *fromPane = activePane;
+  Pane *toPane = nextPane->second;
+  const auto next = toPane->consoleCoordinates();
+  spdlog::info("Switching pane ({}, {}) -> ({}, {})", current.x(), current.y(),
+               next.x(), next.y());
+
+  try {
+    fromPane->hide(*baseWindow);
+    toPane->show(*baseWindow);
+    activePane = toPane;
+    performLayout();
+  } catch (const std::exception &e) {
+    spdlog::error("Pane switch failed: {}", e.what());
+    try {
+      fromPane->show(*baseWindow);
+      activePane = fromPane;
+      performLayout();
+    } catch (...) {
+      spdlog::critical("Failed to restore previous pane after switch error");
+    }
+    return false;
+  } catch (...) {
+    spdlog::error("Pane switch failed with unknown exception");
+    try {
+      fromPane->show(*baseWindow);
+      activePane = fromPane;
+      performLayout();
+    } catch (...) {
+      spdlog::critical(
+          "Failed to restore previous pane after unknown switch error");
+    }
+    return false;
+  }
+
+  spdlog::info("Switched pane ({}, {}) -> ({}, {})", current.x(), current.y(),
+               next.x(), next.y());
+  return true;
+}
+
 void SimulatorGUI::viewingIntervalChanged(bool firstChanged) {
   const double timeElapsed = reactor->getCurrentTime();
   const double range = std::min(timeElapsed, DELETE_OLD_DATA_TIME_DEFAULT);
@@ -186,9 +287,10 @@ void SimulatorGUI::viewingIntervalChanged(bool firstChanged) {
                 std::round(1000 * displayTimeSlider->value(0) * range) * 1e-3;
     timeAtLastChange = timeElapsed;
   }
-  {  // update range
+  { // update range
     float vals[2];
-    for (int i = 0; i < 2; i++) vals[i] = displayTimeSlider->value(i);
+    for (int i = 0; i < 2; i++)
+      vals[i] = displayTimeSlider->value(i);
     displayBox->setValue(
         (float)(std::round(1000 * range * (vals[1] - vals[0])) * 1e-3));
   }
@@ -212,7 +314,8 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
   properties = new Settings();
 
   // Keyboard
-  for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) lastKeyPressed[i] = false;
+  for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
+    lastKeyPressed[i] = false;
   panelsLayout = new BoxLayout(Orientation::Horizontal, Alignment::Middle,
                                uiPanelLayoutConfig.panelMargin,
                                uiPanelLayoutConfig.panelSpacing);
@@ -252,7 +355,8 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
 #if defined(_WIN32)
   // Initialize THE BOX
   memset(btns, false, 11 * sizeof(bool));
-  if (!reactor->scriptCommands.size()) initializeSerial();
+  if (!reactor->scriptCommands.size())
+    initializeSerial();
   if (boxConnected) {
     std::cout << "===========The Box Mk. III===========" << std::endl;
   }
@@ -267,12 +371,12 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
   // Create a layout for the window
   relativeLayout = new RelativeGridLayout();
   relativeLayout->appendCol(1.f);
-  relativeLayout->appendRow(properties->graphSize);        // 0 graph
-  relativeLayout->appendRow(1.f - properties->graphSize);  // 1 controls
+  relativeLayout->appendRow(properties->graphSize);       // 0 graph
+  relativeLayout->appendRow(1.f - properties->graphSize); // 1 controls
   relativeLayout->appendRow(RelativeGridLayout::Size(
-      2.f, RelativeGridLayout::SizeType::Fixed));  // 2 border
+      2.f, RelativeGridLayout::SizeType::Fixed)); // 2 border
   relativeLayout->appendRow(RelativeGridLayout::Size(
-      30.f, RelativeGridLayout::SizeType::Fixed));  // 3 bottom panel
+      30.f, RelativeGridLayout::SizeType::Fixed)); // 3 bottom panel
   baseWindow->setLayout(relativeLayout);
   baseWindow->setBackgroundColor(uiStyleConfig.baseWindowBackgroundColor);
   baseWindow->setDrawBackground(true);
@@ -283,8 +387,8 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
   bottomBorder->setBackgroundColor(coolBlue);
   relativeLayout->setAnchor(bottomBorder, RelativeGridLayout::makeAnchor(0, 2));
 
-  // Create the graph element
-  initializeGraph();
+  // Create pane system and start at lower-center pane.
+  initializePanes();
 
   // Create the bottom panel
   createBottomPanel();
@@ -346,26 +450,26 @@ void SimulatorGUI::createBottomPanel() {
   RelativeGridLayout *bottomLayout = new RelativeGridLayout();
   bottomLayout->appendRow(1.f);
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      120.f, RelativeGridLayout::SizeType::Fixed));  // 0 version label
+      120.f, RelativeGridLayout::SizeType::Fixed)); // 0 version label
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      1.f, RelativeGridLayout::SizeType::Fixed));  // 1 border
+      1.f, RelativeGridLayout::SizeType::Fixed)); // 1 border
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      100.f, RelativeGridLayout::SizeType::Fixed));  // 2 fps label
+      100.f, RelativeGridLayout::SizeType::Fixed)); // 2 fps label
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      1.f, RelativeGridLayout::SizeType::Fixed));  // 3 border
-  bottomLayout->appendCol(1.f);                    // 4 speed label
+      1.f, RelativeGridLayout::SizeType::Fixed)); // 3 border
+  bottomLayout->appendCol(1.f);                   // 4 speed label
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      1.f, RelativeGridLayout::SizeType::Fixed));  // 5 border
+      1.f, RelativeGridLayout::SizeType::Fixed)); // 5 border
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      100.f, RelativeGridLayout::SizeType::Fixed));  // 6 buttons
+      100.f, RelativeGridLayout::SizeType::Fixed)); // 6 buttons
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      1.f, RelativeGridLayout::SizeType::Fixed));  // 7 border
+      1.f, RelativeGridLayout::SizeType::Fixed)); // 7 border
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      80.f, RelativeGridLayout::SizeType::Fixed));  // 8 simulation time factor
+      80.f, RelativeGridLayout::SizeType::Fixed)); // 8 simulation time factor
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      1.f, RelativeGridLayout::SizeType::Fixed));  // 9 border
+      1.f, RelativeGridLayout::SizeType::Fixed)); // 9 border
   bottomLayout->appendCol(RelativeGridLayout::Size(
-      150.f, RelativeGridLayout::SizeType::Fixed));  // 10 time label
+      150.f, RelativeGridLayout::SizeType::Fixed)); // 10 time label
   bottomPanel->setLayout(bottomLayout);
 
   for (int i = 1; i < 11; i += 2) {
@@ -454,7 +558,7 @@ void SimulatorGUI::resetSimToStart() {
   reactor->resetSimulator();
   properties = new Settings();
   updateSettings(false);
-  setSimulationTime(8);  // 1x speed
+  setSimulationTime(8); // 1x speed
   playPauseSimulation(true);
 }
 
@@ -530,16 +634,28 @@ SimulatorGUI::~SimulatorGUI() {
     }
   }
 #if defined(_WIN32)
-  if (boxConnected) delete theBox;
+  if (boxConnected)
+    delete theBox;
 #endif
 }
 
 bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
                                  int modifiers) {
-  if (Screen::keyboardEvent(key, scancode, action, modifiers)) return true;
-  if (!baseWindow->enabled()) return false;
+  if (Screen::keyboardEvent(key, scancode, action, modifiers))
+    return true;
+  if (!baseWindow->enabled())
+    return false;
 
   if (action == GLFW_PRESS) {
+    if (key == GLFW_KEY_LEFT && navigatePane(-1, 0))
+      return true;
+    if (key == GLFW_KEY_RIGHT && navigatePane(1, 0))
+      return true;
+    if (key == GLFW_KEY_UP && navigatePane(0, 1))
+      return true;
+    if (key == GLFW_KEY_DOWN && navigatePane(0, -1))
+      return true;
+
     if (last10keys.size() == 10) {
       last10keys.pop_front();
     }
@@ -590,7 +706,7 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
     }
   } else if (key == enableSafetyCommand && action == GLFW_PRESS) {
     reactor->safetyRod()->setEnabled(!reactor->safetyRod()->isEnabled());
-  }  // Regulation rod
+  } // Regulation rod
   else if (key == regulatoryRodControl) {
     if (action == GLFW_RELEASE) {
       lastKeyPressed[1] = false;
@@ -603,7 +719,7 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
   } else if (key == enableRegCommand && action == GLFW_PRESS) {
     reactor->regulatingRod()->setEnabled(
         !reactor->regulatingRod()->isEnabled());
-  }  // Shim rod
+  } // Shim rod
   else if (key == shimRodControl) {
     if (action == GLFW_RELEASE) {
       lastKeyPressed[2] = false;
@@ -615,7 +731,7 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
     }
   } else if (key == enableShimCommand && action == GLFW_PRESS) {
     reactor->shimRod()->setEnabled(!reactor->shimRod()->isEnabled());
-  }  // Move rod up
+  } // Move rod up
   else if (key == rodUpCommand && action != GLFW_REPEAT) {
     if (action == GLFW_RELEASE) {
       reactor->safetyRod()->clearCommands(ControlRod::CommandType::Top);
@@ -623,10 +739,11 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
       reactor->shimRod()->clearCommands(ControlRod::CommandType::Top);
     } else {
       for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) {
-        if (lastKeyPressed[i]) reactor->rods[i]->commandToTop();
+        if (lastKeyPressed[i])
+          reactor->rods[i]->commandToTop();
       }
     }
-  }  // Move rod down
+  } // Move rod down
   else if (key == rodDownCommand && action != GLFW_REPEAT) {
     if (action == GLFW_RELEASE) {
       reactor->safetyRod()->clearCommands(ControlRod::CommandType::Bottom);
@@ -634,33 +751,34 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
       reactor->shimRod()->clearCommands(ControlRod::CommandType::Bottom);
     } else {
       for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) {
-        if (lastKeyPressed[i]) reactor->rods[i]->commandToBottom();
+        if (lastKeyPressed[i])
+          reactor->rods[i]->commandToBottom();
       }
     }
-  }  // SCRAM
+  } // SCRAM
   else if (key == scramCommand && action == GLFW_PRESS) {
     reactor->scram(Simulator::ScramSignals::User);
-  }  // reset scram
+  } // reset scram
   else if (key == resetScramCommand && action == GLFW_PRESS) {
     reactor->scram(Simulator::ScramSignals::None);
-  }  // pause
+  } // pause
   else if (key == pauseCommand && action == GLFW_PRESS) {
     playPauseSimulation(reactor->isPaused());
-  }  // fast forward
+  } // fast forward
   else if (key == fasterCommand && action != GLFW_RELEASE) {
     if (!reactor->isPaused()) {
       setSimulationTime(
           std::min((int)selectedTime + 1, SIM_TIME_FACTOR_NUMBER - 1));
     }
-  }  // slow down
+  } // slow down
   else if (key == slowerCommand && action != GLFW_RELEASE) {
     if (!reactor->isPaused()) {
       setSimulationTime(std::max((int)selectedTime - 1, 0));
     }
-  }  // exit
+  } // exit
   else if (key == GLFW_KEY_ESCAPE) {
     setVisible(false);
-  }  // change active tab
+  } // change active tab
   else if (key == tabChangeCommand && action == GLFW_PRESS) {
     if (modifiers & GLFW_MOD_SHIFT) {
       if (tabControl->activeTab() == 0) {
@@ -673,10 +791,10 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
       tabControl->setActiveTab((tabControl->activeTab() + 1) %
                                tabControl->tabCount());
     }
-  }  // fire
+  } // fire
   else if (key == firePulseCommand && action == GLFW_PRESS) {
     reactor->beginPulse();
-  }  // toogle neutron source
+  } // toogle neutron source
   else if (key == sourceToggleCommand && action == GLFW_PRESS) {
     reactor->setNeutronSourceInserted(!reactor->getNeutronSourceInserted());
     neutronSourceCB->setChecked(reactor->getNeutronSourceInserted());
@@ -701,7 +819,8 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action,
 }
 
 bool SimulatorGUI::resizeEvent(const Eigen::Vector2i &size) {
-  if (Screen::resizeEvent(size)) return true;
+  if (Screen::resizeEvent(size))
+    return true;
   if (layoutStart) {
     performLayout();
   } else {
@@ -775,7 +894,8 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
   if (!(displayTimeSlider && timeLockedBox && tabControl)) {
     static bool warnedMissingCoreWidgets = false;
     if (!warnedMissingCoreWidgets) {
-      spdlog::error("Core draw widgets missing: displayTimeSlider={} timeLockedBox={} tabControl={}",
+      spdlog::error("Core draw widgets missing: displayTimeSlider={} "
+                    "timeLockedBox={} tabControl={}",
                     (void *)displayTimeSlider, (void *)timeLockedBox,
                     (void *)tabControl);
       warnedMissingCoreWidgets = true;
@@ -809,61 +929,102 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
   displayTimeSlider->setValue(
       1, (float)min(1., (sliderStart + properties->displayTime) / sliderRange));
 
-  // Link plots to display interval
-  reactivityPlot->setPlotRange(displayInterval[0], displayInterval[1]);
-  rodReactivityPlot->setPlotRange(displayInterval[0], displayInterval[1]);
-  temperaturePlot->setPlotRange(displayInterval[0], displayInterval[1]);
-  powerPlot->setPlotRange(displayInterval[0], displayInterval[1]);
-  for (size_t i = 0; i < 6; i++) {
-    delayedGroups[i]->setPlotRange(displayInterval[0], displayInterval[1]);
+  const bool graphReady =
+      (reactivityPlot && rodReactivityPlot && temperaturePlot && powerPlot);
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} graphReady={} activeTab={}", startupDrawFrame,
+                 graphReady ? 1 : 0, tabControl->activeTab());
   }
+  if (graphReady) {
+    bool delayedGroupsReady = true;
+    for (size_t i = 0; i < 6; i++) {
+      delayedGroupsReady = delayedGroupsReady && (delayedGroups[i] != nullptr);
+    }
 
-  try {
-    // Save times for better performance
-    double timeStart = reactor->time_[displayInterval[0]];
-    double timeEnd = reactor->time_[displayInterval[1]];
-    // Set reactivity scaling
-    reactivityPlot->setLimits(timeStart, timeEnd,
-                              properties->reactivityGraphLimits[0],
-                              properties->reactivityGraphLimits[1]);
-    rodReactivityPlot->setLimits(timeStart, timeEnd,
-                                 properties->reactivityGraphLimits[0],
-                                 properties->reactivityGraphLimits[1]);
-    // Set power plot scaling
-    pair<int, int> newExtremes = recalculatePowerExtremes();
-    if (isZero.first || isZero.second) {
-      if (isZero.first && isZero.second) {
-        powerPlot->setLimits(timeStart, timeEnd, 0., 1.);
-      } else {
-        powerPlot->setLimits(
-            timeStart, timeEnd, 0.,
-            pow(10., std::max(newExtremes.first, newExtremes.second)));
+    // Link plots to display interval
+    reactivityPlot->setPlotRange(displayInterval[0], displayInterval[1]);
+    rodReactivityPlot->setPlotRange(displayInterval[0], displayInterval[1]);
+    temperaturePlot->setPlotRange(displayInterval[0], displayInterval[1]);
+    powerPlot->setPlotRange(displayInterval[0], displayInterval[1]);
+    if (delayedGroupsReady) {
+      for (size_t i = 0; i < 6; i++) {
+        delayedGroups[i]->setPlotRange(displayInterval[0], displayInterval[1]);
       }
     } else {
-      powerPlot->setLimits(
-          timeStart, timeEnd,
-          /*(newExtremes.first < -3) ? 0. : pow(10., newExtremes.first)*/
-          powerPlot->getYlog() ? pow(10., newExtremes.first) : 0.,
-          pow(10., newExtremes.second));
-    }
-    // Set temperature scaling
-    temperaturePlot->setLimits(timeStart, timeEnd,
-                               properties->temperatureGraphLimits[0],
-                               properties->temperatureGraphLimits[1]);
-
-    // Set stacked graph scaling
-    if (tabControl->activeTab() == 4) {
-      for (int i = 0; i < 6; i++) {
-        delayedGroups[i]->setLimits(timeStart, timeEnd, 0., 3.);
+      static bool warnedMissingDelayed = false;
+      if (!warnedMissingDelayed) {
+        spdlog::warn("Delayed group plots not initialized; skipping delayed "
+                     "group plot updates");
+        warnedMissingDelayed = true;
       }
     }
-  } catch (exception e) {
-    cerr << "Index out of bounds: SimulatorGUI.draw" << "\n"
-         << e.what() << endl;
+
+    try {
+      // Save times for better performance
+      double timeStart = reactor->time_[displayInterval[0]];
+      double timeEnd = reactor->time_[displayInterval[1]];
+      // Set reactivity scaling
+      reactivityPlot->setLimits(timeStart, timeEnd,
+                                properties->reactivityGraphLimits[0],
+                                properties->reactivityGraphLimits[1]);
+      rodReactivityPlot->setLimits(timeStart, timeEnd,
+                                   properties->reactivityGraphLimits[0],
+                                   properties->reactivityGraphLimits[1]);
+      // Set power plot scaling
+      pair<int, int> newExtremes = recalculatePowerExtremes();
+      if (isZero.first || isZero.second) {
+        if (isZero.first && isZero.second) {
+          powerPlot->setLimits(timeStart, timeEnd, 0., 1.);
+        } else {
+          powerPlot->setLimits(
+              timeStart, timeEnd, 0.,
+              pow(10., std::max(newExtremes.first, newExtremes.second)));
+        }
+      } else {
+        powerPlot->setLimits(
+            timeStart, timeEnd,
+            /*(newExtremes.first < -3) ? 0. : pow(10., newExtremes.first)*/
+            powerPlot->getYlog() ? pow(10., newExtremes.first) : 0.,
+            pow(10., newExtremes.second));
+      }
+      // Set temperature scaling
+      temperaturePlot->setLimits(timeStart, timeEnd,
+                                 properties->temperatureGraphLimits[0],
+                                 properties->temperatureGraphLimits[1]);
+
+      // Set stacked graph scaling
+      if (delayedGroupsReady && tabControl->activeTab() == 4) {
+        for (int i = 0; i < 6; i++) {
+          delayedGroups[i]->setLimits(timeStart, timeEnd, 0., 3.);
+        }
+      }
+    } catch (const std::exception &e) {
+      cerr << "Index out of bounds: SimulatorGUI.draw" << "\n"
+           << e.what() << endl;
+      spdlog::error("draw index error: {}", e.what());
+    } catch (...) {
+      spdlog::error("draw graph update failed with unknown exception");
+    }
+  } else {
+    static bool warnedMissingGraph = false;
+    if (!warnedMissingGraph) {
+      spdlog::warn(
+          "Main graph pointers are not initialized; skipping graph updates");
+      warnedMissingGraph = true;
+    }
+  }
+
+  if (traceStartupDraw) {
+    spdlog::info("draw frame {} after graph update", startupDrawFrame);
   }
 
   // re-draw control rods
-  if (tabControl->activeTab() == 3) {
+  bool rodWidgetsReady = true;
+  for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) {
+    rodWidgetsReady = rodWidgetsReady && (rodCurves[i] != nullptr) &&
+                      (rodDerivatives[i] != nullptr);
+  }
+  if (tabControl->activeTab() == 3 && rodWidgetsReady) {
     float pointPos;
     for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++) {
       rodCurves[i]->setPointerPosition(reactor->rods[i]->getCurrentPCM() /
@@ -889,23 +1050,40 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
           *reactor->rods[i]->getExactPosition() /
           *reactor->rods[i]->getRodSteps());
     }
+  } else if (tabControl->activeTab() == 3) {
+    static bool warnedMissingRodWidgets = false;
+    if (!warnedMissingRodWidgets) {
+      spdlog::warn("Rod widgets not initialized; skipping rod curve redraw");
+      warnedMissingRodWidgets = true;
+    }
+  }
 
   if (traceStartupDraw) {
     spdlog::info("draw frame {} after rod redraw", startupDrawFrame);
   }
 
   // Show data
-  powerShow->setData(reactor->getCurrentPower());
-  size_t curIndx = reactor->getCurrentIndex();
-  reactivityShow->setData(reactor->reactivity_[curIndx]);
-  rodReactivityShow->setData(reactor->rodReactivity_[curIndx]);
-  temperatureShow->setData(reactor->temperature_[curIndx]);
-  waterTemperatureShow->setData(*reactor->getWaterTemperature());
-  // waterLevelShow->setData(*reactor->getWaterLevel() * 100.);
-  periodShow->setData(*reactor->getReactorPeriod());
+  if (powerShow && reactivityShow && rodReactivityShow && temperatureShow &&
+      waterTemperatureShow && periodShow && periodDisplay) {
+    powerShow->setData(reactor->getCurrentPower());
+    size_t curIndx = reactor->getCurrentIndex();
+    reactivityShow->setData(reactor->reactivity_[curIndx]);
+    rodReactivityShow->setData(reactor->rodReactivity_[curIndx]);
+    temperatureShow->setData(reactor->temperature_[curIndx]);
+    waterTemperatureShow->setData(*reactor->getWaterTemperature());
+    // waterLevelShow->setData(*reactor->getWaterLevel() * 100.);
+    periodShow->setData(*reactor->getReactorPeriod());
 
-  // Data for graphical reactor period display
-  periodDisplay->setPeriod(*reactor->getReactorPeriod());
+    // Data for graphical reactor period display
+    periodDisplay->setPeriod(*reactor->getReactorPeriod());
+  } else {
+    static bool warnedMissingDisplays = false;
+    if (!warnedMissingDisplays) {
+      spdlog::warn(
+          "Display widgets not initialized; skipping data display refresh");
+      warnedMissingDisplays = true;
+    }
+  }
 
   if (traceStartupDraw) {
     spdlog::info("draw frame {} after display refresh", startupDrawFrame);
@@ -962,7 +1140,8 @@ void SimulatorGUI::draw(NVGcontext *ctx) {
   // Send dickbut PNG bits over serial
 #if defined(_WIN32)
   if (boxConnected) {
-    if (theBox->IsConnected()) handleBox();
+    if (theBox->IsConnected())
+      handleBox();
   } else {
     updateCOMports();
   }
@@ -987,7 +1166,8 @@ pair<int, int> SimulatorGUI::recalculatePowerExtremes(double fromTime,
     // Find the last change since the graph begin time
     size_t startIndex = 0;
     for (; startIndex < reactor->getOrderChanges(); startIndex++) {
-      if (reactor->getExtremeAt(startIndex).when >= fromTime) break;
+      if (reactor->getExtremeAt(startIndex).when >= fromTime)
+        break;
     }
     Simulator::PowerExtreme *firstExtreme;
     if (startIndex) {
@@ -1000,9 +1180,11 @@ pair<int, int> SimulatorGUI::recalculatePowerExtremes(double fromTime,
     // Find the last change before the graph end time
     size_t endIndex = startIndex;
     for (; endIndex < reactor->getOrderChanges(); endIndex++) {
-      if (reactor->getExtremeAt(endIndex).when > toTime) break;
+      if (reactor->getExtremeAt(endIndex).when > toTime)
+        break;
     }
-    if (endIndex != 0) endIndex--;
+    if (endIndex != 0)
+      endIndex--;
     err = 2;
     // If there is only one order change, return the order
     if (startIndex == endIndex) {
@@ -1059,7 +1241,8 @@ int runSimulatorGuiApp(int argc, char **argv) {
       app->handleDebugChanged();
       app->drawAll();
       app->setVisible(true);
-      if (argc == 2) app->startScript = argv[1];
+      if (argc == 2)
+        app->startScript = argv[1];
       nanogui::mainloop(10);
     }
 
