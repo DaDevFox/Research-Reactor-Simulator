@@ -47,7 +47,7 @@
 // #define ENTYPO_ICON_BELL                 0x1F514
 // #define ENTYPO_ICON_LINK                 0x1F517
 // #define ENTYPO_ICON_FLAG                 0x2691
-#define ENTYPO_ICON_COG                  0x2699
+#define ENTYPO_ICON_COG 0x2699
 // #define ENTYPO_ICON_TOOLS                0x2692
 // #define ENTYPO_ICON_TROPHY               0x1F3C6
 // #define ENTYPO_ICON_TAG                  0xE70C
@@ -83,7 +83,7 @@
 // #define ENTYPO_ICON_BATTERY              0x1F50B
 // #define ENTYPO_ICON_BUCKET               0x1F4FE
 // #define ENTYPO_ICON_MAGNET               0xE7A1
-#define ENTYPO_ICON_DRIVE                0x1F4FD
+#define ENTYPO_ICON_DRIVE 0x1F4FD
 // #define ENTYPO_ICON_CUP                  0x2615
 // #define ENTYPO_ICON_ROCKET               0x1F680
 // #define ENTYPO_ICON_BRUSH                0xE79A
@@ -124,14 +124,14 @@
 // #define ENTYPO_ICON_LOCK_OPEN            0x1F513
 // #define ENTYPO_ICON_LOGOUT               0xE741
 // #define ENTYPO_ICON_LOGIN                0xE740
-#define ENTYPO_ICON_CHECK                0x2713
+#define ENTYPO_ICON_CHECK 0x2713
 // #define ENTYPO_ICON_CROSS                0x274C
 // #define ENTYPO_ICON_SQUARED_MINUS        0x229F
 // #define ENTYPO_ICON_SQUARED_PLUS         0x229E
 // #define ENTYPO_ICON_SQUARED_CROSS        0x274E
 // #define ENTYPO_ICON_CIRCLED_MINUS        0x2296
 // #define ENTYPO_ICON_CIRCLED_PLUS         0x2295
-#define ENTYPO_ICON_CIRCLED_CROSS        0x2716
+#define ENTYPO_ICON_CIRCLED_CROSS 0x2716
 // #define ENTYPO_ICON_MINUS                0x2796
 // #define ENTYPO_ICON_PLUS                 0x2795
 // #define ENTYPO_ICON_ERASE                0x232B
@@ -146,11 +146,11 @@
 // #define ENTYPO_ICON_CCW                  0x27F2
 // #define ENTYPO_ICON_SHUFFLE              0x1F500
 // #define ENTYPO_ICON_BACK                 0x1F519
-#define ENTYPO_ICON_LEVEL_DOWN           0x21B3
+#define ENTYPO_ICON_LEVEL_DOWN 0x21B3
 // #define ENTYPO_ICON_RETWEET              0xE717
 // #define ENTYPO_ICON_LOOP                 0x1F501
 // #define ENTYPO_ICON_BACK_IN_TIME         0xE771
-#define ENTYPO_ICON_LEVEL_UP             0x21B0
+#define ENTYPO_ICON_LEVEL_UP 0x21B0
 // #define ENTYPO_ICON_SWITCH               0x21C6
 // #define ENTYPO_ICON_NUMBERED_LIST        0xE005
 // #define ENTYPO_ICON_ADD_TO_LIST          0xE003
@@ -164,7 +164,7 @@
 // #define ENTYPO_ICON_PICTURE              0x1F304
 // #define ENTYPO_ICON_VIDEO                0x1F3AC
 // #define ENTYPO_ICON_MUSIC                0x1F3B5
-#define ENTYPO_ICON_FOLDER               0x1F4C1
+#define ENTYPO_ICON_FOLDER 0x1F4C1
 // #define ENTYPO_ICON_ARCHIVE              0xE800
 // #define ENTYPO_ICON_TRASH                0xE729
 // #define ENTYPO_ICON_UPLOAD               0x1F4E4
@@ -176,12 +176,12 @@
 // #define ENTYPO_ICON_BOOKMARK             0x1F516
 // #define ENTYPO_ICON_BOOKMARKS            0x1F4D1
 // #define ENTYPO_ICON_OPEN_BOOK            0x1F4D6
-#define ENTYPO_ICON_PLAY                 0x25B6
-#define ENTYPO_ICON_PAUS                 0x2016
+#define ENTYPO_ICON_PLAY 0x25B6
+#define ENTYPO_ICON_PAUS 0x2016
 // #define ENTYPO_ICON_RECORD               0x25CF
 // #define ENTYPO_ICON_STOP                 0x25A0
-#define ENTYPO_ICON_FF                   0x23E9
-#define ENTYPO_ICON_FB                   0x23EA
+#define ENTYPO_ICON_FF 0x23E9
+#define ENTYPO_ICON_FB 0x23EA
 // #define ENTYPO_ICON_TO_START             0x23EE
 // #define ENTYPO_ICON_TO_END               0x23ED
 // #define ENTYPO_ICON_RESIZE_FULL          0xE744
