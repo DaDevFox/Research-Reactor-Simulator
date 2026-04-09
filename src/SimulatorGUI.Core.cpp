@@ -1,4 +1,6 @@
 #include "../include/SimulatorGUI.h"
+#include <functional>
+#include <string>
 
 const std::string SimulatorGUI::version()
 {
@@ -59,8 +61,9 @@ void SimulatorGUI::updateSimulationIcon()
 		}
 	}
 
+	// For cleaner code
 void SimulatorGUI::initializeSimulator()
-{
+	{
 		// Create the Simulator object, set initial properties
 		reactor = new Simulator(properties);
 		reactor->setDebugMode(debugMode);
@@ -111,6 +114,7 @@ void SimulatorGUI::initializeSimulator()
 					userScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_MAN;
 				}
+        // TODO: dynamic pad
 				cout << "The reactor has SCRAMed!" << endl;
 				cout << "=======REASON=======" << endl;
 				cout << reason << endl;
@@ -158,7 +162,7 @@ void SimulatorGUI::initializeSimulator()
 	}
 
 void SimulatorGUI::viewingIntervalChanged(bool firstChanged)
-{
+	{
 		const double timeElapsed = reactor->getCurrentTime();
 		const double range = std::min(timeElapsed, DELETE_OLD_DATA_TIME_DEFAULT);
 		if (firstChanged)
@@ -174,8 +178,13 @@ void SimulatorGUI::viewingIntervalChanged(bool firstChanged)
 		}
 	}
 
-SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider) : nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"), uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()), uiStyleConfig(uiConfigProvider->getStyleConfig()), uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()), coolBlue(uiStyleConfig.accentColor)
-{
+SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr)
+		: nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"),
+		  uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()),
+		  uiStyleConfig(uiConfigProvider->getStyleConfig()),
+		  uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()),
+		  coolBlue(uiStyleConfig.accentColor)
+	{
 		cout << "======= Research reactor simulator " << version() << " =======" << endl;
 
 		// Load settings
@@ -299,8 +308,9 @@ SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider) : 
 		performLayout();
 	}
 
-void SimulatorGUI::createBottomPanel()
-{
+	// Bottom panel initialization
+	void SimulatorGUI::createBottomPanel()
+	{
 		CustomWidget *bottomPanel = baseWindow->add<CustomWidget>();
 		bottomPanel->setId("bottom panel");
 		bottomPanel->setDrawBackground(true);
@@ -393,8 +403,8 @@ void SimulatorGUI::createBottomPanel()
 		bottomLayout->setAnchor(simStatusLabel, RelativeGridLayout::makeAnchor(10, 0, 1, 1, Alignment::Minimum, Alignment::Fill));
 	}
 
-void SimulatorGUI::resetSimToStart()
-{
+	void SimulatorGUI::resetSimToStart()
+	{
 		reactor->resetSimulator();
 		properties = new Settings();
 		updateSettings(false);
@@ -403,7 +413,7 @@ void SimulatorGUI::resetSimToStart()
 	}
 
 void SimulatorGUI::handleDerivativeChange()
-{
+	{
 		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
 		{
 			rodDerivatives[i]->setYdata(reactor->rods[i]->derivativeArray());
@@ -414,7 +424,7 @@ void SimulatorGUI::handleDerivativeChange()
 	}
 
 void SimulatorGUI::hardcoreMode(bool value)
-{
+	{
 		reactivityPlot->setEnabled(!value);
 		rodReactivityPlot->setEnabled(properties->rodReactivityPlot && !value);
 
@@ -426,8 +436,10 @@ void SimulatorGUI::hardcoreMode(bool value)
 		performLayout();
 	}
 
+// makeSettingLabel is templated (variadic args), thus must be implemented in SimulatorGUI.h
+
 IntBox<int> *SimulatorGUI::makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
-{
+	{
 		IntBox<int> *tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
 		tempBox->setFixedWidth(100);
 		tempBox->setFormat("[0-9]+");
@@ -440,7 +452,7 @@ IntBox<int> *SimulatorGUI::makeSimulationSetting(CustomWidget *parent, int initi
 	}
 
 void SimulatorGUI::handleDebugChanged()
-{
+	{
 		reactor->setDebugMode(debugMode);
 		if (debugMode)
 		{
@@ -456,8 +468,8 @@ void SimulatorGUI::handleDebugChanged()
 		}
 	}
 
-SimulatorGUI::~SimulatorGUI()
-{
+	~SimulatorGUI()
+	{
 		delete reactor;
 		for (int i = 0; i < 2; i++)
 		{
@@ -473,7 +485,7 @@ SimulatorGUI::~SimulatorGUI()
 	}
 
 bool SimulatorGUI::keyboardEvent(int key, int scancode, int action, int modifiers)
-{
+	{
 		if (Screen::keyboardEvent(key, scancode, action, modifiers))
 			return true;
 		if (!baseWindow->enabled())
@@ -691,7 +703,7 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action, int modifier
 	}
 
 bool SimulatorGUI::resizeEvent(const Eigen::Vector2i &size)
-{
+	{
 		if (Screen::resizeEvent(size))
 			return true;
 		if (layoutStart)
@@ -706,7 +718,7 @@ bool SimulatorGUI::resizeEvent(const Eigen::Vector2i &size)
 	}
 
 void SimulatorGUI::updateAlphaGraph()
-{
+	{
 		// Point 1
 		alphaX[0] = 0.;
 		alphaY[0] = properties->alpha0;
@@ -725,7 +737,7 @@ void SimulatorGUI::updateAlphaGraph()
 	}
 
 std::string SimulatorGUI::getTimeSinceStart()
-{
+	{
 		size_t time[3];
 		double t = reactor->getCurrentTime();
 		time[2] = (size_t)floor(fmod(t, 60.));
@@ -740,7 +752,7 @@ std::string SimulatorGUI::getTimeSinceStart()
 	}
 
 void SimulatorGUI::draw(NVGcontext *ctx)
-{
+	{
 		double reactorElapsed = reactor->getCurrentTime();
 		if (startScript.size())
 		{
@@ -925,7 +937,7 @@ void SimulatorGUI::draw(NVGcontext *ctx)
 	}
 
 void SimulatorGUI::reculculateDisplayInterval(double fromTime, double toTime)
-{
+	{
 		fromTime = std::max(fromTime, 0.);
 		toTime = std::min(toTime, reactor->getCurrentTime());
 		displayInterval[0] = reactor->getIndexFromTime(fromTime);
@@ -933,7 +945,7 @@ void SimulatorGUI::reculculateDisplayInterval(double fromTime, double toTime)
 	}
 
 pair<int, int> SimulatorGUI::recalculatePowerExtremes(double fromTime, double toTime)
-{
+	{
 		int err = 0;
 		if (fromTime + toTime == 0.)
 		{
@@ -1018,7 +1030,7 @@ pair<int, int> SimulatorGUI::recalculatePowerExtremes(double fromTime, double to
 	}
 
 void SimulatorGUI::toggleBaseWindow(bool value)
-{
+	{
 		if (!value && baseWindow->enabled())
 			prevToggle = (reactor->getSpeedFactor() != 0.);
 		baseWindow->setEnabled(value);
