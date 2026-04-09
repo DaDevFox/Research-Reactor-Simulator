@@ -178,7 +178,7 @@ void SimulatorGUI::viewingIntervalChanged(bool firstChanged)
 		}
 	}
 
-SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr)
+SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
 		: nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"),
 		  uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()),
 		  uiStyleConfig(uiConfigProvider->getStyleConfig()),
@@ -468,7 +468,7 @@ void SimulatorGUI::handleDebugChanged()
 		}
 	}
 
-	~SimulatorGUI()
+SimulatorGUI::~SimulatorGUI()
 	{
 		delete reactor;
 		for (int i = 0; i < 2; i++)
@@ -1038,7 +1038,7 @@ void SimulatorGUI::toggleBaseWindow(bool value)
 		playPauseSimulation(value ? prevToggle : value);
 	}
 
-int runSimulatorGuiApp(int argc, char **argv)
+int runSimulatorGuiApp(int argc, char **argv) 
 {
 	try
 	{
