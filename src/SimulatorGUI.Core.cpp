@@ -174,7 +174,7 @@ void SimulatorGUI::viewingIntervalChanged(bool firstChanged)
 		}
 	}
 
-SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
+SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider) : nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"), uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()), uiStyleConfig(uiConfigProvider->getStyleConfig()), uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()), coolBlue(uiStyleConfig.accentColor)
 {
 		cout << "======= Research reactor simulator " << version() << " =======" << endl;
 
@@ -426,17 +426,7 @@ void SimulatorGUI::hardcoreMode(bool value)
 		performLayout();
 	}
 
-template <typename WidgetClass, typename... Args> WidgetClass SimulatorGUI::*makeSettingLabel(Widget *parent, std::string text, int fixedWidth, const Args &...args)
-{
-		Widget *panel = parent->add<Widget>();
-		panel->setLayout(panelsLayout);
-		CustomLabel *temp = panel->add<CustomLabel>(text, "sans-bold");
-		if (fixedWidth)
-			temp->setFixedWidth(fixedWidth);
-		return panel->add<WidgetClass>(args...);
-	}
-
-IntBox<int> SimulatorGUI::*makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
+IntBox<int> *SimulatorGUI::makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
 {
 		IntBox<int> *tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
 		tempBox->setFixedWidth(100);
