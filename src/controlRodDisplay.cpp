@@ -1,10 +1,10 @@
-#include "nanogui/controlRodDisplay.h"
+#include "../include/controlRodDisplay.h"
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 
-NAMESPACE_BEGIN(nanogui)
+using namespace nanogui;
 
-void ControlRodDisplay::draw(NVGcontext *ctx)
+void ControlRodDisplay::draw(NVGcontext* ctx)
 {
 	Widget::draw(ctx);
 
@@ -16,9 +16,10 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 	// Draw backgrounds
 	float x[3];
 	nvgBeginPath(ctx);
-	for (int i = 0; i < 3; i++) {
-		x[i] = mPos.x() + (rodWidth + rodSpacing)*i;
-		nvgRect(ctx, mPos.x() + (rodWidth + rodSpacing)*i, mPos.y(), rodWidth, mSize.y());
+	for (int i = 0; i < 3; i++)
+	{
+		x[i] = mPos.x() + (rodWidth + rodSpacing) * i;
+		nvgRect(ctx, mPos.x() + (rodWidth + rodSpacing) * i, mPos.y(), rodWidth, mSize.y());
 	}
 	nvgFillColor(ctx, mRodBackgroundColor);
 	nvgFill(ctx);
@@ -28,26 +29,30 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 	const float h = std::sqrt(3.f) * pointerSize * 0.5f;
 	NVGpaint upper[2];
 	const float rodWgrad = rodWidth / 2 - rodBorder;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; i++)
+	{
 		// Store rod positions
 		relPosRod = (1.f - *rodActualPos[i] / *rodSteps[i]) * rodSize;
 		relPosMagnet = (1.f - *rodExactPos[i] / *rodSteps[i]) * rodSize;
 
 		// Drawing top part
-		if (relPosRod > 0.f) {
-			for (int m = 0; m < 2; m++) {
+		if (relPosRod > 0.f)
+		{
+			for (int m = 0; m < 2; m++)
+			{
 				upper[m] = nvgLinearGradient(ctx, x[i] + rodWgrad, 0, // startx, starty
 					m ? (x[i] + rodWidth) : x[i], 0, // endx, endy
 					rodEnabled[i] ? mRodExtrudedWhiteColor : mRodDisabledWhiteColor, rodEnabled[i] ? mRodExtrudedColor : mRodDisabledColor); // startcol, endcol
 				nvgBeginPath(ctx);
-				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), mPos.y(), (2 - m)*rodWgrad, relPosRod);
+				nvgRect(ctx, x[i] + rodBorder + (m ? rodWgrad : 0.f), mPos.y(), (2 - m) * rodWgrad, relPosRod);
 				nvgFillPaint(ctx, upper[m]);
 				nvgFill(ctx);
 			}
 		}
 
 		// Drawing lower part
-		if (relPosRod < rodSize) {
+		if (relPosRod < rodSize)
+		{
 			nvgBeginPath(ctx);
 			nvgRect(ctx, x[i] + rodBorder, mPos.y() + relPosRod, rodWidth - 2 * rodBorder, rodSize - relPosRod);
 			nvgFillColor(ctx, mRodInsertedColor);
@@ -71,8 +76,7 @@ void ControlRodDisplay::draw(NVGcontext *ctx)
 	nvgRestore(ctx);
 }
 
-Vector2i ControlRodDisplay::preferredSize(NVGcontext *) const {
+Vector2i ControlRodDisplay::preferredSize(NVGcontext*) const
+{
 	return Vector2i((int)std::ceil(2 * rodSpacing + 6 * rodBorder), 70);
 }
-
-NAMESPACE_END(nanogui)

@@ -10,7 +10,7 @@
 #include <deque>
 #include <functional>
 #include <ControlRod.h>
-#include <nanogui/DataDisplay.h>
+#include "DataDisplay.h"
 #include <Settings.h>
 #include <ScriptCommand.h>
 
@@ -28,6 +28,9 @@ constexpr auto WATER_HEIGHT = 5.;			  // height of water level above (point)reac
 constexpr auto TANK_RADIUS = 1.;			  // radius of the reactor tank [m]
 
 using namespace std;
+
+std::string formatDecimalsDouble(double value, int decimalPlaces);
+std::string formatDecimalsDoubleWithTrailing(const double x, const int decDigits, bool removeTrailingZeros);
 
 class Simulator
 {
@@ -144,7 +147,8 @@ private:
 public:
 
 	// Classes for use in Simulator.cpp
-	struct PowerExtreme {
+	struct PowerExtreme
+	{
 		// The new order this extreme got to
 		int order = 0;
 		// The index at which this happened
@@ -152,16 +156,19 @@ public:
 		// Value to hold if the order is negative infinity
 		bool isZero = false;
 
-		PowerExtreme(int order, double time) {
+		PowerExtreme(int order, double time)
+		{
 			this->order = order;
 			this->when = time;
 		}
-		PowerExtreme() {
+		PowerExtreme()
+		{
 			isZero = true;
 		}
 	};
 
-	struct PulseData {
+	struct PulseData
+	{
 		double peakPower = 0.;
 		double FWHM = 0.;
 		double releasedEnergy = 0.;
@@ -172,7 +179,8 @@ public:
 	};
 
 	// In case of SCRAM, this enum tells you the reason for SCRAM
-	enum ScramSignals : std::uint8_t {
+	enum ScramSignals : std::uint8_t
+	{
 		None = 0,
 		Period = 1,
 		FuelTemperature = 2,
@@ -182,7 +190,8 @@ public:
 		User = 32
 	};
 
-	enum TemperatureMode : std::uint8_t {
+	enum TemperatureMode : std::uint8_t
+	{
 		Asymptotic = 0,
 		FH = 1
 	};
@@ -208,7 +217,8 @@ public:
 	void reset(Settings* properties);
 
 	// Toggles debug mode
-	void setDebugMode(bool& value) {
+	void setDebugMode(bool& value)
+	{
 		debug_mode = value;
 	}
 
@@ -223,42 +233,55 @@ public:
 	const bool& getFissionPoisoningEffectsEnabled() { return fissionPoisoning_effects; }
 	void setFissionPoisoningEffectsEnabled(const bool& value);
 
-	const size_t getCurrentIndex() const {
-		if (iterations_total > 0) {
+	const size_t getCurrentIndex() const
+	{
+		if (iterations_total > 0)
+		{
 			return (iterations_total - 1) % dataPoints;
 		}
-		else {
+		else
+		{
 			return iterations_total;
 		}
 	}
-	const size_t getNextIndex() const {
+	const size_t getNextIndex() const
+	{
 		return iterations_total % dataPoints;
 	}
-	const size_t shiftIndex(size_t index, long shift) const {
-		if (shift + (long)index >= (long)dataPoints) {
+	const size_t shiftIndex(size_t index, long shift) const
+	{
+		if (shift + (long)index >= (long)dataPoints)
+		{
 			return (shift + index) % dataPoints;
 		}
-		else if (shift + (long)index < 0L) {
+		else if (shift + (long)index < 0L)
+		{
 			return dataPoints + shift + index;
 		}
-		else {
+		else
+		{
 			return shift + index;
 		}
 	}
 
-	const size_t getOldestIndex() const {
+	const size_t getOldestIndex() const
+	{
 		return (iterations_total > dataPoints) ? getNextIndex() : (size_t)0;
 	}
 
-	const size_t translateIndex(size_t iteration) const {
+	const size_t translateIndex(size_t iteration) const
+	{
 		return shiftIndex(getNextIndex(), (int)iteration % dataPoints);
 	}
 
-	const size_t getIteration(size_t index) const {
-		if (index >= getOldestIndex()) {
+	const size_t getIteration(size_t index) const
+	{
+		if (index >= getOldestIndex())
+		{
 			return iterations_total - dataPoints + index - getOldestIndex();
 		}
-		else {
+		else
+		{
 			return iterations_total - getOldestIndex() + index;
 		}
 	}
@@ -284,8 +307,9 @@ public:
 
 
 	// Returns flux in m^-1
-	double getCurrentFlux() { 
-		return state_vector_[0][getCurrentIndex()] * t_neutron_speed / (getReactorCoreVolume()); 
+	double getCurrentFlux()
+	{
+		return state_vector_[0][getCurrentIndex()] * t_neutron_speed / (getReactorCoreVolume());
 	}
 
 	/* Gets or sets the decay rates of delayed neutrons groups(6 groups).
@@ -328,12 +352,14 @@ public:
 	/* Gets or sets the mode of modulation of the neutron source.
 	Default is None (const value).*/
 	const SimulationModes& getNeutronSourceMode() const;
-	void setNeutronSourceMode(const SimulationModes & value);
+	void setNeutronSourceMode(const SimulationModes& value);
 	SimulationModes source_mode = SimulationModes::None;
 
 	// Get periodical mode pointer for neutron source
-	PeriodicalMode* getSourceModeClass(SimulationModes sim) {
-		switch (sim) {
+	PeriodicalMode* getSourceModeClass(SimulationModes sim)
+	{
+		switch (sim)
+		{
 		case SimulationModes::SquareWaveMode:
 			return source_sqw;
 			break;
@@ -367,22 +393,22 @@ public:
 
 	// Get and Set HeatCapacityConstants
 	std::pair <double, double> getHeatCpConstants();
-	void setHeatCpConstants(std::pair<double, double> &values);
+	void setHeatCpConstants(std::pair<double, double>& values);
 
 	//The 5 get and set functions for operational limits
-	double &getPowerLimit();
+	double& getPowerLimit();
 	void setPowerLimit(double limit);
 
-	double &getPeriodLimit();
+	double& getPeriodLimit();
 	void setPeriodLimit(double limit);
 
-	double &getFuelTemperatureLimit();
+	double& getFuelTemperatureLimit();
 	void setFuelTemperatureLimit(double limit);
 
-	double &getWaterTemperatureLimit();
+	double& getWaterTemperatureLimit();
 	void setWaterTemperatureLimit(double limit);
 
-	double &getWaterLevelLimit();
+	double& getWaterLevelLimit();
 	void setWaterLevelLimit(double limit);
 
 	bool godMode = false;
@@ -401,7 +427,7 @@ public:
 	// Returns a pointer to an array containing delayed neutron concentrations
 	void getCurrentStateVector(double* result, bool copyLast = true) const;
 	// Returns the entire array of a specific neutron group
-	const double *getNeutronGroup(size_t i = 0);
+	const double* getNeutronGroup(size_t i = 0);
 	double* state_vector_[8];
 
 	// Functions for returning poison concentrations
@@ -413,51 +439,51 @@ public:
 	// Returns the current reactivity(in pcm) in the reactor.
 	double getCurrentReactivity() const;
 	// Returns the entire data array for reactivity.
-	const float *getReactivity() const;
+	const float* getReactivity() const;
 	float* reactivity_;
 
 	// Returns reactor period
-	double *getReactorPeriod();
+	double* getReactorPeriod();
 
 	// Returns reactor asymptotic
-	double *getReactorAsymPeriod();
+	double* getReactorAsymPeriod();
 
 	// Returns the current reactivity(in pcm) in the reactor.
 	float getCurrentRodReactivity() const;
 	// Returns the entire data array for reactivity.
-	const float *getRodReactivity() const;
+	const float* getRodReactivity() const;
 	float* rodReactivity_;
 
 	// Returns the current temperature(in kelvin) in the reactor.
 	float getCurrentTemperature() const;
 	// Returns the entire data array for temperature.
-	const float *getTemperature() const;
+	const float* getTemperature() const;
 	float* temperature_;
 
 	// Water temperature(in celsius).
-	double *getWaterTemperature();
+	double* getWaterTemperature();
 	void waterHeatingCycle(double dt);
 	double waterTemperature = WATER_TEMPERATURE_DEFAULT;
 
 	// Water level difference from regular water level (in meters)
-	double *getWaterLevel();
+	double* getWaterLevel();
 
 	// Water cooling
-	bool *getWaterCooling() { return &w_cooling; }
+	bool* getWaterCooling() { return &w_cooling; }
 	void setWaterCooling(bool value) { w_cooling = value; }
 	bool w_cooling = WATER_COOLING_ENABLED_DEFAULT;
 
 	// Cooling power
-	double *getCoolingPower() { return &cooling_p; }
+	double* getCoolingPower() { return &cooling_p; }
 	void setCoolingPower(double value) { cooling_p = value; }
 	double cooling_p = WATER_COOLING_POWER_DEFAULT;
 
-	double &getWaterVolume() { return waterVolume; }
+	double& getWaterVolume() { return waterVolume; }
 	void setWaterVolume(double value) { waterVolume = value; }
-	double waterVolume =  WATER_VOLUME_DEFAULT;
+	double waterVolume = WATER_VOLUME_DEFAULT;
 
 	// Returns the dose rate above the reactor tank (in mSv/h)
-	double *getDoseRate() { return &doseRate; }
+	double* getDoseRate() { return &doseRate; }
 	void recalculateDoseRate(double flux);
 
 	// Returns the current power output of the reactor.
@@ -472,7 +498,7 @@ public:
 	// Returns the speed factor deque.
 	void setSpeedFactor(double value);
 	// Returns the entire data array for power.
-	double &getSpeedFactor();
+	double& getSpeedFactor();
 	double speedFactor = 0;;
 
 	const size_t getIndexFromTime(double time) const;
@@ -482,35 +508,35 @@ public:
 	// Returns the current time(in seconds since start).
 	double getCurrentTime() const;
 	// Returns the entire data array for time.
-	const double *getTime() const;
+	const double* getTime() const;
 	double* time_;
 
 	// Returns the number of calculations performed since the start of the simulation.
-	const size_t &getCalculationsPerformed() const;
+	const size_t& getCalculationsPerformed() const;
 	size_t calc_performed = 0;
 
 	// Returns the number of order changes since the start of the simulation.
 	size_t getOrderChanges() const;
 
 	// Returns the power extreme at the desired location
-	PowerExtreme &getExtremeAt(size_t i);
+	PowerExtreme& getExtremeAt(size_t i);
 	PowerExtreme trailingExtreme = PowerExtreme();
 
 	// Returns a boolean value if the simulation is paused or not
 	bool isPaused() const;
 
 	// Returns the power at which the automatic mode should keep the reactor stable
-	double &getAutomaticSteadyPower() { return keepSteadyPowerAt; }
+	double& getAutomaticSteadyPower() { return keepSteadyPowerAt; }
 	// Sets the stable power in automatic mode
 	void setAutomaticSteadyPower(double power) { keepSteadyPowerAt = power; }
 
 	// Returns true if automatic mode holds the current power level when enabled
-	bool &getKeepCurrentPower() { return keepCurrentPower; }
+	bool& getKeepCurrentPower() { return keepCurrentPower; }
 	// If true, the automatic mode will keep the reactor steady at the current power
 	void setKeepCurrentPower(bool value) { keepCurrentPower = value; }
 
 	// Returns true if automatic mode avoids triggering a period SCRAM when moving the control rod
-	bool &getAutomaticAvoidPeriodScram() { return avoidPeriodScram; }
+	bool& getAutomaticAvoidPeriodScram() { return avoidPeriodScram; }
 	// If true, the automatic mode will avoid triggering a period SCRAM when moving the control rod
 	void setAutomaticAvoidPeriodScram(bool value) { avoidPeriodScram = value; }
 
@@ -520,12 +546,12 @@ public:
 	void setAutomaticDeviation(float value) { steadyDeviation = value; }
 
 	// Set the scram callback
-	void setScramCallback(const std::function<void(int)> &callback);
-	void setResetScramCallback(const std::function<void()> &callback);
-	void setSevereErrorCallback(const std::function<void(int)> &callback);
-	
+	void setScramCallback(const std::function<void(int)>& callback);
+	void setResetScramCallback(const std::function<void()>& callback);
+	void setSevereErrorCallback(const std::function<void(int)>& callback);
+
 	// Set the pulse callback
-	void setPulseCallback(const std::function<void(PulseData)> &callback);
+	void setPulseCallback(const std::function<void(PulseData)>& callback);
 
 	// Sets or gets the automatic hold power
 	double powerHold;
@@ -589,24 +615,24 @@ private:
 	double time_at_peak = 0;
 	double pulse_startP = 0;
 	bool autoScramAfterPulse = AUTOMATIC_PULSE_SCRAM_DEFAULT;
-	
+
 	double ns_activity_temp = NEUTRON_SOURCE_ACTIVITY_DEFAULT;
 	double doseRate = 0;
 
 	// Variables controlling execution of the script
 	double scriptStart = 0.;
-	
+
 	double scriptTimer = 0;
 
 	// Increment neutron source simtulation time
-	void advanceSourceTime(double dt) { if(source_mode != SimulationModes::None) getSourceModeClass(source_mode)->handleAddTime((float)dt); };
+	void advanceSourceTime(double dt) { if (source_mode != SimulationModes::None) getSourceModeClass(source_mode)->handleAddTime((float)dt); };
 
 	// Variables for neutron changes
 	double temp_state[7] = { 0 }, delayed = 0, fissionRate = 0;
 
 	// Per frame calculations
 	void solvePerFrame();
-	
+
 	// Initialization method
 	void init();
 
@@ -635,7 +661,7 @@ private:
 	double reactorPeriod = 0;
 	double reactorAsymPeriod = 0;
 
-	/*Operational limits, each has a get 
+	/*Operational limits, each has a get
 	and a set function, so they can be set from the GUI*/
 	double periodLimit = PERIOD_SCRAM_DEFAULT;
 	double powerLimit = POWER_SCRAM_DEFAULT;
@@ -643,9 +669,9 @@ private:
 	double waterTemperatureLimit = WATER_TEMPERATURE_SCRAM_DEFAULT;
 	double waterLevelLimit = WATER_LEVEL_SCRAM_DEFAULT;
 
-	/*The scram on period will happen only if the period 
-	raises over the limit for more than a certain period, so 
-	we need a way to know how long has it passed since the period 
+	/*The scram on period will happen only if the period
+	raises over the limit for more than a certain period, so
+	we need a way to know how long has it passed since the period
 	has risen too high*/
 	double periodTimer = 0;
 
@@ -660,15 +686,18 @@ private:
 	std::function<void(PulseData)> pulseCallback;
 	std::function<void(int)> severeErrorCallback;
 
-	static std::string formatTime(double t) {
+	static std::string formatTime(double t)
+	{
 		size_t time[4];
 		time[3] = (size_t)floor(fmod(t, 1.) * 1000);
 		time[2] = (size_t)floor(fmod(t, 60.));
 		time[1] = (size_t)floor(fmod(t, 3600.) / 60.);
 		time[0] = (size_t)floor(t / 3600.);
 		std::string ret[4];
-		for (int i = 0; i < 4; i++) {
-			if (i == 3) {
+		for (int i = 0; i < 4; i++)
+		{
+			if (i == 3)
+			{
 				ret[i] = to_string(time[i]);
 				int max = 3 - (int)ret[i].length();
 				for (int m = 0; m < max; m++) ret[i] = "0" + ret[i];

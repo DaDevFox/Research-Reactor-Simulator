@@ -82,7 +82,7 @@ Default values estimated from the graph in TRIGLAV documentation
 constexpr auto ALPHA_AT_0_DEFAULT = 6.f;
 constexpr auto ALPHA_T1_DEFAULT = 240.f;
 constexpr auto ALPHA_AT_T1_DEFAULT = 9.f;
-constexpr auto ALPHA_K_DEFAULT = - 0.004;
+constexpr auto ALPHA_K_DEFAULT = -0.004;
 
 // Delete old data (seconds)
 constexpr auto DELETE_OLD_DATA_TIME_DEFAULT = 3600.;
@@ -100,7 +100,7 @@ constexpr auto SIMULATION_MODE_PERIOD_DEFAULT = 5.f;
 // Simulation modes amplitude (steps)
 constexpr auto SIMULATION_MODE_AMPLITUDE_DEFAULT = 40.f;
 // Square wave
-constexpr auto SQUARE_WAVE_START_UP_DEFAULT	= 0.f;
+constexpr auto SQUARE_WAVE_START_UP_DEFAULT = 0.f;
 constexpr auto SQUARE_WAVE_END_UP_DEFAULT = 0.5f;
 constexpr auto SQUARE_WAVE_START_DOWN_DEFAULT = 0.5f;
 constexpr auto SQUARE_WAVE_END_DOWN_DEFAULT = 1.f;
@@ -124,7 +124,8 @@ constexpr auto DEFAULT_DATA_DIVISION = 100;
 const auto SETTINGS_NUMBER = 94;
 const auto SETTINGS_VERSION = 1.1f;
 
-class Settings {
+class Settings
+{
 private:
 	const float safetyRodCurveDefault[2] = { 0.f, 1.f };
 	const float regulatoryRodCurveDefault[2] = { 0.f, 1.f };
@@ -136,14 +137,16 @@ private:
 
 public:
 
-	struct ControlRodSettings {
+	struct ControlRodSettings
+	{
 	public:
 		size_t rodSteps = 0;
 		float rodWorth = 0.f;
 		float rodSpeed = 0.f;
-		float rodCurve[2] = {0.f, 1.f};
+		float rodCurve[2] = { 0.f, 1.f };
 
-		ControlRodSettings(size_t steps_, float rodWorth_, float rodSpeed_, float rodCurve1, float rodCurve2) {
+		ControlRodSettings(size_t steps_, float rodWorth_, float rodSpeed_, float rodCurve1, float rodCurve2)
+		{
 			rodSteps = steps_;
 			rodWorth = rodWorth_;
 			rodSpeed = rodSpeed_;
@@ -159,7 +162,8 @@ public:
 		}
 	};
 
-	struct SimulationSettings {
+	struct SimulationSettings
+	{
 	public:
 		float period;
 		float amplitude;
@@ -173,11 +177,12 @@ public:
 		}
 	};
 
-	struct SquareWaveSettings : SimulationSettings {
+	struct SquareWaveSettings : SimulationSettings
+	{
 	public:
 		float xIndex[4] = { SQUARE_WAVE_START_UP_DEFAULT, SQUARE_WAVE_END_UP_DEFAULT, SQUARE_WAVE_START_DOWN_DEFAULT, SQUARE_WAVE_END_DOWN_DEFAULT };
 		SquareWaveSettings(float per, float ampl) : SimulationSettings(per, ampl) {}
-		
+
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
@@ -185,9 +190,11 @@ public:
 		}
 	};
 
-	struct SineSettings : SimulationSettings {
+	struct SineSettings : SimulationSettings
+	{
 	public:
-		enum SineMode {
+		enum SineMode
+		{
 			Normal,
 			Quadratic,
 		};
@@ -201,7 +208,8 @@ public:
 		}
 	};
 
-	struct SawToothSettings : SimulationSettings {
+	struct SawToothSettings : SimulationSettings
+	{
 	public:
 		float xIndex[6] = { SAW_TOOTH_UP_START_DEFAULT, SAW_TOOTH_UP_PEAK_DEFAULT, SAW_TOOTH_UP_END_DEFAULT,
 			SAW_TOOTH_DOWN_START_DEFAULT, SAW_TOOTH_DOWN_PEAK_DEFAULT, SAW_TOOTH_DOWN_END_DEFAULT };
@@ -219,8 +227,8 @@ public:
 	float graphSize = GRAPH_DEFAULT_HEIGHT;							// 21
 	float displayTime = DISPLAY_TIME_DEFAULT;						// 22
 	//float reactivityGraphLimits[2] = {CORE_EXCESS_REACTIVITY - SHIM_ROD_WORTH_DEFAULT - REGULATORY_ROD_WORTH_DEFAULT - SAFETY_ROD_WORTH_DEFAULT, CORE_EXCESS_REACTIVITY};	// 23, 24
-	float reactivityGraphLimits[2] = {-1000, 1000 };	// 23, 24
-	float temperatureGraphLimits[2] = {TEMPERATURE_GRAPH_FROM_DEFAULT, TEMPERATURE_GRAPH_TO_DEFAULT};	// 25, 26
+	float reactivityGraphLimits[2] = { -1000, 1000 };	// 23, 24
+	float temperatureGraphLimits[2] = { TEMPERATURE_GRAPH_FROM_DEFAULT, TEMPERATURE_GRAPH_TO_DEFAULT };	// 25, 26
 	bool curveFill = CURVE_FILL_DEFAULT;							// 27
 	bool rodReactivityPlot = ROD_REACTIVITY_PLOT_ENABLED_DEFAULT;	// 28
 
@@ -265,7 +273,7 @@ public:
 	float waterLevelLimit = WATER_LEVEL_SCRAM_DEFAULT;				// 83
 	bool waterLevelScram = false;									// 84
 
-	double pulseLimits[2] = {PULSE_START_DEFAULT, PULSE_END_AFTER_DEFAULT};	// 85, 86
+	double pulseLimits[2] = { PULSE_START_DEFAULT, PULSE_END_AFTER_DEFAULT };	// 85, 86
 
 	float alpha0 = ALPHA_AT_0_DEFAULT;								// 87
 	float alphaAtT1 = ALPHA_AT_T1_DEFAULT;							// 88
@@ -282,8 +290,9 @@ public:
 
 
 	// DO NOT ADD SETTINGS UNDER THIS LINE
-	
-	Settings() {
+
+	Settings()
+	{
 		rodSettings[0] = ControlRodSettings(SAFETY_ROD_STEPS_DEFAULT, SAFETY_ROD_WORTH_DEFAULT, SAFETY_ROD_SPEED_DEFAULT, safetyRodCurveDefault[0], safetyRodCurveDefault[1]);
 		rodSettings[1] = ControlRodSettings(REGULATORY_ROD_STEPS_DEFAULT, REGULATORY_ROD_WORTH_DEFAULT, REGULATORY_ROD_SPEED_DEFAULT, regulatoryRodCurveDefault[0], regulatoryRodCurveDefault[1]);
 		rodSettings[2] = ControlRodSettings(SHIM_ROD_STEPS_DEFAULT, SHIM_ROD_WORTH_DEFAULT, SHIM_ROD_SPEED_DEFAULT, shimRodCurveDefault[0], shimRodCurveDefault[1]);
@@ -292,7 +301,8 @@ public:
 		memcpy(groupsEnabled, delayedGroupsEnabledDefault, 6 * sizeof(bool));
 	};
 
-	void saveArchive(std::string fileName) {
+	void saveArchive(std::string fileName)
+	{
 		std::ofstream os(fileName);
 		cereal::JSONOutputArchive archive(os);
 
@@ -348,7 +358,8 @@ public:
 
 	}
 
-	void restoreArchive(std::string fileName) {
+	void restoreArchive(std::string fileName)
+	{
 		std::ifstream is(fileName);
 		cereal::JSONInputArchive iarchive(is);
 
