@@ -2953,3 +2953,21 @@
 [DEBUG] mouseButtonEvent at (98, 437) button=0 down=0
 [DEBUG] findWidget found: class CustomTabHeader
 [DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (874, 480) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (874, 480) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1004, 474) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1004, 474) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1515, 710) button=0 down=1
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1515, 710) button=0 down=0
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1

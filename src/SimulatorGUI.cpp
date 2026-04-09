@@ -56,6 +56,10 @@
 #include <Icon.h>
 #include "../include/util.h"
 #include <CustomTabWidget.h>
+#include "../include/UiConfigProvider.h"
+#include "../include/SimulatorGuiUiHelpers.h"
+#include "../include/SimulatorGuiApp.h"
+#include <memory>
 
 /* Resolution formats supported:
  *	HD 720	(1280 x 720)
@@ -301,9 +305,12 @@ public:
 	Plot *operationModes[3];
 	Plot *operationModesTrackers[3];
 
-	Color coolBlue = Color(77, 184, 255, 255);
+	std::shared_ptr<IUiConfigProvider> uiConfigProvider;
+	UiStyleConfig uiStyleConfig;
+	UiPanelLayoutConfig uiPanelLayoutConfig;
+	Color coolBlue;
 
-	BoxLayout *panelsLayout = new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 10);
+	BoxLayout *panelsLayout = nullptr;
 
 	uint16_t LEDstatus = 0;
 	bool boxConnected = false;
@@ -370,28 +377,28 @@ public:
 				{
 					reason = "Period too low | " + std::to_string(*reactor->getReactorPeriod()) + " s | asymptotic | " + std::to_string(*reactor->getReactorAsymPeriod()) + " s";
 					periodScram->setGlow(true);
-					periodScram->setBackgroundColor(Color(255, 0, 0, 255));
+					periodScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_PER;
 				}
 				if ((signal & Simulator::ScramSignals::FuelTemperature) != 0)
 				{
 					reason = "Fuel temperature too high | " + std::to_string(reactor->getCurrentTemperature()) + " C";
 					fuelTemperatureScram->setGlow(true);
-					fuelTemperatureScram->setBackgroundColor(Color(255, 0, 0, 255));
+					fuelTemperatureScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_FT;
 				}
 				if ((signal & Simulator::ScramSignals::WaterTemperature) != 0)
 				{
 					reason = "Water temperature too high | " + std::to_string(reactor->waterTemperature) + " C";
 					waterTemperatureScram->setGlow(true);
-					waterTemperatureScram->setBackgroundColor(Color(255, 0, 0, 255));
+					waterTemperatureScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_WT;
 				}
 				if ((signal & Simulator::ScramSignals::WaterLevel) != 0)
 				{
 					reason = "Water level too low | " + std::to_string(*reactor->getWaterLevel()) + " m";
 					waterLevelScram->setGlow(true);
-					waterLevelScram->setBackgroundColor(Color(255, 0, 0, 255));
+					waterLevelScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					// LEDstatus |= ALARM3;
 					// NOT SUPPORTED BY THE BOX
 				}
@@ -399,14 +406,14 @@ public:
 				{
 					reason = "Power too high | " + std::to_string(reactor->getCurrentPower()) + " W";
 					powerScram->setGlow(true);
-					powerScram->setBackgroundColor(Color(255, 0, 0, 255));
+					powerScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_POW;
 				}
 				if ((signal & Simulator::ScramSignals::User) != 0)
 				{
 					reason = "Operator";
 					userScram->setGlow(true);
-					userScram->setBackgroundColor(Color(255, 0, 0, 255));
+					userScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_MAN;
 				}
 				cout << "The reactor has SCRAMed!" << endl;
@@ -416,18 +423,14 @@ public:
 		reactor->setResetScramCallback([this]
 									   {
 				LEDstatus &= RESET_ALARM_KEY;
-				userScram->setGlow(false);
-				userScram->setBackgroundColor(Color(120, 120));
-				powerScram->setGlow(false);
-				powerScram->setBackgroundColor(Color(120, 120));
-				periodScram->setGlow(false);
-				periodScram->setBackgroundColor(Color(120, 120));
-				waterTemperatureScram->setGlow(false);
-				waterTemperatureScram->setBackgroundColor(Color(120, 120));
-				waterLevelScram->setGlow(false);
-				waterLevelScram->setBackgroundColor(Color(120, 120));
-				fuelTemperatureScram->setGlow(false);
-				fuelTemperatureScram->setBackgroundColor(Color(120, 120)); });
+				SimulatorGuiUiHelpers::resetScramIndicators(
+					uiStyleConfig,
+					userScram,
+					powerScram,
+					periodScram,
+					waterTemperatureScram,
+					waterLevelScram,
+					fuelTemperatureScram); });
 		reactor->setPulseCallback([this](Simulator::PulseData data)
 								  {
 				// Format pulse graph
@@ -864,7 +867,12 @@ public:
 		pulsePlots[1]->setMinorTickNumber(4);
 	}
 
-	SimulatorGUI() : nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator")
+	SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr)
+		: nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"),
+		  uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()),
+		  uiStyleConfig(uiConfigProvider->getStyleConfig()),
+		  uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()),
+		  coolBlue(uiStyleConfig.accentColor)
 	{
 		cout << "======= Research reactor simulator " << version() << " =======" << endl;
 
@@ -874,18 +882,19 @@ public:
 		// Keyboard
 		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
 			lastKeyPressed[i] = false;
+		panelsLayout = new BoxLayout(Orientation::Horizontal, Alignment::Middle, uiPanelLayoutConfig.panelMargin, uiPanelLayoutConfig.panelSpacing);
 
 		// Theme
-		this->mTheme->mTabInnerMargin = 0;
-		this->mTheme->mStandardFontSize = 18;
-		this->mTheme->mTextColor = Color(0.92f, 1.f);
-		this->mTheme->mButtonCornerRadius = 2.f;
-		this->mTheme->mTabMaxButtonWidth = 250.f;
-		this->mTheme->mTabButtonVerticalPadding = 7.f;
+		this->mTheme->mTabInnerMargin = uiStyleConfig.tabInnerMargin;
+		this->mTheme->mStandardFontSize = uiStyleConfig.standardFontSize;
+		this->mTheme->mTextColor = uiStyleConfig.themeTextColor;
+		this->mTheme->mButtonCornerRadius = uiStyleConfig.buttonCornerRadius;
+		this->mTheme->mTabMaxButtonWidth = uiStyleConfig.tabMaxButtonWidth;
+		this->mTheme->mTabButtonVerticalPadding = uiStyleConfig.tabButtonVerticalPadding;
 		this->mTheme->mBorderDark = coolBlue;
 		this->mTheme->mBorderLight = Color(coolBlue.r(), coolBlue.g(), coolBlue.b(), 0.4f);
 		// this->mTheme->mBorderWidth = 0.8f;
-		this->mTheme->mTextBoxFontSize = 18.f;
+		this->mTheme->mTextBoxFontSize = uiStyleConfig.textBoxFontSize;
 		// Set minimum size
 		glfwSetWindowSizeLimits(mGLFWWindow, WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
@@ -929,7 +938,7 @@ public:
 		relativeLayout->appendRow(RelativeGridLayout::Size(2.f, RelativeGridLayout::SizeType::Fixed));	// 2 border
 		relativeLayout->appendRow(RelativeGridLayout::Size(30.f, RelativeGridLayout::SizeType::Fixed)); // 3 bottom panel
 		baseWindow->setLayout(relativeLayout);
-		baseWindow->setBackgroundColor(Color(80, 255));
+		baseWindow->setBackgroundColor(uiStyleConfig.baseWindowBackgroundColor);
 		baseWindow->setDrawBackground(true);
 
 		CustomWidget *bottomBorder = baseWindow->add<CustomWidget>();
@@ -994,7 +1003,7 @@ public:
 		CustomWidget *bottomPanel = baseWindow->add<CustomWidget>();
 		bottomPanel->setId("bottom panel");
 		bottomPanel->setDrawBackground(true);
-		bottomPanel->setBackgroundColor(Color(35, 255));
+		bottomPanel->setBackgroundColor(uiStyleConfig.bottomPanelBackgroundColor);
 		relativeLayout->setAnchor(bottomPanel, RelativeGridLayout::makeAnchor(0, 3));
 		RelativeGridLayout *bottomLayout = new RelativeGridLayout();
 		bottomLayout->appendRow(1.f);
@@ -3591,38 +3600,15 @@ public:
 
 		if (!reactor->getScramStatus())
 		{
-			if ((*reactor->getReactorPeriod() < 1.1 * properties->periodLimit) && (*reactor->getReactorPeriod() > 0.))
-			{
-				periodScram->setBackgroundColor(Color(175, 100, 0, 255));
-			}
-			else
-			{
-				periodScram->setBackgroundColor(Color(120, 120));
-			}
-			if (tempNow > 0.9 * properties->tempLimit)
-			{
-				fuelTemperatureScram->setBackgroundColor(Color(175, 100, 0, 255));
-			}
-			else
-			{
-				fuelTemperatureScram->setBackgroundColor(Color(120, 120));
-			}
-			if (*reactor->getWaterTemperature() > 0.9 * properties->waterTempLimit)
-			{
-				waterTemperatureScram->setBackgroundColor(Color(175, 100, 0, 255));
-			}
-			else
-			{
-				waterTemperatureScram->setBackgroundColor(Color(120, 120));
-			}
-			if (reactor->getCurrentPower() > 0.9 * properties->powerLimit)
-			{
-				powerScram->setBackgroundColor(Color(175, 100, 0, 255));
-			}
-			else
-			{
-				powerScram->setBackgroundColor(Color(120, 120));
-			}
+			SimulatorGuiUiHelpers::updateScramWarningIndicators(
+				uiStyleConfig,
+				reactor,
+				properties,
+				tempNow,
+				periodScram,
+				fuelTemperatureScram,
+				waterTemperatureScram,
+				powerScram);
 		}
 
 		if (shouldUpdateNeutronSource)
@@ -4274,7 +4260,7 @@ public:
 	}
 };
 
-int main(int argc, char **argv)
+int runSimulatorGuiApp(int argc, char **argv)
 {
 	try
 	{
