@@ -1,5 +1,8 @@
 #pragma once
 #include <cereal/archives/json.hpp>
+#include <stdlib.h>
+#include <ostream>
+#include <string>
 /*==================
 DEFAULT VALUES
 =====================*/

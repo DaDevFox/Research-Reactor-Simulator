@@ -1,3 +1,4 @@
+#pragma once
 #include <nanogui/layout.h>
 
 #include <vector>

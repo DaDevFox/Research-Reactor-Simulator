@@ -1,4 +1,6 @@
 #pragma once
+#include <cmath>
+#include <corecrt_math_defines.h>
 enum SimulationModes : std::uint8_t {
   None,
   SquareWaveMode,

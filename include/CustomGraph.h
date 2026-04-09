@@ -1,3 +1,4 @@
+#pragma once
 #include <nanogui/graph.h>
 
 #include "BarGraph.h"
