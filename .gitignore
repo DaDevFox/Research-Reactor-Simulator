@@ -16,6 +16,7 @@ CMakeCache.txt
 **/*.sln
 **/*.vcxproj
 **/*.vcxproj.filters
+out/
 
 # User-specific files
 *.rsuser

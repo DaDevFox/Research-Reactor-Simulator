@@ -416,6 +416,7 @@ public:
 					userScram->setBackgroundColor(uiStyleConfig.scramAlertColor);
 					LEDstatus |= SCRAM_MAN;
 				}
+        // TODO: dynamic pad
 				cout << "The reactor has SCRAMed!" << endl;
 				cout << "=======REASON=======" << endl;
 				cout << reason << endl;
