@@ -159,11 +159,10 @@ Vector2f RelativeGridLayout::positionOf(const Widget* widget, size_t x, size_t y
 				accumulateFixed[axis] += mTable[axis][i].value();
 			else
 				accumulateRelative[axis] += mTable[axis][i].value();
-
-
-			if (relativeSum[axis] != 0.f)
-				accumulateRelative[axis] *= (float)(widget->size()[axis] - fixedSum[axis]) / relativeSum[axis];
 		}
+
+		if (relativeSum[axis] != 0.f)
+			accumulateRelative[axis] *= (float)(widget->size()[axis] - fixedSum[axis]) / relativeSum[axis];
 	}
 
 	return accumulateFixed + accumulateRelative;

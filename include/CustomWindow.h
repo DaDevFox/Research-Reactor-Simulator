@@ -52,7 +52,6 @@ public:
 	float mBorderThickness = 1.5f;
 
 	// CustomWidget properties:
-	float mFontSize;
 	nanogui::Color mBackgroundColor = nanogui::Color(0, 0);
 	bool drawBackground = false;
 
@@ -76,7 +75,7 @@ public:
 	float fontSize() const;
 
 	/// Set the font size of this widget
-	void setFontSize(float fontSize) { mFontSize = fontSize; }
+	void setFontSize(int fontSize) { nanogui::Widget::setFontSize(fontSize); }
 	/// Return whether the font size is explicitly specified for this widget
 	bool hasFontSize() const { return mFontSize > 0; }
 

@@ -49,7 +49,7 @@ public:
 	float fontSize() const;
 
 	/// Set the font size of this widget
-	void setFontSize(float fontSize) { mFontSize = fontSize; }
+	void setFontSize(int fontSize) { mFontSize = fontSize; }
 	/// Return whether the font size is explicitly specified for this widget
 	bool hasFontSize() const { return mFontSize > 0; }
 
@@ -76,7 +76,6 @@ protected:
 	/// Free all resources used by the widget and any children
 	virtual ~CustomWidget();
 
-	float mFontSize;
 	nanogui::Color mBackgroundColor = nanogui::Color(0, 0);
 	bool drawBackground = false;
 
