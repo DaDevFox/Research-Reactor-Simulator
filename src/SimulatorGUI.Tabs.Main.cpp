@@ -342,3 +342,84 @@ void SimulatorGUI::createDelayedGroupsTab()
 		};
 	}
 
+void SimulatorGUI::updateNeutronSourceTab()
+{
+		int v = (int)reactor->getNeutronSourceMode() - 1;
+		bool tempB;
+		for (int i = 0; i < 3; i++)
+		{
+			tempB = (v == i);
+			neutronSourcePeriodBoxes[i]->parent()->setVisible(tempB);
+			neutronSourcePeriodBoxes[i]->setEditable(tempB);
+			neutronSourceAmplitudeBoxes[i]->parent()->setVisible(tempB);
+			neutronSourceAmplitudeBoxes[i]->setEditable(tempB);
+		}
+		tempB = (v == 0);
+		for (int i = 0; i < 4; i++)
+		{
+			neutronSourceSQWBoxes[i]->parent()->setVisible(tempB);
+			neutronSourceSQWBoxes[i]->setEditable(tempB);
+		}
+		tempB = (v == 1);
+		neutronSourceSINEModeBox->parent()->setVisible(tempB);
+		neutronSourceSINEModeBox->setEnabled(tempB);
+		tempB = (v == 2);
+		for (int i = 0; i < 6; i++)
+		{
+			neutronSourceSAWBoxes[i]->parent()->setVisible(tempB);
+			neutronSourceSAWBoxes[i]->setEditable(tempB);
+		}
+		for (int i = (int)sourceGraph->actualGraphNumber() - 1; i >= 0; i--)
+		{
+			sourceGraph->removeGraphElement(i);
+		}
+		PeriodicalMode *ns_mode = reactor->getSourceModeClass(reactor->getNeutronSourceMode());
+		size_t dataP = ns_mode->num_points();
+		neutronSourcePlot = sourceGraph->addPlot(dataP);
+		neutronSourcePlot->setPlotRange(0, dataP - 1);
+		neutronSourcePlot->setLimits(0., ns_mode->getPeriod(), std::min(-1.5 * ns_mode->getAmplitude(), -1.), std::max(1.5 * ns_mode->getAmplitude(), 1.));
+		neutronSourcePlot->setMainTickFontSize(18.f);
+		neutronSourcePlot->setMajorTickFontSize(16.f);
+		neutronSourcePlot->setNameFontSize(24.f);
+		neutronSourcePlot->setPointerShown(false);
+		neutronSourcePlot->setColor(coolBlue);
+		neutronSourcePlot->setDrawMode(DrawMode::Default);
+		neutronSourcePlot->setTextColor(Color(250, 255));
+		neutronSourcePlot->setAxisColor(Color(250, 255));
+		neutronSourcePlot->setTextShown(true);
+		neutronSourcePlot->setAxisShown(true);
+		neutronSourcePlot->setUnits("n/s");
+		neutronSourcePlot->setName("Delta source activity");
+		neutronSourcePlot->setTextOffset(40.f);
+		neutronSourcePlot->setMainLineShown(true);
+		neutronSourcePlot->setMajorTickNumber(3);
+		neutronSourcePlot->setMinorTickNumber(1);
+		neutronSourcePlot->setHorizontalAxisShown(true);
+		neutronSourcePlot->setHorizontalUnits("s");
+		neutronSourcePlot->setHorizontalName("Time");
+		neutronSourcePlot->setHorizontalMainLineShown(true);
+		neutronSourcePlot->setHorizontalMajorTickNumber(3);
+		neutronSourcePlot->setHorizontalMinorTickNumber(1);
+		if (v >= 0)
+		{
+			neutronSourceTracker = sourceGraph->addPlot(2);
+			neutronSourceTracker->setPlotRange(0, 1);
+			neutronSourceTracker->setDrawMode(DrawMode::Default);
+			neutronSourceTracker->setAxisShown(false);
+			neutronSourceTracker->setColor(Color(1.f, 0.f, 0.f, 1.f));
+			neutronSourceTracker->setHorizontalAxisShown(false);
+			neutronSourceTracker->setTextShown(false);
+			neutronSourceTracker->setPointerShown(false);
+			neutronSourceTracker->setXdata(ns_mode->getTrackerArray());
+			neutronSourceTracker->setYdata(trackerY);
+			neutronSourceTracker->setLimits(0., ns_mode->getPeriod(), 0., 1.);
+		}
+		double *xAxis = new double[dataP];
+		double *yAxis = new double[dataP];
+		ns_mode->fillXYaxis(xAxis, yAxis);
+
+		neutronSourcePlot->setXdata(xAxis);
+		neutronSourcePlot->setYdata(yAxis);
+		shouldUpdateNeutronSource = true;
+	}
+

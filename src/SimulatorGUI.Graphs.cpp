@@ -1,6 +1,6 @@
 #include "../include/SimulatorGUI.h"
 
-void SimulatorGUI::updatePulseTrack(bool updateData = false)
+void SimulatorGUI::updatePulseTrack(bool updateData)
 {
 		if (!pulsePerformed)
 			return;

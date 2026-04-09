@@ -129,9 +129,6 @@ using std::max;
 using std::string;
 using std::to_string;
 
-
-#include "SimulatorGuiApp.h"
-
 class SimulatorGUI : public nanogui::Screen
 {
 private:
@@ -164,7 +161,7 @@ public:
 	double timeAtLastChange = 0.;
 	string startScript = "";
 
-	Settings *properties;        const std::string version();
+	Settings *properties;	const std::string version();
 
 #if defined(_WIN32)
 	Serial *theBox;
@@ -308,57 +305,138 @@ public:
 	BoxLayout *panelsLayout = nullptr;
 
 	uint16_t LEDstatus = 0;
-	bool boxConnected = false;        void setSimulationTime(size_t time);
-        void playPauseSimulation(bool play);
-        void updateSimulationIcon();
-        void initializeSimulator();
-        void updatePulseTrack(bool updateData = false);
-        void viewingIntervalChanged(bool firstChanged);
-        void createDataDisplays(Widget *parent, RelativeGridLayout *rLayout);
-        void initializeGraph();
+	bool boxConnected = false;	void setSimulationTime(size_t time);
+	void playPauseSimulation(bool play);
+	void updateSimulationIcon();
+	void initializeSimulator();
+	void updatePulseTrack(bool updateData = false);
+	void viewingIntervalChanged(bool firstChanged);
+	void createDataDisplays(Widget *parent, RelativeGridLayout *rLayout);
+	void initializeGraph();
 
 #if defined(_WIN32)
 	vector<string> comPorts;
-	vector<string> lastCOMports;        void initializeSerial();
-        void updateCOMports();
-        void tryConnectingTo(string port);
-        void initializePulseGraph();
-        SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr);
-        void createBottomPanel();
-        void createMainTab();
-        void createGraphSettingsTab();
-        void createPhysicsSettingsTab();
-        void createRodSettingsTab();
-        void createDelayedGroupsTab();
+	vector<string> lastCOMports;	void initializeSerial();
+	void updateCOMports();
+	void tryConnectingTo(string port);
+	void initializePulseGraph();
+	SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr);
+	void createBottomPanel();
+	void createMainTab();
+	void createGraphSettingsTab();
+	void createPhysicsSettingsTab();
+	void createRodSettingsTab();
+	void createDelayedGroupsTab();
 
 
 	double *operationModesPlots[2][3];
-	const int simModeFields[3] = {7, 3, 8};        void createOperationModesTab();
+	const int simModeFields[3] = {7, 3, 8};	void createOperationModesTab();
 
 
 	const std::string labels[5] = {"Period", "Power", "Fuel temperature", "Water temperature", "Water level"};
-	const Simulator::ScramSignals reasons[5] = {Simulator::ScramSignals::Period, Simulator::ScramSignals::Power, Simulator::ScramSignals::FuelTemperature, Simulator::ScramSignals::WaterTemperature, Simulator::ScramSignals::WaterLevel};        void createOperationalLimitsTab();
-        void createPulseTab();
-        void createOtherTab();
+	const Simulator::ScramSignals reasons[5] = {Simulator::ScramSignals::Period, Simulator::ScramSignals::Power, Simulator::ScramSignals::FuelTemperature, Simulator::ScramSignals::WaterTemperature, Simulator::ScramSignals::WaterLevel};	void createOperationalLimitsTab();
+	void createPulseTab();
+	void createOtherTab();
 
 
-	double trackerY[2] = {0., 1.};        void resetSimToStart();
-        void handleDerivativeChange();
-        void hardcoreMode(bool value);
-
-
+	double trackerY[2] = {0., 1.};	void resetSimToStart();
+	void handleDerivativeChange();
+	void hardcoreMode(bool value);
 	template <typename WidgetClass, typename... Args>
-	WidgetClass *makeSettingLabel(Widget *parent, std::string text, int fixedWidth = 0, const Args &...args)
+	WidgetClass *makeSettingLabel(Widget *parent, std::string text, int fixedWidth = 0, const Args &...args);
+	IntBox<int> *makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text);
+	void handleDebugChanged();
+	~SimulatorGUI();
+	virtual bool keyboardEvent(int key, int scancode, int action, int modifiers);
+	virtual bool resizeEvent(const Eigen::Vector2i &size);
+
+
+	// DEBUG: Override to trace mouse events
+	virtual bool mouseButtonEvent(const nanogui::Vector2i &p, int button, bool down, int modifiers) override
 	{
-		Widget *panel = parent->add<Widget>();
-		panel->setLayout(panelsLayout);
-		CustomLabel *temp = panel->add<CustomLabel>(text, "sans-bold");
-		if (fixedWidth)
-			temp->setFixedWidth(fixedWidth);
-		return panel->add<WidgetClass>(args...);
-	}        IntBox<int> *makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text);
-        void handleDebugChanged();
-        ~SimulatorGUI();
-        virtual bool keyboardEvent(int key, int scancode, int action, int modifiers);
+		static std::ofstream debugLog("debug_clicks.txt", std::ios::app);
+		debugLog << "[DEBUG] mouseButtonEvent at (" << p.x() << ", " << p.y() << ") button=" << button << " down=" << down << std::endl;
+		Widget *target = findWidget(p);
+		if (target)
+		{
+			debugLog << "[DEBUG] findWidget found: " << typeid(*target).name() << std::endl;
+		}
+		else
+		{
+			debugLog << "[DEBUG] findWidget found: nullptr" << std::endl;
+		}
+		bool result = Screen::mouseButtonEvent(p, button, down, modifiers);
+		debugLog << "[DEBUG] Screen::mouseButtonEvent returned: " << result << std::endl;
+		debugLog.flush();
+		return result;
+	}
+
+private:
+	bool lastKeyPressed[NUMBER_OF_CONTROL_RODS];
+	int safetyRodControl = GLFW_KEY_S;
+	int regulatoryRodControl = GLFW_KEY_R;
+	int shimRodControl = GLFW_KEY_C;
+	int rodUpCommand = GLFW_KEY_UP;
+	int rodDownCommand = GLFW_KEY_DOWN;
+	int scramCommand = GLFW_KEY_X;
+	int resetScramCommand = GLFW_KEY_0;
+	int enableSafetyCommand = GLFW_KEY_1;
+	int enableRegCommand = GLFW_KEY_2;
+	int enableShimCommand = GLFW_KEY_3;
+	int pauseCommand = GLFW_KEY_SPACE;
+	int fasterCommand = GLFW_KEY_RIGHT;
+	int slowerCommand = GLFW_KEY_LEFT;
+	int tabChangeCommand = GLFW_KEY_TAB;
+	int firePulseCommand = GLFW_KEY_P;
+	int sourceToggleCommand = GLFW_KEY_N;
+	int demoModeCommand = GLFW_KEY_D;
+	int demoModeHighPowerCommand = GLFW_KEY_F;
+	int cheat1[7] = {GLFW_KEY_G, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_M, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_E};
+	int cheat2[5] = {GLFW_KEY_D, GLFW_KEY_E, GLFW_KEY_B, GLFW_KEY_U, GLFW_KEY_G};
+	int cheat3[5] = {GLFW_KEY_R, GLFW_KEY_E, GLFW_KEY_S, GLFW_KEY_E, GLFW_KEY_T};
+	bool debugMode = false;
+	deque<int> last10keys = deque<int>();
+	size_t displayInterval[2] = {0, 0};
+	bool btns[11];
+	int lastModeState = 0;	void updateAlphaGraph();
+	std::string getTimeSinceStart();
+
+
+public:
+	double lastTime = get_seconds_since_epoch();	virtual void draw(NVGcontext *ctx);
+
+
+	double lastData = 0.;	void handleBox();
+
+#endif
+	bool shouldUpdateNeutronSource = false;	void updateNeutronSourceTab();
+	void handleBoxData(uint16_t box_data, double now);
+
+
+	// static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
+	//{
+	//	stringstream ss;
+	//	ss << fixed;
+	//	ss.precision(decDigits);
+	//	ss << x;
+	//	std::string res = ss.str();
+	//	if (removeTrailingZeros)
+	//	{
+	//		while (res.back() == '0') res = res.substr(0, res.length() - 1);
+	//		if (res.back() == '.') res = res.substr(0, res.length() - 1);
+	//	}
+	//	return res;
+	// }	void reculculateDisplayInterval(double fromTime, double toTime);
+	pair<int, int> recalculatePowerExtremes(double fromTime = 0., double toTime = 0.);
+	std::vector<string> getCOMports();
+	void saveArchive(std::string path);
+	void loadArchive(std::string path);
+	void loadScriptFromFile(std::string path);
+	void updateSettings(bool updateReactor = true);
+
+
+	bool prevToggle;	void toggleBaseWindow(bool value);
+
 };
 
+int runSimulatorGuiApp(int argc, char **argv);

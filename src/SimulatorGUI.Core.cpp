@@ -174,12 +174,7 @@ void SimulatorGUI::viewingIntervalChanged(bool firstChanged)
 		}
 	}
 
-SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider = nullptr)
-		: nanogui::Screen(Vector2i(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), "Research reactor simulator"),
-		  uiConfigProvider(configProvider ? std::move(configProvider) : std::make_shared<DefaultUiConfigProvider>()),
-		  uiStyleConfig(uiConfigProvider->getStyleConfig()),
-		  uiPanelLayoutConfig(uiConfigProvider->getPanelLayoutConfig()),
-		  coolBlue(uiStyleConfig.accentColor)
+SimulatorGUI::SimulatorGUI(std::shared_ptr<IUiConfigProvider> configProvider)
 {
 		cout << "======= Research reactor simulator " << version() << " =======" << endl;
 
@@ -431,7 +426,17 @@ void SimulatorGUI::hardcoreMode(bool value)
 		performLayout();
 	}
 
-IntBox<int> *SimulatorGUI::makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
+template <typename WidgetClass, typename... Args> WidgetClass SimulatorGUI::*makeSettingLabel(Widget *parent, std::string text, int fixedWidth, const Args &...args)
+{
+		Widget *panel = parent->add<Widget>();
+		panel->setLayout(panelsLayout);
+		CustomLabel *temp = panel->add<CustomLabel>(text, "sans-bold");
+		if (fixedWidth)
+			temp->setFixedWidth(fixedWidth);
+		return panel->add<WidgetClass>(args...);
+	}
+
+IntBox<int> SimulatorGUI::*makeSimulationSetting(CustomWidget *parent, int initialValue, std::string text)
 {
 		IntBox<int> *tempBox = makeSettingLabel<IntBox<int>>(parent, text, 100, initialValue);
 		tempBox->setFixedWidth(100);
@@ -695,8 +700,8 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action, int modifier
 		return true;
 	}
 
-	virtual bool resizeEvent(const Eigen::Vector2i &size)
-	{
+bool SimulatorGUI::resizeEvent(const Eigen::Vector2i &size)
+{
 		if (Screen::resizeEvent(size))
 			return true;
 		if (layoutStart)
@@ -710,57 +715,8 @@ bool SimulatorGUI::keyboardEvent(int key, int scancode, int action, int modifier
 		return true;
 	}
 
-	// DEBUG: Override to trace mouse events
-	virtual bool mouseButtonEvent(const nanogui::Vector2i &p, int button, bool down, int modifiers) override
-	{
-		static std::ofstream debugLog("debug_clicks.txt", std::ios::app);
-		debugLog << "[DEBUG] mouseButtonEvent at (" << p.x() << ", " << p.y() << ") button=" << button << " down=" << down << std::endl;
-		Widget *target = findWidget(p);
-		if (target)
-		{
-			debugLog << "[DEBUG] findWidget found: " << typeid(*target).name() << std::endl;
-		}
-		else
-		{
-			debugLog << "[DEBUG] findWidget found: nullptr" << std::endl;
-		}
-		bool result = Screen::mouseButtonEvent(p, button, down, modifiers);
-		debugLog << "[DEBUG] Screen::mouseButtonEvent returned: " << result << std::endl;
-		debugLog.flush();
-		return result;
-	}
-
-private:
-	bool lastKeyPressed[NUMBER_OF_CONTROL_RODS];
-	int safetyRodControl = GLFW_KEY_S;
-	int regulatoryRodControl = GLFW_KEY_R;
-	int shimRodControl = GLFW_KEY_C;
-	int rodUpCommand = GLFW_KEY_UP;
-	int rodDownCommand = GLFW_KEY_DOWN;
-	int scramCommand = GLFW_KEY_X;
-	int resetScramCommand = GLFW_KEY_0;
-	int enableSafetyCommand = GLFW_KEY_1;
-	int enableRegCommand = GLFW_KEY_2;
-	int enableShimCommand = GLFW_KEY_3;
-	int pauseCommand = GLFW_KEY_SPACE;
-	int fasterCommand = GLFW_KEY_RIGHT;
-	int slowerCommand = GLFW_KEY_LEFT;
-	int tabChangeCommand = GLFW_KEY_TAB;
-	int firePulseCommand = GLFW_KEY_P;
-	int sourceToggleCommand = GLFW_KEY_N;
-	int demoModeCommand = GLFW_KEY_D;
-	int demoModeHighPowerCommand = GLFW_KEY_F;
-	int cheat1[7] = {GLFW_KEY_G, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_M, GLFW_KEY_O, GLFW_KEY_D, GLFW_KEY_E};
-	int cheat2[5] = {GLFW_KEY_D, GLFW_KEY_E, GLFW_KEY_B, GLFW_KEY_U, GLFW_KEY_G};
-	int cheat3[5] = {GLFW_KEY_R, GLFW_KEY_E, GLFW_KEY_S, GLFW_KEY_E, GLFW_KEY_T};
-	bool debugMode = false;
-	deque<int> last10keys = deque<int>();
-	size_t displayInterval[2] = {0, 0};
-	bool btns[11];
-	int lastModeState = 0;
-
-	void updateAlphaGraph()
-	{
+void SimulatorGUI::updateAlphaGraph()
+{
 		// Point 1
 		alphaX[0] = 0.;
 		alphaY[0] = properties->alpha0;
@@ -778,8 +734,8 @@ private:
 		alphaPlot->setMajorTickNumber((size_t)std::max((alphaPlot->limits()[3] - alphaPlot->limits()[2] - 5.) / 5., 0.));
 	}
 
-	std::string getTimeSinceStart()
-	{
+std::string SimulatorGUI::getTimeSinceStart()
+{
 		size_t time[3];
 		double t = reactor->getCurrentTime();
 		time[2] = (size_t)floor(fmod(t, 60.));
@@ -793,11 +749,8 @@ private:
 		return ret[0] + ":" + ret[1] + ":" + ret[2];
 	}
 
-public:
-	double lastTime = get_seconds_since_epoch();
-
-	virtual void draw(NVGcontext *ctx)
-	{
+void SimulatorGUI::draw(NVGcontext *ctx)
+{
 		double reactorElapsed = reactor->getCurrentTime();
 		if (startScript.size())
 		{
@@ -981,340 +934,16 @@ public:
 #endif
 	}
 
-	double lastData = 0.;
-#if defined(_WIN32)
-	void handleBox()
-	{
-		LEDstatus = (uint16_t)0;
-		// Write LED status
-		int scramS = reactor->getScramStatus();
-		if (Simulator::ScramSignals::Period & scramS)
-			LEDstatus |= SCRAM_PER;
-		if (Simulator::ScramSignals::FuelTemperature & scramS)
-			LEDstatus |= SCRAM_FT;
-		if (Simulator::ScramSignals::WaterTemperature & scramS)
-			LEDstatus |= SCRAM_WT;
-		if (Simulator::ScramSignals::Power & scramS)
-			LEDstatus |= SCRAM_POW;
-		if (Simulator::ScramSignals::User & scramS)
-			LEDstatus |= SCRAM_MAN;
-
-		if (reactor->safetyRod()->isEnabled())
-		{
-			LEDstatus |= ROD_SAFETY_ENBL;
-		}
-		if (reactor->regulatingRod()->isEnabled())
-		{
-			LEDstatus |= ROD_REG_ENBL;
-		}
-		if (reactor->shimRod()->isEnabled())
-		{
-			LEDstatus |= ROD_SHIM_ENBL;
-		}
-
-		if (reactor->safetyRod()->getCommandType() == ControlRod::CommandType::Top || *reactor->safetyRod()->getExactPosition() == (float)*reactor->safetyRod()->getRodSteps())
-		{
-			LEDstatus |= ROD_SAFETY_UP;
-		}
-		if (reactor->regulatingRod()->getCommandType() == ControlRod::CommandType::Top || *reactor->regulatingRod()->getExactPosition() == (float)*reactor->regulatingRod()->getRodSteps())
-		{
-			LEDstatus |= ROD_REG_UP;
-		}
-		if (reactor->shimRod()->getCommandType() == ControlRod::CommandType::Top || *reactor->shimRod()->getExactPosition() == (float)*reactor->shimRod()->getRodSteps())
-		{
-			LEDstatus |= ROD_SHIM_UP;
-		}
-		if (reactor->safetyRod()->getCommandType() == ControlRod::CommandType::Bottom || *reactor->safetyRod()->getExactPosition() == 0.f)
-		{
-			LEDstatus |= ROD_SAFETY_DOWN;
-		}
-		if (reactor->regulatingRod()->getCommandType() == ControlRod::CommandType::Bottom || *reactor->regulatingRod()->getExactPosition() == 0.f)
-		{
-			LEDstatus |= ROD_REG_DOWN;
-		}
-		if (reactor->shimRod()->getCommandType() == ControlRod::CommandType::Bottom || *reactor->shimRod()->getExactPosition() == 0.f)
-		{
-			LEDstatus |= ROD_SHIM_DOWN;
-		}
-		if (reactor->regulatingRod()->getOperationMode() == ControlRod::OperationModes::Pulse && reactor->getScramStatus() == 0)
-		{
-			LEDstatus |= FIRE_LED_B;
-		}
-
-		// Convert LED status to two bytes
-		char sendByte[3];
-		sendByte[0] = 77;
-		sendByte[1] = LEDstatus >> 8;
-		sendByte[2] = LEDstatus & 0x00ff;
-
-		// Write LED data
-
-		theBox->WriteData(sendByte, 3);
-
-		// Reset sounds
-		// LEDstatus &= (1 << 13) - 1;
-
-		// Read data
-		uint16_t box_data = 0;
-		bool gotData = false;
-		char buffer[2];
-		double time_now = get_seconds_since_epoch();
-		while (theBox->availableBytes() >= 2)
-		{
-			theBox->ReadData(buffer, 2);
-			box_data = (unsigned char)buffer[1];
-			box_data += ((uint16_t)buffer[0]) << 8;
-			gotData = true;
-			handleBoxData(box_data, time_now);
-		}
-		if (!gotData)
-		{ // Disconnect box if no data is recieved in 1 second
-			if (lastData == 0.)
-			{
-				lastData = time_now;
-			}
-			else if (time_now > lastData + 1.)
-			{
-				boxConnected = false;
-				theBox->~Serial();
-				std::cout << "Box disconnected! (timeout)" << std::endl;
-				lastData = 0.;
-			}
-			return;
-		}
-	}
-#endif
-	bool shouldUpdateNeutronSource = false;
-	void updateNeutronSourceTab()
-	{
-		int v = (int)reactor->getNeutronSourceMode() - 1;
-		bool tempB;
-		for (int i = 0; i < 3; i++)
-		{
-			tempB = (v == i);
-			neutronSourcePeriodBoxes[i]->parent()->setVisible(tempB);
-			neutronSourcePeriodBoxes[i]->setEditable(tempB);
-			neutronSourceAmplitudeBoxes[i]->parent()->setVisible(tempB);
-			neutronSourceAmplitudeBoxes[i]->setEditable(tempB);
-		}
-		tempB = (v == 0);
-		for (int i = 0; i < 4; i++)
-		{
-			neutronSourceSQWBoxes[i]->parent()->setVisible(tempB);
-			neutronSourceSQWBoxes[i]->setEditable(tempB);
-		}
-		tempB = (v == 1);
-		neutronSourceSINEModeBox->parent()->setVisible(tempB);
-		neutronSourceSINEModeBox->setEnabled(tempB);
-		tempB = (v == 2);
-		for (int i = 0; i < 6; i++)
-		{
-			neutronSourceSAWBoxes[i]->parent()->setVisible(tempB);
-			neutronSourceSAWBoxes[i]->setEditable(tempB);
-		}
-		for (int i = (int)sourceGraph->actualGraphNumber() - 1; i >= 0; i--)
-		{
-			sourceGraph->removeGraphElement(i);
-		}
-		PeriodicalMode *ns_mode = reactor->getSourceModeClass(reactor->getNeutronSourceMode());
-		size_t dataP = ns_mode->num_points();
-		neutronSourcePlot = sourceGraph->addPlot(dataP);
-		neutronSourcePlot->setPlotRange(0, dataP - 1);
-		neutronSourcePlot->setLimits(0., ns_mode->getPeriod(), std::min(-1.5 * ns_mode->getAmplitude(), -1.), std::max(1.5 * ns_mode->getAmplitude(), 1.));
-		neutronSourcePlot->setMainTickFontSize(18.f);
-		neutronSourcePlot->setMajorTickFontSize(16.f);
-		neutronSourcePlot->setNameFontSize(24.f);
-		neutronSourcePlot->setPointerShown(false);
-		neutronSourcePlot->setColor(coolBlue);
-		neutronSourcePlot->setDrawMode(DrawMode::Default);
-		neutronSourcePlot->setTextColor(Color(250, 255));
-		neutronSourcePlot->setAxisColor(Color(250, 255));
-		neutronSourcePlot->setTextShown(true);
-		neutronSourcePlot->setAxisShown(true);
-		neutronSourcePlot->setUnits("n/s");
-		neutronSourcePlot->setName("Delta source activity");
-		neutronSourcePlot->setTextOffset(40.f);
-		neutronSourcePlot->setMainLineShown(true);
-		neutronSourcePlot->setMajorTickNumber(3);
-		neutronSourcePlot->setMinorTickNumber(1);
-		neutronSourcePlot->setHorizontalAxisShown(true);
-		neutronSourcePlot->setHorizontalUnits("s");
-		neutronSourcePlot->setHorizontalName("Time");
-		neutronSourcePlot->setHorizontalMainLineShown(true);
-		neutronSourcePlot->setHorizontalMajorTickNumber(3);
-		neutronSourcePlot->setHorizontalMinorTickNumber(1);
-		if (v >= 0)
-		{
-			neutronSourceTracker = sourceGraph->addPlot(2);
-			neutronSourceTracker->setPlotRange(0, 1);
-			neutronSourceTracker->setDrawMode(DrawMode::Default);
-			neutronSourceTracker->setAxisShown(false);
-			neutronSourceTracker->setColor(Color(1.f, 0.f, 0.f, 1.f));
-			neutronSourceTracker->setHorizontalAxisShown(false);
-			neutronSourceTracker->setTextShown(false);
-			neutronSourceTracker->setPointerShown(false);
-			neutronSourceTracker->setXdata(ns_mode->getTrackerArray());
-			neutronSourceTracker->setYdata(trackerY);
-			neutronSourceTracker->setLimits(0., ns_mode->getPeriod(), 0., 1.);
-		}
-		double *xAxis = new double[dataP];
-		double *yAxis = new double[dataP];
-		ns_mode->fillXYaxis(xAxis, yAxis);
-
-		neutronSourcePlot->setXdata(xAxis);
-		neutronSourcePlot->setYdata(yAxis);
-		shouldUpdateNeutronSource = true;
-	}
-
-	void handleBoxData(uint16_t box_data, double now)
-	{
-		lastData = now;
-		bool rodsMoving[NUMBER_OF_CONTROL_RODS];
-		for (int i = 0; i < NUMBER_OF_CONTROL_RODS; i++)
-			rodsMoving[i] = (reactor->rods[i]->getCommandType() == ControlRod::CommandType::None);
-		if (box_data & SCRAM_BTN)
-		{
-			if (!btns[0])
-				reactor->scram(Simulator::ScramSignals::User);
-		}
-		if (box_data & FIRE_BTN)
-		{
-			if (!btns[1])
-			{
-				if (reactor->getScramStatus() == 0)
-					reactor->beginPulse();
-			}
-		}
-		if (box_data & ENABLE_SAFETY_BTN)
-		{
-			if (!btns[2])
-			{
-				if (reactor->getScramStatus() == 0)
-					reactor->safetyRod()->setEnabled(!reactor->safetyRod()->isEnabled());
-			}
-		}
-		if (box_data & UP_SAFETY_BTN)
-		{
-			if (!btns[3] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce))
-				reactor->safetyRod()->commandToTop();
-		}
-		else
-		{
-			if (btns[3])
-				reactor->safetyRod()->clearCommands(ControlRod::CommandType::Top);
-		}
-		if (box_data & DOWN_SAFETY_BTN)
-		{
-			if (!btns[4] && ((rodsMoving[1] && rodsMoving[2]) || properties->allRodsAtOnce))
-				reactor->safetyRod()->commandToBottom();
-		}
-		else
-		{
-			if (btns[4])
-				reactor->safetyRod()->clearCommands(ControlRod::CommandType::Bottom);
-		}
-		if (box_data & ENABLE_REG_BTN)
-		{
-			if (!btns[5])
-			{
-				if (reactor->getScramStatus() == 0)
-					reactor->regulatingRod()->setEnabled(!reactor->regulatingRod()->isEnabled());
-			}
-		}
-		if (box_data & UP_REG_BTN)
-		{
-			if (!btns[6] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce))
-				reactor->regulatingRod()->commandToTop();
-		}
-		else
-		{
-			if (btns[6])
-				reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Top);
-		}
-		if (box_data & DOWN_REG_BTN)
-		{
-			if (!btns[7] && ((rodsMoving[0] && rodsMoving[2]) || properties->allRodsAtOnce))
-				reactor->regulatingRod()->commandToBottom();
-		}
-		else
-		{
-			if (btns[7])
-				reactor->regulatingRod()->clearCommands(ControlRod::CommandType::Bottom);
-		}
-		if (box_data & ENABLE_SHIM_BTN)
-		{
-			if (!btns[8])
-			{
-				if (reactor->getScramStatus() == 0)
-					reactor->shimRod()->setEnabled(!reactor->shimRod()->isEnabled());
-			}
-		}
-		if (box_data & UP_SHIM_BTN)
-		{
-			if (!btns[9] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce))
-				reactor->shimRod()->commandToTop();
-		}
-		else
-		{
-			if (btns[9])
-				reactor->shimRod()->clearCommands(ControlRod::CommandType::Top);
-		}
-		if (box_data & DOWN_SHIM_BTN)
-		{
-			if (!btns[10] && ((rodsMoving[0] && rodsMoving[1]) || properties->allRodsAtOnce))
-				reactor->shimRod()->commandToBottom();
-		}
-		else
-		{
-			if (btns[10])
-				reactor->shimRod()->clearCommands(ControlRod::CommandType::Bottom);
-		}
-		btns[0] = (box_data & SCRAM_BTN) != 0;
-		btns[1] = (box_data & FIRE_BTN) != 0;
-		btns[2] = (box_data & ENABLE_SAFETY_BTN) != 0;
-		btns[3] = (box_data & UP_SAFETY_BTN) != 0;
-		btns[4] = (box_data & DOWN_SAFETY_BTN) != 0;
-		btns[5] = (box_data & ENABLE_REG_BTN) != 0;
-		btns[6] = (box_data & UP_REG_BTN) != 0;
-		btns[7] = (box_data & DOWN_REG_BTN) != 0;
-		btns[8] = (box_data & ENABLE_SHIM_BTN) != 0;
-		btns[9] = (box_data & UP_SHIM_BTN) != 0;
-		btns[10] = (box_data & DOWN_SHIM_BTN) != 0;
-
-		int mode = box_data & 7;
-		if (mode != lastModeState)
-		{
-			rodMode->setSelectedIndex(mode);
-			lastModeState = mode;
-		}
-	}
-
-	// static string formatDecimals(const double x, const int decDigits, bool removeTrailingZeros = true)
-	//{
-	//	stringstream ss;
-	//	ss << fixed;
-	//	ss.precision(decDigits);
-	//	ss << x;
-	//	std::string res = ss.str();
-	//	if (removeTrailingZeros)
-	//	{
-	//		while (res.back() == '0') res = res.substr(0, res.length() - 1);
-	//		if (res.back() == '.') res = res.substr(0, res.length() - 1);
-	//	}
-	//	return res;
-	// }
-
-	void reculculateDisplayInterval(double fromTime, double toTime)
-	{
+void SimulatorGUI::reculculateDisplayInterval(double fromTime, double toTime)
+{
 		fromTime = std::max(fromTime, 0.);
 		toTime = std::min(toTime, reactor->getCurrentTime());
 		displayInterval[0] = reactor->getIndexFromTime(fromTime);
 		displayInterval[1] = reactor->getIndexFromTime(toTime);
 	}
 
-	// Method for calculating autoscale factors
-	pair<int, int> recalculatePowerExtremes(double fromTime = 0., double toTime = 0.)
-	{
+pair<int, int> SimulatorGUI::recalculatePowerExtremes(double fromTime, double toTime)
+{
 		int err = 0;
 		if (fromTime + toTime == 0.)
 		{
@@ -1398,215 +1027,14 @@ public:
 		}
 	}
 
-	std::vector<string> getCOMports()
-	{
-#ifdef _WIN32
-		TCHAR *ptr = new TCHAR[65535];
-		TCHAR *temp_ptr;
-		unsigned long dwChars = QueryDosDevice(NULL, ptr, 65535);
-		std::vector<string> comPorts_ = std::vector<string>();
-		while (dwChars)
-		{
-			int port;
-			if (sscanf(ptr, "COM%d", &port) == 1)
-			{
-				comPorts_.push_back("COM" + std::to_string(port));
-			}
-			temp_ptr = strchr(ptr, 0);
-			dwChars -= (DWORD)((temp_ptr - ptr) / sizeof(TCHAR) + 1);
-			ptr = temp_ptr + 1;
-		}
-		return comPorts_;
-#else
-		return std::vector<string>();
-#endif
-	}
-
-	void saveArchive(std::string path)
-	{
-		properties->saveArchive(path);
-		toggleBaseWindow(true);
-	}
-
-	void loadArchive(std::string path)
-	{
-		properties->restoreArchive(path);
-		toggleBaseWindow(true);
-	}
-
-	void loadScriptFromFile(std::string path)
-	{
-		double time0 = reactor->getCurrentTime();
-		std::ifstream ifs;
-		if (path.length())
-		{
-			ifs.open(path);
-
-			if (!ifs)
-			{
-				std::cerr << "Error opening input file: " << path << std::endl;
-				return;
-			}
-			std::istream &is = static_cast<std::istream &>(ifs);
-
-			Command cmd;
-
-			while (is >> cmd)
-			{
-				cmd.timed += time0;
-				cout << cmd;
-				reactor->scriptCommands.push_back(cmd);
-			}
-
-			MessageDialog *msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Loaded.");
-			msg->setPosition(Vector2i((this->size().x() - msg->size().x()) / 2, (this->size().y() - msg->size().y()) / 2));
-			msg->setCallback([this](int /*choice*/)
-							 { toggleBaseWindow(true); });
-		}
-		else
-		{
-			MessageDialog *msg = new MessageDialog(this, MessageDialog::Type::Warning, "Load script", "Bad file name.");
-			msg->setPosition(Vector2i((this->size().x() - msg->size().x()) / 2, (this->size().y() - msg->size().y()) / 2));
-			msg->setCallback([this](int /*choice*/)
-							 { toggleBaseWindow(true); });
-		}
-	}
-
-	void updateSettings(bool updateReactor = true)
-	{
-		curveFillBox->setChecked(properties->curveFill);
-		curveFillBox->callback()(properties->curveFill);
-		avoidPeriodScramBox->setChecked(properties->avoidPeriodScram);
-		avoidPeriodScramBox->callback()(properties->avoidPeriodScram);
-		for (int i = 0; i < 6; i++)
-		{
-			delayedGroupBoxes[i]->setValue(properties->betas[i]);
-			delayedGroupBoxes[6 + i]->setValue(properties->lambdas[i]);
-			delayedGroupsEnabledBoxes[i]->setChecked(properties->groupsEnabled[i]);
-			delayedGroupsEnabledBoxes[i]->callback()(properties->groupsEnabled[i]);
-		}
-		coreVolumeBox->setValue(properties->coreVolume * 1e3); // Convert from m3 to L
-		alpha0Box->setValue(properties->alpha0);
-		alphaPeakBox->setValue(properties->alphaAtT1);
-		alphaSlopeBox->setValue((float)properties->alphaK);
-		tempPeakBox->setValue(properties->alphaT1);
-		displayBox->setValue(properties->displayTime);
-		excessReactivityBox->setValue(properties->excessReactivity);
-		fissionProductsBox->setChecked(properties->fissionPoisons);
-		fissionProductsBox->callback()(properties->fissionPoisons);
-		graphSizeBox->setValue((int)(properties->graphSize * 100));
-		sourceActivityBox->setValue(properties->neutronSourceActivity);
-		neutronSourceCB->setChecked(properties->neutronSourceInserted);
-		neutronSourceCB->callback()(properties->neutronSourceInserted);
-		neutronSourceModeBox->setSelectedIndex(properties->ns_mode);
-		neutronSourcePeriodBoxes[0]->setValue(properties->ns_squareWave.period);
-		neutronSourcePeriodBoxes[1]->setValue(properties->ns_sineMode.period);
-		neutronSourcePeriodBoxes[2]->setValue(properties->ns_sawToothMode.period);
-		neutronSourceAmplitudeBoxes[0]->setValue(properties->ns_squareWave.amplitude);
-		neutronSourceAmplitudeBoxes[1]->setValue(properties->ns_sineMode.amplitude);
-		neutronSourceAmplitudeBoxes[2]->setValue(properties->ns_sawToothMode.amplitude);
-		for (int i = 0; i < 4; i++)
-			neutronSourceSQWBoxes[i]->setValue((int)(properties->ns_squareWave.xIndex[i] * 100));
-		neutronSourceSINEModeBox->setSelectedIndex((int)properties->ns_sineMode.mode);
-		for (int i = 0; i < 6; i++)
-			neutronSourceSAWBoxes[i]->setValue((int)(properties->ns_sawToothMode.xIndex[i] * 100));
-		periodLimBox->setValue((float)properties->periodLimit);
-		powerLimBox->setValue(properties->powerLimit * 1e-03);
-		fuel_tempLimBox->setValue(properties->tempLimit);
-		water_tempLimBox->setValue(properties->waterTempLimit);
-		// water_levelLimBox->setValue(properties->waterLevelLimit);
-		for (int i = 0; i < 4; i++)
-		{
-			bool value = false;
-			switch (i)
-			{
-			case 0:
-				value = properties->periodScram;
-				break;
-			case 1:
-				value = properties->powerScram;
-				break;
-			case 2:
-				value = properties->tempScram;
-				break;
-			case 3:
-				value = properties->waterTempScram;
-				break;
-			case 4:
-				value = properties->waterLevelScram;
-				break;
-			}
-			scramEnabledBoxes[i]->setChecked(value);
-			scramEnabledBoxes[i]->callback()(value);
-		}
-
-		promptNeutronLifetimeBox->setValue(properties->promptNeutronLifetime);
-		for (int i = 0; i < 2; i++)
-		{
-			reactivityLimitBox[i]->setValue(properties->reactivityGraphLimits[i]);
-			temperatureLimitBox[i]->setValue(properties->temperatureGraphLimits[i]);
-		}
-		rodReactivityBox->setChecked(properties->rodReactivityPlot);
-		rodReactivityBox->callback()(properties->rodReactivityPlot);
-		for (int i = 0; i < 3; i++)
-		{
-			rodStepsBox[i]->setValue((int)properties->rodSettings[i].rodSteps);
-			rodWorthBox[i]->setValue(properties->rodSettings[i].rodWorth);
-			rodSpeedBox[i]->setValue(properties->rodSettings[i].rodSpeed);
-			for (int j = 0; j < 2; j++)
-			{
-				rodCurveSliders[i * 2 + j]->setValue(properties->rodSettings[i].rodCurve[j]);
-				rodCurveSliders[i * 2 + j]->finalCallback()(properties->rodSettings[i].rodCurve[j]);
-				rodCurves[i]->setParameter(j * 2, properties->rodSettings[i].rodCurve[j]);
-			}
-		}
-		periodBoxes[0]->setValue(properties->squareWave.period);
-		amplitudeBoxes[0]->setValue(properties->squareWave.amplitude);
-		for (int i = 0; i < 4; i++)
-			squareWaveBoxes[i]->setValue((int)(properties->squareWave.xIndex[i] * 100));
-		periodBoxes[1]->setValue(properties->sineMode.period);
-		amplitudeBoxes[1]->setValue(properties->sineMode.amplitude);
-		sineModeBox->setSelectedIndex(properties->sineMode.mode);
-		periodBoxes[2]->setValue(properties->sawToothMode.period);
-		amplitudeBoxes[2]->setValue(properties->sawToothMode.amplitude);
-		for (int i = 0; i < 6; i++)
-			sawToothBoxes[i]->setValue((int)(properties->sawToothMode.xIndex[i] * 100));
-		keepCurrentPowerBox->setChecked(properties->steadyCurrentPower);
-		keepCurrentPowerBox->callback()(properties->steadyCurrentPower);
-		steadyPowerBox->setValue(properties->steadyGoalPower);
-		automaticMarginBox->setValue(properties->steadyMargin * 100);
-		tempEffectsBox->setChecked(properties->temperatureEffects);
-		tempEffectsBox->callback()(properties->temperatureEffects);
-		cooling->setChecked(properties->waterCooling);
-		cooling->callback()(properties->waterCooling);
-		coolingPowerBox->setValue(properties->waterCoolingPower);
-		waterVolumeInput->setValue(properties->waterVolume);
-		allRodsBox->setChecked(properties->allRodsAtOnce);
-		allRodsBox->callback()(properties->allRodsAtOnce);
-		logScaleBox->setChecked(properties->yAxisLog);
-		logScaleBox->callback()(properties->yAxisLog);
-		autoScramBox->setChecked(properties->automaticPulseScram);
-		autoScramBox->callback()(properties->automaticPulseScram);
-		hardcoreBox->setChecked(properties->reactivityHardcore);
-		hardcoreBox->callback()(properties->reactivityHardcore);
-		squareWaveSpeedBox->setChecked(properties->squareWaveUsesRodSpeed);
-		squareWaveSpeedBox->callback()(properties->squareWaveUsesRodSpeed);
-
-		if (updateReactor)
-			reactor->setProperties(properties);
-	}
-
-	bool prevToggle;
-	void toggleBaseWindow(bool value)
-	{
+void SimulatorGUI::toggleBaseWindow(bool value)
+{
 		if (!value && baseWindow->enabled())
 			prevToggle = (reactor->getSpeedFactor() != 0.);
 		baseWindow->setEnabled(value);
 		baseWindow->setFocused(value);
 		playPauseSimulation(value ? prevToggle : value);
 	}
-
-
 
 int runSimulatorGuiApp(int argc, char **argv)
 {
