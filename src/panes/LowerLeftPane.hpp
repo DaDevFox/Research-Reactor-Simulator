@@ -22,24 +22,9 @@ public:
     root = baseWindow.add<CustomWidget>();
     root->setDrawBackground(true);
     root->setBackgroundColor(Color(32, 255));
-    root->setLayout(new GridLayout(Orientation::Horizontal, 2,
-                                   Alignment::Middle, 12, 12));
-
-    auto makePanel = [&](const std::string &title) {
-      auto *panel = root->add<CustomWidget>();
-      panel->setDrawBackground(true);
-      panel->setBackgroundColor(Color(45, 255));
-      panel->setLayout(new GridLayout(Orientation::Horizontal, 3,
-                                      Alignment::Middle, 6, 6));
-      panel->add<CustomLabel>(title);
-      for (int i = 0; i < 9; ++i) {
-        auto *label = panel->add<CustomLabel>("LIGHT " + std::to_string(i + 1));
-        label->setColor(Color(220, 255));
-      }
-    };
-
-    makePanel("Warnings A");
-    makePanel("Warnings B");
+    auto *label = root->add<CustomLabel>("Lower-left pane");
+    label->setPosition(Vector2i(18, 18));
+    label->setColor(Color(220, 255));
 
     if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout())) {
       layout->setAnchor(root, RelativeGridLayout::makeAnchor(0, 0));

@@ -11,14 +11,23 @@ public:
   LowerCenterPane(Settings *properties, Simulator *reactor)
       : Pane(properties, reactor) {}
 
+  LowerCenterPane(Settings *properties, Simulator *reactor,
+                  CustomGraph **guiCanvas, Plot **guiPowerPlot,
+                  Plot **guiTemperaturePlot, Plot **guiReactivityPlot,
+                  Plot **guiRodReactivityPlot)
+      : Pane(properties, reactor), guiCanvas(guiCanvas),
+        guiPowerPlot(guiPowerPlot), guiTemperaturePlot(guiTemperaturePlot),
+        guiReactivityPlot(guiReactivityPlot),
+        guiRodReactivityPlot(guiRodReactivityPlot) {}
+
   nanogui::Vector2i consoleCoordinates() override { return Vector2i(0, -1); }
 
   nanogui::Vector2i consoleDimensions() override { return Vector2i(1, 1); }
 
-  void createGraph(CustomWindow &baseWindow) {
+  void createGraph(CustomWidget &graphHost) {
     // Create a graph object
-    canvas = baseWindow.add<CustomGraph>(4, "Main graph");
-    if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout())) {
+    canvas = graphHost.add<CustomGraph>(4, "Main graph");
+    if (auto *layout = dynamic_cast<RelativeGridLayout *>(graphHost.layout())) {
       layout->setAnchor(canvas, RelativeGridLayout::makeAnchor(0, 0));
     }
 
@@ -32,6 +41,18 @@ public:
     temperaturePlot = canvas->addPlot(reactor->getDataLength(), true);
     reactivityPlot = canvas->addPlot(reactor->getDataLength(), true);
     powerPlot = canvas->addPlot(reactor->getDataLength(), true);
+
+    // Bridge to SimulatorGUI's existing update pipeline.
+    if (guiCanvas)
+      *guiCanvas = canvas;
+    if (guiPowerPlot)
+      *guiPowerPlot = powerPlot;
+    if (guiTemperaturePlot)
+      *guiTemperaturePlot = temperaturePlot;
+    if (guiReactivityPlot)
+      *guiReactivityPlot = reactivityPlot;
+    if (guiRodReactivityPlot)
+      *guiRodReactivityPlot = rodReactivityPlot;
 
     // Styling
     canvas->setTextColor(Color(0, 255));
@@ -93,6 +114,7 @@ public:
     temperaturePlot->setMajorTickNumber(3);
     temperaturePlot->setMinorTickNumber(4);
     temperaturePlot->setFill(properties->curveFill);
+
     // Link plots to data
     reactivityPlot->setXdata(reactor->time_);
     reactivityPlot->setYdata(reactor->reactivity_);
@@ -109,15 +131,31 @@ public:
 
   void show(CustomWindow &baseWindow) override {
     spdlog::info("Pane show lower-center start");
-    createGraph(baseWindow);
+    root = baseWindow.add<CustomWidget>();
+    root->setDrawBackground(true);
+    root->setBackgroundColor(Color(100, 255));
+    auto *rootLayout = new RelativeGridLayout();
+    rootLayout->appendCol(1.f);
+    rootLayout->appendRow(0.2f);
+    rootLayout->appendRow(0.6f);
+    rootLayout->appendRow(0.2f);
+    root->setLayout(rootLayout);
 
-    // Placeholder band for the 3 rod dials until the real dial widget lands.
-    dialStrip = baseWindow.add<CustomWidget>();
+    row = root->add<CustomWidget>();
+    row->setDrawBackground(true);
+    row->setBackgroundColor(Color(200, 255));
+    auto *rowLayout = new RelativeGridLayout();
+    rowLayout->appendCol(0.35f);
+    rowLayout->appendCol(0.65f);
+    rowLayout->appendRow(1.f);
+    row->setLayout(rowLayout);
+
+    // Left side: 3 dial placeholders aligned to row center.
+    dialStrip = row->add<CustomWidget>();
     dialStrip->setDrawBackground(true);
     dialStrip->setBackgroundColor(Color(35, 255));
-    dialStrip->setFixedHeight(52);
-    dialStrip->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle,
-                                       10, 8));
+    dialStrip->setLayout(
+      new BoxLayout(Orientation::Horizontal, Alignment::Middle, 10, 12));
 
     auto *shim1 = dialStrip->add<CustomLabel>("SHIM-1: -- %");
     auto *shim2 = dialStrip->add<CustomLabel>("SHIM-2: -- %");
@@ -125,22 +163,74 @@ public:
     shim1->setColor(Color(220, 255));
     shim2->setColor(Color(220, 255));
     reg->setColor(Color(220, 255));
+    rowLayout->setAnchor(dialStrip, RelativeGridLayout::makeAnchor(0, 0));
+
+    // Right side: graph in dark bordered frame.
+    graphFrame = row->add<CustomWidget>();
+    graphFrame->setDrawBackground(true);
+    graphFrame->setBackgroundColor(Color(55, 255));
+    auto *frameLayout = new RelativeGridLayout();
+    frameLayout->appendCol(1.f);
+    frameLayout->appendRow(1.f);
+    graphFrame->setLayout(frameLayout);
+    rowLayout->setAnchor(graphFrame, RelativeGridLayout::makeAnchor(1, 0));
+
+    graphInset = graphFrame->add<CustomWidget>();
+    graphInset->setDrawBackground(true);
+    graphInset->setBackgroundColor(Color(245, 255));
+    auto *insetLayout = new RelativeGridLayout();
+    insetLayout->appendCol(1.f);
+    insetLayout->appendRow(1.f);
+    graphInset->setLayout(insetLayout);
+    frameLayout->setAnchor(graphInset, RelativeGridLayout::makeAnchor(0, 0));
+
+    createGraph(*graphInset);
+
+    rootLayout->setAnchor(row, RelativeGridLayout::makeAnchor(0, 1));
 
     if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout())) {
-      layout->setAnchor(dialStrip, RelativeGridLayout::makeAnchor(0, 0));
+      layout->setAnchor(root, RelativeGridLayout::makeAnchor(0, 0));
     }
+
     spdlog::info("Pane show lower-center done");
   }
 
   void hide(CustomWindow &baseWindow) override {
     spdlog::info("Pane hide lower-center");
-    safeRemoveFromBaseWindow(baseWindow, dialStrip,
-                             "LowerCenterPane::hide(dialStrip)");
-    safeRemoveFromBaseWindow(baseWindow, canvas,
-                             "LowerCenterPane::hide(canvas)");
+
+    if (guiCanvas && *guiCanvas == canvas)
+      *guiCanvas = nullptr;
+    if (guiPowerPlot && *guiPowerPlot == powerPlot)
+      *guiPowerPlot = nullptr;
+    if (guiTemperaturePlot && *guiTemperaturePlot == temperaturePlot)
+      *guiTemperaturePlot = nullptr;
+    if (guiReactivityPlot && *guiReactivityPlot == reactivityPlot)
+      *guiReactivityPlot = nullptr;
+    if (guiRodReactivityPlot && *guiRodReactivityPlot == rodReactivityPlot)
+      *guiRodReactivityPlot = nullptr;
+
+    powerPlot = nullptr;
+    temperaturePlot = nullptr;
+    reactivityPlot = nullptr;
+    rodReactivityPlot = nullptr;
+    canvas = nullptr;
+    graphInset = nullptr;
+    graphFrame = nullptr;
+    row = nullptr;
+    dialStrip = nullptr;
+    safeRemoveFromBaseWindow(baseWindow, root, "LowerCenterPane::hide(root)");
   }
 
 private:
+  CustomGraph **guiCanvas = nullptr;
+  Plot **guiPowerPlot = nullptr;
+  Plot **guiTemperaturePlot = nullptr;
+  Plot **guiReactivityPlot = nullptr;
+  Plot **guiRodReactivityPlot = nullptr;
+  CustomWidget *root = nullptr;
+  CustomWidget *row = nullptr;
+  CustomWidget *graphFrame = nullptr;
+  CustomWidget *graphInset = nullptr;
   CustomGraph *canvas = nullptr;
   CustomWidget *dialStrip = nullptr;
   Plot *powerPlot = nullptr;
