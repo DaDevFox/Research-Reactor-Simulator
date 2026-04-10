@@ -269,7 +269,7 @@ bool SimulatorGUI::navigatePane(int dx, int dy)
   auto nextPane = paneLookup.find({current.x() + dx, current.y() + dy});
   if (nextPane == paneLookup.end())
   {
-    spdlog::verbose("No pane from ({}, {}) with delta ({}, {})", current.x(),
+    spdlog::trace("No pane from ({}, {}) with delta ({}, {})", current.x(),
                     current.y(), dx, dy);
     return false;
   }
@@ -277,7 +277,7 @@ bool SimulatorGUI::navigatePane(int dx, int dy)
   Pane *fromPane = activePane;
   Pane *toPane = nextPane->second;
   const auto next = toPane->consoleCoordinates();
-  spdlog::verbose("Switching pane ({}, {}) -> ({}, {})", current.x(), current.y(),
+  spdlog::trace("Switching pane ({}, {}) -> ({}, {})", current.x(), current.y(),
                   next.x(), next.y());
 
   try

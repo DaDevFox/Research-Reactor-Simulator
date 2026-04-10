@@ -21,9 +21,9 @@ public:
         guiReactivityPlot(guiReactivityPlot),
         guiRodReactivityPlot(guiRodReactivityPlot) {}
 
-  nanogui::Vector2i consoleCoordinates() override { return Vector2i(0, -1); }
+  nanogui::Vector2i consoleCoordinates() override { return nanogui::Vector2i(0, -1); }
 
-  nanogui::Vector2i consoleDimensions() override { return Vector2i(1, 1); }
+  nanogui::Vector2i consoleDimensions() override { return nanogui::Vector2i(1, 1); }
 
   void createGraph(CustomWidget &graphHost)
   {
@@ -155,7 +155,7 @@ public:
     dialStrip->setDrawBackground(true);
     dialStrip->setBackgroundColor(Color(35, 255));
     dialStrip->setLayout(
-        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 10, 12));
+        new nanogui::BoxLayout(nanogui::Orientation::Horizontal, nanogui::Alignment::Middle, 10, 12));
 
     auto *shim1 = dialStrip->add<CustomLabel>("SHIM-1: -- %");
     auto *shim2 = dialStrip->add<CustomLabel>("SHIM-2: -- %");
@@ -200,7 +200,7 @@ public:
     pumpControls->setDrawBackground(true);
     pumpControls->setBackgroundColor(Color(75, 255));
     auto *pumpLabel = pumpControls->add<CustomLabel>("Pump Controls");
-    pumpLabel->setPosition(Vector2i(10, 10));
+    pumpLabel->setPosition(nanogui::Vector2i(10, 10));
     pumpLabel->setColor(Color(220, 255));
     rightSideLayout->setAnchor(pumpControls,
                                RelativeGridLayout::makeAnchor(0, 0));
@@ -210,7 +210,7 @@ public:
     autoPower->setBackgroundColor(Color(85, 255));
     auto *autoPowerLabel =
         autoPower->add<CustomLabel>("Automatic Power Settings (xScale)");
-    autoPowerLabel->setPosition(Vector2i(10, 10));
+    autoPowerLabel->setPosition(nanogui::Vector2i(10, 10));
     autoPowerLabel->setColor(Color(220, 255));
     rightSideLayout->setAnchor(autoPower, RelativeGridLayout::makeAnchor(0, 1));
     rowLayout->setAnchor(rightSidePanel, RelativeGridLayout::makeAnchor(2, 0));
@@ -243,7 +243,7 @@ public:
     scram->setDrawBackground(true);
     scram->setBackgroundColor(Color(150, 120, 0, 255));
     auto *scramLabel = scram->add<CustomLabel>("MANUAL SCRAM");
-    scramLabel->setPosition(Vector2i(10, 8));
+    scramLabel->setPosition(nanogui::Vector2i(10, 8));
     centerControlsLayout->setAnchor(scram, RelativeGridLayout::makeAnchor(0, 0));
 
     auto addButtonRow = [&](int rowIndex, const std::string &caption)
@@ -252,7 +252,7 @@ public:
       r->setDrawBackground(true);
       r->setBackgroundColor(Color(75, 255));
       auto *lbl = r->add<CustomLabel>(caption);
-      lbl->setPosition(Vector2i(10, 6));
+      lbl->setPosition(nanogui::Vector2i(10, 6));
       lbl->setColor(Color(220, 255));
       centerControlsLayout->setAnchor(r,
                                       RelativeGridLayout::makeAnchor(0, rowIndex));
@@ -266,7 +266,7 @@ public:
     cic->setDrawBackground(true);
     cic->setBackgroundColor(Color(70, 255));
     auto *cicLabel = cic->add<CustomLabel>("CIC Scale Power Control");
-    cicLabel->setPosition(Vector2i(10, 10));
+    cicLabel->setPosition(nanogui::Vector2i(10, 10));
     cicLabel->setColor(Color(220, 255));
     lowerLayout->setAnchor(cic, RelativeGridLayout::makeAnchor(2, 0));
 
@@ -327,5 +327,5 @@ private:
   Plot *temperaturePlot = nullptr;
   Plot *reactivityPlot = nullptr;
   Plot *rodReactivityPlot = nullptr;
-  const std::string degCelsiusUnit = std::string(utf8(0xBA).data()) + "C";
+  const std::string degCelsiusUnit = std::string(nanogui::utf8(0xBA).data()) + "C";
 };

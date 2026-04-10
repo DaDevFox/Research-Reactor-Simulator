@@ -22,7 +22,7 @@ void ensureLogger() {
     spdlog::set_default_logger(logger);
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
     spdlog::flush_on(spdlog::level::info);
-    spdlog::verbose("spdlog initialized");
+    spdlog::trace("spdlog initialized");
   } catch (...) {
     // Keep app running even if logger initialization fails.
   }
@@ -185,7 +185,7 @@ void SimulatorGUI::initializeSimulator() {
 
 // TODO: determine pass-up error control flow style
 void SimulatorGUI::initializePanes() {
-  spdlog::verbose("Initializing pane registry");
+  spdlog::trace("Initializing pane registry");
   panes.clear();
   paneLookup.clear();
 
@@ -200,7 +200,7 @@ void SimulatorGUI::initializePanes() {
   for (auto &pane : panes) {
     const auto c = pane->consoleCoordinates();
     paneLookup[{c.x(), c.y()}] = pane.get();
-    spdlog::verbose("Registered pane at ({}, {})", c.x(), c.y());
+    spdlog::trace("Registered pane at ({}, {})", c.x(), c.y());
   }
 
   if (paneLookup.empty()) {
