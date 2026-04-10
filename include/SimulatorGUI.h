@@ -84,9 +84,9 @@
 // SIMULATOR VERSION
 // major.minor.revision.build
 #define VERSION_MAJOR 1
-#define VERSION_MINOR 4
-#define VERSION_REVISION 1
-#define VERSION_BUILD 1  // Setting this to 0 doesn't display the build number
+#define VERSION_MINOR 5
+#define VERSION_REVISION 0
+#define VERSION_BUILD 0  // Setting this to 0 doesn't display the build number
 
 // RECIEVING
 #define BOX_ID "IJS_F8_BOX3"

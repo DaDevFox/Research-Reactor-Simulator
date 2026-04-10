@@ -4141,3 +4141,687 @@
 [DEBUG] mouseButtonEvent at (997, 667) button=0 down=0
 [DEBUG] findWidget found: class nanogui::Widget
 [DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (262, 445) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (262, 445) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (412, 449) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (412, 449) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (915, 719) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (915, 719) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 725) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 726) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (927, 726) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (928, 729) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (915, 719) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (919, 732) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (919, 732) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (412, 335) button=0 down=1
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (412, 335) button=0 down=0
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=1 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (925, 720) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (227, 434) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (227, 434) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (68, 675) button=0 down=1
+[DEBUG] findWidget found: class IntervalSlider
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (68, 675) button=0 down=0
+[DEBUG] findWidget found: class IntervalSlider
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (235, 674) button=0 down=1
+[DEBUG] findWidget found: class IntervalSlider
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (235, 674) button=0 down=0
+[DEBUG] findWidget found: class IntervalSlider
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (227, 678) button=0 down=1
+[DEBUG] findWidget found: class IntervalSlider
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (-1, 684) button=0 down=0
+[DEBUG] findWidget found: nullptr
+[DEBUG] Screen::mouseButtonEvent returned: 0
+[DEBUG] mouseButtonEvent at (435, 434) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (435, 434) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (562, 433) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (562, 433) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (460, 429) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (460, 429) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (397, 570) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=1
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (402, 577) button=0 down=0
+[DEBUG] findWidget found: class nanogui::FloatBox<double>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (574, 443) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (574, 443) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (106, 426) button=0 down=1
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (106, 426) button=0 down=0
+[DEBUG] findWidget found: class CustomTabHeader
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=1
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=0
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=1
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=0
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=1
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=0
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=1
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=0
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=1
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (883, 541) button=0 down=0
+[DEBUG] findWidget found: class nanogui::ComboBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1016, 605) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1053, 610) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1053, 610) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1064, 648) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1064, 648) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1055, 640) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1055, 640) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (906, 728) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (906, 728) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (928, 729) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (928, 729) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1017, 606) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1050, 611) button=0 down=1
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1050, 611) button=0 down=0
+[DEBUG] findWidget found: class nanogui::IntBox<int>
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1060, 620) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1060, 620) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (933, 735) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (933, 735) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (933, 733) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (933, 733) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (906, 480) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (906, 480) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (996, 567) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (996, 567) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Widget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (987, 473) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (987, 473) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (985, 476) button=0 down=1
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (985, 476) button=0 down=0
+[DEBUG] findWidget found: class nanogui::Button
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (380, 325) button=0 down=1
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (380, 325) button=0 down=0
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (483, 351) button=0 down=1
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (483, 351) button=0 down=0
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (463, 334) button=0 down=1
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (463, 334) button=0 down=0
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (439, 306) button=0 down=1
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (439, 306) button=0 down=0
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1112, 297) button=0 down=1
+[DEBUG] findWidget found: class CustomLabel
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (1112, 327) button=0 down=0
+[DEBUG] findWidget found: class CustomWidget
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (921, 726) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=1
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1
+[DEBUG] mouseButtonEvent at (918, 730) button=0 down=0
+[DEBUG] findWidget found: class SliderCheckBox
+[DEBUG] Screen::mouseButtonEvent returned: 1

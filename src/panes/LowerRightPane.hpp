@@ -16,7 +16,6 @@ public:
   nanogui::Vector2i consoleDimensions() override { return Vector2i(1, 1); }
 
   void show(CustomWindow &baseWindow) override {
-    spdlog::info("Pane show lower-right start");
     if (root) return;
 
     root = baseWindow.add<CustomWidget>();
@@ -42,7 +41,6 @@ public:
     if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout())) {
       layout->setAnchor(root, RelativeGridLayout::makeAnchor(0, 0));
     }
-    spdlog::info("Pane show lower-right done");
 
   }
 

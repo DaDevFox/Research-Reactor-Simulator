@@ -6,7 +6,8 @@
 #include "pane.hpp"
 #include <nanogui/common.h>
 
-class LowerCenterPane : public Pane {
+class LowerCenterPane : public Pane
+{
 public:
   LowerCenterPane(Settings *properties, Simulator *reactor)
       : Pane(properties, reactor) {}
@@ -24,10 +25,12 @@ public:
 
   nanogui::Vector2i consoleDimensions() override { return Vector2i(1, 1); }
 
-  void createGraph(CustomWidget &graphHost) {
+  void createGraph(CustomWidget &graphHost)
+  {
     // Create a graph object
     canvas = graphHost.add<CustomGraph>(4, "Main graph");
-    if (auto *layout = dynamic_cast<RelativeGridLayout *>(graphHost.layout())) {
+    if (auto *layout = dynamic_cast<RelativeGridLayout *>(graphHost.layout()))
+    {
       layout->setAnchor(canvas, RelativeGridLayout::makeAnchor(0, 0));
     }
 
@@ -122,31 +125,28 @@ public:
     rodReactivityPlot->setYdata(reactor->rodReactivity_);
     powerPlot->setXdata(reactor->time_);
     powerPlot->setYdata(reactor->state_vector_[0]);
-    powerPlot->setValueComputing([this](double *val, const size_t /*index*/) {
-      *val = reactor->powerFromNeutrons(*val);
-    });
+    powerPlot->setValueComputing([this](double *val, const size_t /*index*/)
+                                 { *val = reactor->powerFromNeutrons(*val); });
     temperaturePlot->setXdata(reactor->time_);
     temperaturePlot->setYdata(reactor->temperature_);
   }
 
-  void show(CustomWindow &baseWindow) override {
-    spdlog::info("Pane show lower-center start");
-    root = baseWindow.add<CustomWidget>();
-    root->setDrawBackground(true);
-    root->setBackgroundColor(Color(100, 255));
+  void show(CustomWindow &baseWindow) override
+  {
+    root->setDrawBackground(false);
     auto *rootLayout = new RelativeGridLayout();
     rootLayout->appendCol(1.f);
-    rootLayout->appendRow(0.2f);
-    rootLayout->appendRow(0.6f);
-    rootLayout->appendRow(0.2f);
+    rootLayout->appendRow(0.08f);
+    rootLayout->appendRow(0.60f);
+    rootLayout->appendRow(0.32f);
     root->setLayout(rootLayout);
 
     row = root->add<CustomWidget>();
-    row->setDrawBackground(true);
-    row->setBackgroundColor(Color(200, 255));
+    row->setDrawBackground(false);
     auto *rowLayout = new RelativeGridLayout();
-    rowLayout->appendCol(0.35f);
-    rowLayout->appendCol(0.65f);
+    rowLayout->appendCol(0.30f);
+    rowLayout->appendCol(0.45f);
+    rowLayout->appendCol(0.25f);
     rowLayout->appendRow(1.f);
     row->setLayout(rowLayout);
 
@@ -155,7 +155,7 @@ public:
     dialStrip->setDrawBackground(true);
     dialStrip->setBackgroundColor(Color(35, 255));
     dialStrip->setLayout(
-      new BoxLayout(Orientation::Horizontal, Alignment::Middle, 10, 12));
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 10, 12));
 
     auto *shim1 = dialStrip->add<CustomLabel>("SHIM-1: -- %");
     auto *shim2 = dialStrip->add<CustomLabel>("SHIM-2: -- %");
@@ -186,16 +186,102 @@ public:
 
     createGraph(*graphInset);
 
+    // Upright right-side blocks from plan: pump controls + automatic power.
+    rightSidePanel = row->add<CustomWidget>();
+    rightSidePanel->setDrawBackground(true);
+    rightSidePanel->setBackgroundColor(Color(40, 255));
+    auto *rightSideLayout = new RelativeGridLayout();
+    rightSideLayout->appendCol(1.f);
+    rightSideLayout->appendRow(1.f);
+    rightSideLayout->appendRow(1.f);
+    rightSidePanel->setLayout(rightSideLayout);
+
+    auto *pumpControls = rightSidePanel->add<CustomWidget>();
+    pumpControls->setDrawBackground(true);
+    pumpControls->setBackgroundColor(Color(75, 255));
+    auto *pumpLabel = pumpControls->add<CustomLabel>("Pump Controls");
+    pumpLabel->setPosition(Vector2i(10, 10));
+    pumpLabel->setColor(Color(220, 255));
+    rightSideLayout->setAnchor(pumpControls,
+                               RelativeGridLayout::makeAnchor(0, 0));
+
+    auto *autoPower = rightSidePanel->add<CustomWidget>();
+    autoPower->setDrawBackground(true);
+    autoPower->setBackgroundColor(Color(85, 255));
+    auto *autoPowerLabel =
+        autoPower->add<CustomLabel>("Automatic Power Settings (xScale)");
+    autoPowerLabel->setPosition(Vector2i(10, 10));
+    autoPowerLabel->setColor(Color(220, 255));
+    rightSideLayout->setAnchor(autoPower, RelativeGridLayout::makeAnchor(0, 1));
+    rowLayout->setAnchor(rightSidePanel, RelativeGridLayout::makeAnchor(2, 0));
+
     rootLayout->setAnchor(row, RelativeGridLayout::makeAnchor(0, 1));
 
-    if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout())) {
+    // Lower panel blocks from plan.
+    lowerPanel = root->add<CustomWidget>();
+    lowerPanel->setDrawBackground(true);
+    lowerPanel->setBackgroundColor(Color(28, 255));
+    auto *lowerLayout = new RelativeGridLayout();
+    lowerLayout->appendCol(0.20f);
+    lowerLayout->appendCol(0.50f);
+    lowerLayout->appendCol(0.30f);
+    lowerLayout->appendRow(1.f);
+    lowerPanel->setLayout(lowerLayout);
+
+    auto *centerControls = lowerPanel->add<CustomWidget>();
+    centerControls->setDrawBackground(true);
+    centerControls->setBackgroundColor(Color(55, 255));
+    auto *centerControlsLayout = new RelativeGridLayout();
+    centerControlsLayout->appendCol(1.f);
+    centerControlsLayout->appendRow(0.22f);
+    centerControlsLayout->appendRow(0.26f);
+    centerControlsLayout->appendRow(0.26f);
+    centerControlsLayout->appendRow(0.26f);
+    centerControls->setLayout(centerControlsLayout);
+
+    auto *scram = centerControls->add<CustomWidget>();
+    scram->setDrawBackground(true);
+    scram->setBackgroundColor(Color(150, 120, 0, 255));
+    auto *scramLabel = scram->add<CustomLabel>("MANUAL SCRAM");
+    scramLabel->setPosition(Vector2i(10, 8));
+    centerControlsLayout->setAnchor(scram, RelativeGridLayout::makeAnchor(0, 0));
+
+    auto addButtonRow = [&](int rowIndex, const std::string &caption)
+    {
+      auto *r = centerControls->add<CustomWidget>();
+      r->setDrawBackground(true);
+      r->setBackgroundColor(Color(75, 255));
+      auto *lbl = r->add<CustomLabel>(caption);
+      lbl->setPosition(Vector2i(10, 6));
+      lbl->setColor(Color(220, 255));
+      centerControlsLayout->setAnchor(r,
+                                      RelativeGridLayout::makeAnchor(0, rowIndex));
+    };
+    addButtonRow(1, "Button Grid Row 1 (Rod Up/Down)");
+    addButtonRow(2, "Button Grid Row 2");
+    addButtonRow(3, "Button Grid Row 3");
+    lowerLayout->setAnchor(centerControls, RelativeGridLayout::makeAnchor(1, 0));
+
+    auto *cic = lowerPanel->add<CustomWidget>();
+    cic->setDrawBackground(true);
+    cic->setBackgroundColor(Color(70, 255));
+    auto *cicLabel = cic->add<CustomLabel>("CIC Scale Power Control");
+    cicLabel->setPosition(Vector2i(10, 10));
+    cicLabel->setColor(Color(220, 255));
+    lowerLayout->setAnchor(cic, RelativeGridLayout::makeAnchor(2, 0));
+
+    rootLayout->setAnchor(lowerPanel, RelativeGridLayout::makeAnchor(0, 2));
+
+    if (auto *layout = dynamic_cast<RelativeGridLayout *>(baseWindow.layout()))
+    {
       layout->setAnchor(root, RelativeGridLayout::makeAnchor(0, 0));
     }
 
     spdlog::info("Pane show lower-center done");
   }
 
-  void hide(CustomWindow &baseWindow) override {
+  void hide(CustomWindow &baseWindow) override
+  {
     spdlog::info("Pane hide lower-center");
 
     if (guiCanvas && *guiCanvas == canvas)
@@ -216,6 +302,8 @@ public:
     canvas = nullptr;
     graphInset = nullptr;
     graphFrame = nullptr;
+    rightSidePanel = nullptr;
+    lowerPanel = nullptr;
     row = nullptr;
     dialStrip = nullptr;
     safeRemoveFromBaseWindow(baseWindow, root, "LowerCenterPane::hide(root)");
@@ -231,6 +319,8 @@ private:
   CustomWidget *row = nullptr;
   CustomWidget *graphFrame = nullptr;
   CustomWidget *graphInset = nullptr;
+  CustomWidget *rightSidePanel = nullptr;
+  CustomWidget *lowerPanel = nullptr;
   CustomGraph *canvas = nullptr;
   CustomWidget *dialStrip = nullptr;
   Plot *powerPlot = nullptr;
