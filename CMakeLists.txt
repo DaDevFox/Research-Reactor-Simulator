@@ -49,6 +49,26 @@ add_executable(SimulatorGui src/main.cpp src/SimulatorGUI.Core.cpp src/Simulator
 
 target_include_directories(SimulatorGui PRIVATE ext/nanogui/include ext/cereal/include ${SIMULATORGUI_EIGEN3_INCLUDE_DIR})
 
+if(WIN32)
+  # Ninja + clang often runs outside a Developer Prompt, so rc.exe does not get
+  # the default Windows SDK include search paths. Derive them from RC compiler.
+  if(CMAKE_RC_COMPILER MATCHES [[Windows Kits/10/bin/([0-9.]+)/]])
+    set(_winsdk_ver "${CMAKE_MATCH_1}")
+    set(_winsdk_inc "C:/Program Files (x86)/Windows Kits/10/Include/${_winsdk_ver}")
+
+    if(EXISTS "${_winsdk_inc}/um/winres.h")
+      target_include_directories(SimulatorGui PRIVATE
+        "${_winsdk_inc}/um"
+        "${_winsdk_inc}/shared"
+        "${_winsdk_inc}/ucrt"
+      )
+      message(STATUS "RC includes using Windows SDK from: ${_winsdk_inc}")
+    else()
+      message(WARNING "Could not find winres.h under ${_winsdk_inc}; RC build may fail if INCLUDE is unset.")
+    endif()
+  endif()
+endif()
+
 # Lastly, additional libraries may have been built for you.  In addition to linking
 # against NanoGUI, we need to link against those as well.
 target_link_libraries(SimulatorGui nanogui ${NANOGUI_EXTRA_LIBS} cereal)
