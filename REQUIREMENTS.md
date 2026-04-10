@@ -1,4 +1,7 @@
 Line items are referred to by their number across project documentation. Numbers of the form (X) indicate estimated difficulty associated with a task (just a rough heuristic – definitely changeable during the course of develeopment). [LP] indicates a requirement item was noted as lower priority. The numbering is roughly ranked by priority (aside from overall changes in item #1). 
+
+
+
 Overall changes
 - 1.1) (1) Fix inconsistent font sizes, obscured labels, and layout glitches
 - 1.2) (4) Undertake full-scale style redesign (UI refresh)
