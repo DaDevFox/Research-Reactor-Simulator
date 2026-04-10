@@ -5,6 +5,7 @@
 #include "../../include/RelativeGridLayout.h"
 #include "pane.hpp"
 #include <nanogui/common.h>
+#include <string>
 
 class LowerCenterPane : public Pane
 {
