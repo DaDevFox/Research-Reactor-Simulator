@@ -1,12 +1,12 @@
 
-#include "../include/CustomMessageDialog.h"
+#include "../../include/CustomMessageDialog.h"
 
 #include <nanogui/button.h>
 #include <nanogui/entypo.h>
 #include <nanogui/label.h>
 #include <nanogui/layout.h>
 
-#include "../include/RelativeGridLayout.h"
+#include "../../include/RelativeGridLayout.h"
 
 using namespace nanogui;
 

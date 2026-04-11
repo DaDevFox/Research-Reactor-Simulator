@@ -1,4 +1,4 @@
-#include "../include/SliderCheckBox.h"
+#include "../../include/SliderCheckBox.h"
 
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>

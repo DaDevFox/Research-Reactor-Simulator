@@ -1,4 +1,4 @@
-#include "../include/CustomWidget.h"
+#include "../../include/CustomWidget.h"
 
 #include <nanogui/layout.h>
 #include <nanogui/opengl.h>

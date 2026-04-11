@@ -1,6 +1,6 @@
-#include "../include/CustomGraph.h"
+#include "../../include/CustomGraph.h"
 
-#include "../include/CustomTabWidget.h"
+#include "../../include/CustomTabWidget.h"
 
 CustomGraph::CustomGraph(Widget *parent, size_t graphNumber,
                          const std::string &caption)

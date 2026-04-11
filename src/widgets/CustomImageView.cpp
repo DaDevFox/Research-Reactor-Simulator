@@ -10,7 +10,7 @@
         BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include "../include/CustomImageView.h"
+#include "../../include/CustomImageView.h"
 
 #include <nanogui/opengl.h>
 

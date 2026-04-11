@@ -5,7 +5,7 @@
         Based on original ijs-f8 VScrollPanel with background drawing support.
 */
 
-#include "../include/CustomVScrollPanel.h"
+#include "../../include/CustomVScrollPanel.h"
 
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>

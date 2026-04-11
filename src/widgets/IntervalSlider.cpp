@@ -1,4 +1,4 @@
-#include "../include/IntervalSlider.h"
+#include "../../include/IntervalSlider.h"
 
 #include <nanogui/serializer/core.h>
 #include <nanovg.h>

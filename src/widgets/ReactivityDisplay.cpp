@@ -1,4 +1,4 @@
-#include "../include/ReactivityDisplay.h"
+#include "../../include/ReactivityDisplay.h"
 
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>

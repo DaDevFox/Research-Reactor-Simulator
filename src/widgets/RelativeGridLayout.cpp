@@ -1,4 +1,4 @@
-#include "../include/RelativeGridLayout.h"
+#include "../../include/RelativeGridLayout.h"
 
 #include <nanogui/label.h>
 #include <nanogui/theme.h>

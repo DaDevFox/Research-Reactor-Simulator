@@ -1,4 +1,4 @@
-#include "../include/controlRodDisplay.h"
+#include "../../include/controlRodDisplay.h"
 
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>

@@ -1,4 +1,4 @@
-#include "../include/CustomTabWidget.h"
+#include "../../include/CustomTabWidget.h"
 
 #include <nanogui/layout.h>
 #include <nanogui/opengl.h>
@@ -10,10 +10,10 @@
 
 #include <algorithm>
 
-#include "../include/CustomTabHeader.h"
-#include "../include/CustomVScrollPanel.h"
-#include "../include/CustomWidget.h"
-#include "../include/RelativeGridLayout.h"
+#include "../../include/CustomTabHeader.h"
+#include "../../include/CustomVScrollPanel.h"
+#include "../../include/CustomWidget.h"
+#include "../../include/RelativeGridLayout.h"
 
 using namespace nanogui;
 

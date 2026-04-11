@@ -1,4 +1,4 @@
-#include "../include/CustomLabel.h"
+#include "../../include/CustomLabel.h"
 
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>

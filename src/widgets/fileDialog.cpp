@@ -1,11 +1,11 @@
-#include "../include/fileDialog.h"
+#include "../../include/fileDialog.h"
 
 #include <nanogui/opengl.h>
 #include <sys/stat.h>
 
 #include <chrono>
 
-#include "../include/RelativeGridLayout.h"
+#include "../../include/RelativeGridLayout.h"
 #include "util.h"
 
 using namespace nanogui;

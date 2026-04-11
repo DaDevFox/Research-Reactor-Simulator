@@ -9,7 +9,7 @@
         BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include "../include/CustomWindow.h"
+#include "../../include/CustomWindow.h"
 
 #include <nanogui/layout.h>
 #include <nanogui/opengl.h>
